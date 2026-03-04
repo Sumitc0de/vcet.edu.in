@@ -1,69 +1,71 @@
-﻿import React, { useEffect, useRef } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 
 // -- Data (all logos from /public/Images/recriters/) ---------------------------
-const recruiters = [
-  { name: "Accenture",           logo: "/Images/recriters/Accenture-Logo-PNG-Vector-EPS-Free-Download.jpeg" },
-  { name: "Arcon",               logo: "/Images/recriters/arcon-logo.png" },
-  { name: "Bristlecone",         logo: "/Images/recriters/bristlecone-logo.png" },
-  { name: "BuiltIO",             logo: "/Images/recriters/builtio-300x72-1.png" },
-  { name: "Capgemini",           logo: "/Images/recriters/Capgemini-300x67-1.png" },
-  { name: "Coca-Cola",           logo: "/Images/recriters/coca-300x99-1.png" },
-  { name: "Cognizant",           logo: "/Images/recriters/cognizant-logo.png" },
-  { name: "Godrej Infotech",     logo: "/Images/recriters/godrej-infotech.jpeg" },
-  { name: "Hexaware",            logo: "/Images/recriters/hexaware-logo.jpeg" },
-  { name: "IBM",                 logo: "/Images/recriters/IBM-logo.png" },
-  { name: "Infosys",             logo: "/Images/recriters/infosys-300x116-1.png" },
-  { name: "Interactive Brokers", logo: "/Images/recriters/interactive-brokers.jpeg" },
-  { name: "Johnson Controls",    logo: "/Images/recriters/Johnson-logo.png" },
-  { name: "L&T",                 logo: "/Images/recriters/lt-300x81-1.jpg" },
-  { name: "LTIMindtree",         logo: "/Images/recriters/lti-logo.png" },
-  { name: "Mahindra",            logo: "/Images/recriters/mahindra-300x85-1.png" },
-  { name: "Neebal Technologies", logo: "/Images/recriters/neebal-technologoes.jpeg" },
-  { name: "Persistent Systems",  logo: "/Images/recriters/logo-rgb-black-e1751968833241.png" },
-  { name: "Schneider Electric",  logo: "/Images/recriters/schneider-logo.png" },
-  { name: "Tata Power",          logo: "/Images/recriters/Tata-Power.png" },
-  { name: "Technimant",          logo: "/Images/recriters/Technimant-logo.png" },
-  { name: "Verdantis",           logo: "/Images/recriters/verdantis-300x77-1.png" },
-  { name: "Vistaar",             logo: "/Images/recriters/Vistaar-logo-1.png" },
-  { name: "Vodafone",            logo: "/Images/recriters/VODAPHONE.jpg" },
-  { name: "Wipro",               logo: "/Images/recriters/wipro-logo.png" },
-  { name: "Zensoft",             logo: "/Images/recriters/Zensoft-logo.jpg" },
-  { name: "Zeus Learning",       logo: "/Images/recriters/Zeus-Learning-logo.png" },
+type Recruiter = { name: string; logo: string; url: string };
+
+const recruiters: Recruiter[] = [
+  { name: "Accenture",           logo: "/Images/recriters/Accenture-Logo-PNG-Vector-EPS-Free-Download.jpeg", url: "https://www.accenture.com" },
+  { name: "Arcon",               logo: "/Images/recriters/arcon-logo.png",        url: "https://www.arconnet.com" },
+  { name: "Bristlecone",         logo: "/Images/recriters/bristlecone-logo.png",   url: "https://www.bristlecone.com" },
+  { name: "BuiltIO",             logo: "/Images/recriters/builtio-300x72-1.png",   url: "https://www.softwareag.com" },
+  { name: "Capgemini",           logo: "/Images/recriters/Capgemini-300x67-1.png", url: "https://www.capgemini.com" },
+  { name: "Coca-Cola",           logo: "/Images/recriters/coca-300x99-1.png",      url: "https://www.coca-colacompany.com" },
+  { name: "Cognizant",           logo: "/Images/recriters/cognizant-logo.png",     url: "https://www.cognizant.com" },
+  { name: "Godrej Infotech",     logo: "/Images/recriters/godrej-infotech.jpeg",   url: "https://www.godrejinfotech.com" },
+  { name: "Hexaware",            logo: "/Images/recriters/hexaware-logo.jpeg",     url: "https://www.hexaware.com" },
+  { name: "IBM",                 logo: "/Images/recriters/IBM-logo.png",           url: "https://www.ibm.com" },
+  { name: "Infosys",             logo: "/Images/recriters/infosys-300x116-1.png",  url: "https://www.infosys.com" },
+  { name: "Interactive Brokers", logo: "/Images/recriters/interactive-brokers.jpeg",url: "https://www.interactivebrokers.com" },
+  { name: "Johnson Controls",    logo: "/Images/recriters/Johnson-logo.png",       url: "https://www.johnsoncontrols.com" },
+  { name: "L&T",                 logo: "/Images/recriters/lt-300x81-1.jpg",        url: "https://www.larsentoubro.com" },
+  { name: "LTIMindtree",         logo: "/Images/recriters/lti-logo.png",           url: "https://www.ltimindtree.com" },
+  { name: "Mahindra",            logo: "/Images/recriters/mahindra-300x85-1.png",  url: "https://www.mahindra.com" },
+  { name: "Neebal Technologies", logo: "/Images/recriters/neebal-technologoes.jpeg",url: "https://www.neebal.com" },
+  { name: "Persistent Systems",  logo: "/Images/recriters/logo-rgb-black-e1751968833241.png", url: "https://www.persistent.com" },
+  { name: "Schneider Electric",  logo: "/Images/recriters/schneider-logo.png",     url: "https://www.se.com" },
+  { name: "Tata Power",          logo: "/Images/recriters/Tata-Power.png",         url: "https://www.tatapower.com" },
+  { name: "Technimant",          logo: "/Images/recriters/Technimant-logo.png",    url: "https://www.technimant.com" },
+  { name: "Verdantis",           logo: "/Images/recriters/verdantis-300x77-1.png", url: "https://www.verdantis.com" },
+  { name: "Vistaar",             logo: "/Images/recriters/Vistaar-logo-1.png",     url: "https://www.vfrpl.in" },
+  { name: "Vodafone",            logo: "/Images/recriters/VODAPHONE.jpg",          url: "https://www.vodafone.com" },
+  { name: "Wipro",               logo: "/Images/recriters/wipro-logo.png",         url: "https://www.wipro.com" },
+  { name: "Zensoft",             logo: "/Images/recriters/Zensoft-logo.jpg",       url: "https://www.zensoft.io" },
+  { name: "Zeus Learning",       logo: "/Images/recriters/Zeus-Learning-logo.png", url: "https://www.zeuslearning.com" },
 ];
 
 // Row 1 — Top / best-known companies
-const rowOne = [
-  { name: "Accenture",           logo: "/Images/recriters/Accenture-Logo-PNG-Vector-EPS-Free-Download.jpeg" },
-  { name: "Capgemini",           logo: "/Images/recriters/Capgemini-300x67-1.png" },
-  { name: "Coca-Cola",           logo: "/Images/recriters/coca-300x99-1.png" },
-  { name: "Cognizant",           logo: "/Images/recriters/cognizant-logo.png" },
-  { name: "IBM",                 logo: "/Images/recriters/IBM-logo.png" },
-  { name: "Infosys",             logo: "/Images/recriters/infosys-300x116-1.png" },
-  { name: "L&T",                 logo: "/Images/recriters/lt-300x81-1.jpg" },
-  { name: "LTIMindtree",         logo: "/Images/recriters/lti-logo.png" },
-  { name: "Mahindra",            logo: "/Images/recriters/mahindra-300x85-1.png" },
-  { name: "Schneider Electric",  logo: "/Images/recriters/schneider-logo.png" },
-  { name: "Tata Power",          logo: "/Images/recriters/Tata-Power.png" },
-  { name: "Vodafone",            logo: "/Images/recriters/VODAPHONE.jpg" },
-  { name: "Wipro",               logo: "/Images/recriters/wipro-logo.png" },
-  { name: "Persistent Systems",  logo: "/Images/recriters/logo-rgb-black-e1751968833241.png" },
+const rowOne: Recruiter[] = [
+  { name: "Accenture",           logo: "/Images/recriters/Accenture-Logo-PNG-Vector-EPS-Free-Download.jpeg", url: "https://www.accenture.com" },
+  { name: "Capgemini",           logo: "/Images/recriters/Capgemini-300x67-1.png", url: "https://www.capgemini.com" },
+  { name: "Coca-Cola",           logo: "/Images/recriters/coca-300x99-1.png",      url: "https://www.coca-colacompany.com" },
+  { name: "Cognizant",           logo: "/Images/recriters/cognizant-logo.png",     url: "https://www.cognizant.com" },
+  { name: "IBM",                 logo: "/Images/recriters/IBM-logo.png",           url: "https://www.ibm.com" },
+  { name: "Infosys",             logo: "/Images/recriters/infosys-300x116-1.png",  url: "https://www.infosys.com" },
+  { name: "L&T",                 logo: "/Images/recriters/lt-300x81-1.jpg",        url: "https://www.larsentoubro.com" },
+  { name: "LTIMindtree",         logo: "/Images/recriters/lti-logo.png",           url: "https://www.ltimindtree.com" },
+  { name: "Mahindra",            logo: "/Images/recriters/mahindra-300x85-1.png",  url: "https://www.mahindra.com" },
+  { name: "Schneider Electric",  logo: "/Images/recriters/schneider-logo.png",     url: "https://www.se.com" },
+  { name: "Tata Power",          logo: "/Images/recriters/Tata-Power.png",         url: "https://www.tatapower.com" },
+  { name: "Vodafone",            logo: "/Images/recriters/VODAPHONE.jpg",          url: "https://www.vodafone.com" },
+  { name: "Wipro",               logo: "/Images/recriters/wipro-logo.png",         url: "https://www.wipro.com" },
+  { name: "Persistent Systems",  logo: "/Images/recriters/logo-rgb-black-e1751968833241.png", url: "https://www.persistent.com" },
 ];
 
 // Row 2 — Remaining partners
-const rowTwo = [
-  { name: "Arcon",               logo: "/Images/recriters/arcon-logo.png" },
-  { name: "Bristlecone",         logo: "/Images/recriters/bristlecone-logo.png" },
-  { name: "BuiltIO",             logo: "/Images/recriters/builtio-300x72-1.png" },
-  { name: "Godrej Infotech",     logo: "/Images/recriters/godrej-infotech.jpeg" },
-  { name: "Hexaware",            logo: "/Images/recriters/hexaware-logo.jpeg" },
-  { name: "Interactive Brokers", logo: "/Images/recriters/interactive-brokers.jpeg" },
-  { name: "Johnson Controls",    logo: "/Images/recriters/Johnson-logo.png" },
-  { name: "Neebal Technologies", logo: "/Images/recriters/neebal-technologoes.jpeg" },
-  { name: "Technimant",          logo: "/Images/recriters/Technimant-logo.png" },
-  { name: "Verdantis",           logo: "/Images/recriters/verdantis-300x77-1.png" },
-  { name: "Vistaar",             logo: "/Images/recriters/Vistaar-logo-1.png" },
-  { name: "Zensoft",             logo: "/Images/recriters/Zensoft-logo.jpg" },
-  { name: "Zeus Learning",       logo: "/Images/recriters/Zeus-Learning-logo.png" },
+const rowTwo: Recruiter[] = [
+  { name: "Arcon",               logo: "/Images/recriters/arcon-logo.png",         url: "https://www.arconnet.com" },
+  { name: "Bristlecone",         logo: "/Images/recriters/bristlecone-logo.png",   url: "https://www.bristlecone.com" },
+  { name: "BuiltIO",             logo: "/Images/recriters/builtio-300x72-1.png",   url: "https://www.softwareag.com" },
+  { name: "Godrej Infotech",     logo: "/Images/recriters/godrej-infotech.jpeg",   url: "https://www.godrejinfotech.com" },
+  { name: "Hexaware",            logo: "/Images/recriters/hexaware-logo.jpeg",     url: "https://www.hexaware.com" },
+  { name: "Interactive Brokers", logo: "/Images/recriters/interactive-brokers.jpeg",url: "https://www.interactivebrokers.com" },
+  { name: "Johnson Controls",    logo: "/Images/recriters/Johnson-logo.png",       url: "https://www.johnsoncontrols.com" },
+  { name: "Neebal Technologies", logo: "/Images/recriters/neebal-technologoes.jpeg",url: "https://www.neebal.com" },
+  { name: "Technimant",          logo: "/Images/recriters/Technimant-logo.png",    url: "https://www.technimant.com" },
+  { name: "Verdantis",           logo: "/Images/recriters/verdantis-300x77-1.png", url: "https://www.verdantis.com" },
+  { name: "Vistaar",             logo: "/Images/recriters/Vistaar-logo-1.png",     url: "https://www.vfrpl.in" },
+  { name: "Zensoft",             logo: "/Images/recriters/Zensoft-logo.jpg",       url: "https://www.zensoft.io" },
+  { name: "Zeus Learning",       logo: "/Images/recriters/Zeus-Learning-logo.png", url: "https://www.zeuslearning.com" },
 ];
 
 // -- BentoBox ------------------------------------------------------------------
@@ -93,12 +95,13 @@ const Bar: React.FC<{ pct: string; gold?: boolean }> = ({ pct, gold }) => (
 
 // -- MarqueeRow — infinite auto-scroll with pause on hover ---------------
 interface MarqueeRowProps {
-  items: typeof recruiters;
+  items: Recruiter[];
   direction?: "left" | "right";
   speed?: number; // seconds for one full cycle
+  onItemClick?: (item: Recruiter) => void;
 }
 
-const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", speed = 40 }) => {
+const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", speed = 40, onItemClick }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<number>(0);
@@ -109,6 +112,8 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
   const dragStartXRef = useRef(0);
   const dragStartPosRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wasDragRef = useRef(false);  // true if user dragged more than 5px
+  const clickTargetRef = useRef<Recruiter | null>(null);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -159,6 +164,8 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
 
   const onPointerDown = (e: React.PointerEvent) => {
     draggingRef.current = true;
+    wasDragRef.current = false;
+    // Don't clear clickTargetRef here - it's set by individual cards
     pausedRef.current = true;
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     dragStartXRef.current = e.clientX;
@@ -169,6 +176,8 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
   const onPointerMove = (e: React.PointerEvent) => {
     if (!draggingRef.current) return;
     const delta = dragStartXRef.current - e.clientX;
+    // If user moved more than 5px, it's a drag, not a click
+    if (Math.abs(delta) > 5) wasDragRef.current = true;
     const el = scrollRef.current;
     if (!el) return;
     const oneSetWidth = el.scrollWidth / 3;
@@ -180,8 +189,14 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
   };
 
   const onPointerUp = () => {
+    const wasClick = !wasDragRef.current;
     draggingRef.current = false;
     scheduleResume();
+    // If it was a click (not a drag), fire the click handler
+    if (wasClick && clickTargetRef.current && onItemClick) {
+      onItemClick(clickTargetRef.current);
+    }
+    clickTargetRef.current = null;
   };
 
   // -- Mouse wheel horizontal scrolling --
@@ -225,8 +240,9 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
           <div
             key={`${company.name}-${i}`}
             className="flex-shrink-0 mx-3 sm:mx-4"
+            onPointerDown={() => { clickTargetRef.current = company; }}
           >
-            <div className="group flex flex-col items-center justify-center gap-3 w-[140px] sm:w-[160px] md:w-[180px] p-5 sm:p-6 border-2 border-gray-100 bg-white rounded-xl shadow-sm hover:border-brand-gold/60 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div className="group flex flex-col items-center justify-center gap-3 w-[140px] sm:w-[160px] md:w-[180px] p-5 sm:p-6 border-2 border-gray-100 bg-white rounded-xl shadow-sm hover:border-brand-gold/60 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
               <div className="w-full flex items-center justify-center h-[60px] sm:h-[70px]">
                 <img
                   src={company.logo}
@@ -247,7 +263,71 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
 };
 
 // -- Main ----------------------------------------------------------------------
-const Recruiters: React.FC = () => (
+const Recruiters: React.FC = () => {
+  const [confirmTarget, setConfirmTarget] = useState<Recruiter | null>(null);
+
+  const handleRecruiterClick = (item: Recruiter) => {
+    setConfirmTarget(item);
+  };
+
+  const handleConfirm = () => {
+    if (confirmTarget) {
+      window.open(confirmTarget.url, '_blank', 'noopener,noreferrer');
+    }
+    setConfirmTarget(null);
+  };
+
+  const handleCancel = () => {
+    setConfirmTarget(null);
+  };
+
+  return (
+  <>
+  {/* Confirmation Popup */}
+  {confirmTarget && (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={handleCancel}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-[90vw] mx-4 text-center animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+        style={{ animation: 'fadeInUp 0.25s ease-out' }}
+      >
+        {/* Recruiter logo preview */}
+        <div className="w-20 h-20 mx-auto mb-5 rounded-xl border-2 border-gray-100 bg-gray-50 flex items-center justify-center p-3">
+          <img
+            src={confirmTarget.logo}
+            alt={confirmTarget.name}
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+        <h3 className="text-lg font-bold text-brand-navy mb-2">
+          Visit {confirmTarget.name}?
+        </h3>
+        <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+          Do you want to visit <span className="font-semibold text-brand-blue">{confirmTarget.name}</span>'s official site?<br />
+          <span className="text-xs text-slate-400 mt-1 block">{confirmTarget.url}</span>
+        </p>
+        <div className="flex items-center justify-center gap-3">
+          <button
+            onClick={handleCancel}
+            className="px-6 py-2.5 rounded-lg border-2 border-gray-200 text-sm font-semibold text-slate-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            className="px-6 py-2.5 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:brightness-110 active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #0B3D91, #1E4DB7)' }}
+          >
+            Yes, Visit Site
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
   <section id="recruiters" className="py-24 relative overflow-hidden">
 
     {/* Background image */}
@@ -426,14 +506,16 @@ const Recruiters: React.FC = () => (
 
           {/* Marquee area */}
           <div className="bg-white px-0 py-8 sm:py-10 space-y-6 overflow-hidden">
-            <MarqueeRow items={rowOne} direction="left" speed={45} />
-            <MarqueeRow items={rowTwo} direction="right" speed={40} />
+            <MarqueeRow items={rowOne} direction="left" speed={45} onItemClick={handleRecruiterClick} />
+            <MarqueeRow items={rowTwo} direction="right" speed={40} onItemClick={handleRecruiterClick} />
           </div>
         </div>
 
       </div>
     </div>
   </section>
-);
+  </>
+  );
+};
 
 export default Recruiters;
