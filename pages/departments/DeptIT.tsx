@@ -510,11 +510,109 @@ const DeptIT: React.FC = () => {
           {/* ════ FACULTY ══════════════════════════════════════════ */}
           {activeId === 'faculty' && (() => {
             const faculty = [
-              { slug: 'dr-thaksen-parvat',  name: 'Dr. Thaksen Parvat',   post: 'Professor & HOD',       email: 'thaksen.parvat@vcet.edu.in',   photo: '/Images/departments/it/faculty/dr-thaksen-parvat.jpg',   initials: 'TP', color: '#1a4b7c' },
-              { slug: 'tbd-1',              name: 'TBD',                   post: 'Asst. Prof.',            email: 'it@vcet.edu.in',                photo: '',                                                        initials: '?',  color: '#2563a8' },
+              {
+                slug: 'dr-thaksen-parvat',
+                name: 'Dr. Thaksen Parvat',
+                post: 'Professor & HOD, Dean IT Infrastructure',
+                email: 'thaksen.parvat@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-thaksen-parvat.jpg',
+                initials: 'TP',
+                color: '#1a4b7c',
+              },
+              {
+                slug: 'chandan-kolvankar',
+                name: 'Mr. Chandan Kolvankar',
+                post: 'Asst. Prof. (Ph.D. Pursuing)',
+                email: 'chandan.kolvankar@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/chandan-kolvankar.jpg',
+                initials: 'CK',
+                color: '#2563a8',
+              },
+              {
+                slug: 'dr-archana-ekbote',
+                name: 'Dr. Archana Ekbote',
+                post: 'Asst. Prof.',
+                email: 'archana.ekbote@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-archana-ekbote.jpg',
+                initials: 'AE',
+                color: '#1a4b7c',
+              },
+              {
+                slug: 'dr-madhavi-waghmare',
+                name: 'Dr. Madhavi Waghmare',
+                post: 'Asst. Prof.',
+                email: 'madhavi.waghmare@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-madhavi-waghmare.jpg',
+                initials: 'MW',
+                color: '#2563a8',
+              },
+              {
+                slug: 'dr-vaishali-shirsath',
+                name: 'Dr. Vaishali A. Shirsath',
+                post: 'Asst. Prof.',
+                email: 'vaishali.shirsath@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-vaishali-shirsath.jpg',
+                initials: 'VS',
+                color: '#1a4b7c',
+              },
+              {
+                slug: 'dr-sainath-patil',
+                name: 'Dr. Sainath Patil',
+                post: 'Asst. Prof.',
+                email: 'sainath.patil@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-sainath-patil.jpg',
+                initials: 'SP',
+                color: '#2563a8',
+              },
+              {
+                slug: 'dr-anagha-patil',
+                name: 'Dr. Anagha Patil',
+                post: 'Asst. Prof.',
+                email: 'anagha.patil@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-anagha-patil.jpg',
+                initials: 'AP',
+                color: '#1a4b7c',
+              },
+              {
+                slug: 'snehal-mhatre',
+                name: 'Ms. Snehal Mhatre',
+                post: 'Asst. Prof.',
+                email: 'snehal.mhatre@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/snehal-mhatre.jpg',
+                initials: 'SM',
+                color: '#2563a8',
+              },
+              {
+                slug: 'pragati-patil',
+                name: 'Ms. Pragati Patil',
+                post: 'Asst. Prof. (Ph.D. Pursuing)',
+                email: 'pragati.patil@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/pragati-patil.jpg',
+                initials: 'PP',
+                color: '#1a4b7c',
+              },
+              {
+                slug: 'jessica-falcao',
+                name: 'Ms. Jessica Falcao',
+                post: 'Asst. Prof.',
+                email: 'jessica.falcao@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/jessica-falcao.jpg',
+                initials: 'JF',
+                color: '#2563a8',
+              },
+              {
+                slug: 'dr-yogita-shelar',
+                name: 'Dr. Yogita Shelar',
+                post: 'Asst. Prof.',
+                email: 'yogita.shelar@vcet.edu.in',
+                photo: '/Images/departments/it/faculty/dr-yogita-shelar.jpg',
+                initials: 'YS',
+                color: '#1a4b7c',
+              },
             ];
             return (
               <div className="space-y-10">
+                {/* Section header — compact bar */}
                 <div className="reveal flex items-center justify-between flex-wrap gap-4 pb-5 border-b-2 border-brand-gold/30">
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-brand-navy/60 flex items-center gap-2 mb-1">
@@ -524,9 +622,9 @@ const DeptIT: React.FC = () => {
                   </div>
                   <div className="flex items-center divide-x divide-slate-200">
                     {[
-                      { icon: 'ph-users-three',    value: '10+',  label: 'Members' },
-                      { icon: 'ph-graduation-cap', value: '1',    label: 'PhD' },
-                      { icon: 'ph-trophy',         value: '20+',  label: 'Yrs Exp.' },
+                      { icon: 'ph-users-three',    value: `${faculty.length}`, label: 'Members' },
+                      { icon: 'ph-graduation-cap', value: '7',                 label: 'PhD' },
+                      { icon: 'ph-trophy',         value: '80+',               label: 'Yrs Exp.' },
                     ].map(stat => (
                       <div key={stat.label} className="flex items-center gap-2.5 px-5">
                         <i className={`ph-fill ${stat.icon} text-lg text-brand-navy`} />
@@ -538,13 +636,16 @@ const DeptIT: React.FC = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Faculty cards grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-4">
-                  {faculty.filter(f => f.name !== 'TBD').map((f) => (
+                  {faculty.map((f) => (
                     <Link
                       key={f.email}
                       to={`/information-technology/faculty/${f.slug}`}
                       className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 border-t-[3px] border-b-[3px] border-t-[#1a4b7c] border-b-[#fdb813] flex flex-col items-center px-6 pt-6 pb-5 no-underline"
                     >
+                      {/* Photo with gold badge at bottom-right */}
                       <div className="relative w-32 h-36 mb-4 shrink-0">
                         <img
                           src={f.photo}
@@ -556,27 +657,40 @@ const DeptIT: React.FC = () => {
                             (t.nextElementSibling as HTMLElement)!.style.display = 'flex';
                           }}
                         />
-                        <div className="absolute inset-0 hidden items-center justify-center text-white font-bold text-2xl" style={{ background: f.color }}>
+                        {/* Fallback initials */}
+                        <div
+                          className="absolute inset-0 hidden items-center justify-center text-white font-bold text-2xl"
+                          style={{ background: f.color }}
+                        >
                           {f.initials}
                         </div>
+                        {/* Gold accent square */}
                         <div className="absolute bottom-0 right-0 w-5 h-5 bg-[#fdb813]" />
                       </div>
-                      <h3 className="text-base font-bold text-[#1a4b7c] text-center leading-snug">{f.name}</h3>
-                      <span className="mt-2 px-3 py-0.5 bg-gray-100 text-gray-500 text-xs rounded font-medium text-center">{f.post}</span>
+
+                      {/* Name */}
+                      <h3 className="text-base font-bold text-[#1a4b7c] text-center leading-snug">
+                        {f.name}
+                      </h3>
+
+                      {/* Designation pill */}
+                      <span className="mt-2 px-3 py-0.5 bg-gray-100 text-gray-500 text-xs rounded font-medium text-center">
+                        {f.post}
+                      </span>
+
+                      {/* Divider */}
                       <div className="w-10 h-0.5 bg-gray-300 my-3" />
-                      <a href={`mailto:${f.email}`} className="flex items-center gap-2 text-xs text-gray-500 hover:text-[#1a4b7c] transition-colors w-full">
+
+                      {/* Email */}
+                      <a
+                        href={`mailto:${f.email}`}
+                        className="flex items-center gap-2 text-xs text-gray-500 hover:text-[#1a4b7c] transition-colors w-full"
+                      >
                         <i className="ph-fill ph-envelope text-sm shrink-0 text-gray-400" />
                         <span className="truncate">{f.email}</span>
                       </a>
                     </Link>
                   ))}
-                </div>
-                <div className="reveal bg-brand-navylight rounded-2xl p-6 flex items-center gap-4 border border-brand-navy/10">
-                  <i className="ph-fill ph-info text-2xl text-brand-navy flex-shrink-0" />
-                  <p className="text-sm text-brand-navy/70">
-                    Complete faculty profiles with photos are being updated. Please contact the department at{' '}
-                    <a href="mailto:information-technology@vcet.edu.in" className="underline font-semibold">information-technology@vcet.edu.in</a> for more information.
-                  </p>
                 </div>
               </div>
             );
