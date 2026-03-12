@@ -799,7 +799,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* â”€â”€â”€â”€ Desktop Nav â”€â”€â”€â”€ */}
-          <nav className="hidden md:flex items-center flex-1 min-w-0" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center flex-1 min-w-0 overflow-x-auto no-scrollbar" aria-label="Main navigation">
             <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5">
               {menuGroups.map((group, idx) => (
                 <li key={group.label} className="relative flex-shrink-0">
