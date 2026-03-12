@@ -1,6 +1,6 @@
 # Issue Groups & Assignment Tracker
 
-The redesign work is split into 12 GitHub issues, each covering a section of the site.
+The redesign and feature work is split into 14 GitHub issues, each covering a section of the site.
 
 > Update the **Assignee** and **Status** columns as work is assigned and completed.
 
@@ -22,6 +22,8 @@ The redesign work is split into 12 GitHub issues, each covering a section of the
 | #10 | Committees | 9 | — | `feat/committees-redesign` | 🔴 Not Started |
 | #11 | NAAC | 6 | — | `feat/naac-redesign` | 🔴 Not Started |
 | #12 | Contact | 1 | — | `feat/contact-redesign` | 🔴 Not Started |
+| #13 | Dynamic Data Integration | 10 components | — | `feat/dynamic-data` | 🔴 Not Started |
+| #14 | Admin Panel | All 10 resources | — | `feat/admin-panel` | ✅ Merged |
 
 **Status key:** `🔴 Not Started` · `🟡 In Progress` · `🟢 PR Submitted` · `✅ Merged`
 
@@ -227,3 +229,71 @@ The redesign work is split into 12 GitHub issues, each covering a section of the
 | File | Route | Status |
 |------|-------|--------|
 | `ContactUs.tsx` | `/contact-us` | 🔴 |
+
+---
+
+## Issue #13 — Dynamic Data Integration
+
+**Branch:** `feat/dynamic-data`  
+**Status:** 🔴 Not Started
+
+Wire the `services/` + `hooks/` layer into all dynamic components so the website reads live data from the Laravel API instead of static placeholder content.
+
+| Component / Page | Hook to use | API endpoint |
+|-------------------|-------------|--------------|
+| `components/Hero.tsx` | `useHeroSlides` | `GET /api/hero-slides` |
+| `components/TopBanner.tsx` | `useNewsTicker` | `GET /api/news-ticker` |
+| `components/Achievements.tsx` | `useAchievements` | `GET /api/achievements` |
+| `components/Testimonials.tsx` | `useTestimonials` | `GET /api/testimonials` |
+| `components/Gallery.tsx` | `useGallery` | `GET /api/gallery` |
+| `components/Placements.tsx` | `usePlacements` | `GET /api/placements` |
+| `components/Recruiters.tsx` | `usePlacementPartners` | `GET /api/placement-partners` |
+| Notices page | `useNotices` | `GET /api/notices` |
+| Events page | `useEvents` | `GET /api/events` |
+| Admissions / contact form | `useEnquiryForm` | `POST /api/enquiries` |
+
+**Technical rules:**
+- Use the generic `useFetch.ts` hook as the base — do not duplicate fetch logic.
+- For data shared across multiple components on every page (hero, ticker, achievements, partners), read from `SiteDataContext` instead of calling the hook directly.
+- Handle `loading` and `error` states in every component (skeleton / error message).
+- Run `npx tsc --noEmit` before opening your PR — must pass with zero errors.
+
+**Steps:**
+```
+git checkout develop && git pull origin develop
+git checkout -b feat/dynamic-data
+# integrate each hook into its component, commit incrementally
+npx tsc --noEmit
+git push origin feat/dynamic-data
+# open PR into develop — never into main
+```
+
+---
+
+## Issue #14 — Admin Panel
+
+**Branch:** `feat/admin-panel`  
+**Status:** ✅ Merged
+
+React admin SPA at `/admin/` that lets authorized users manage all 10 dynamic resource types via the Laravel API.
+
+**Resources managed:**
+
+| Resource | List page | Form page | API |
+|----------|-----------|-----------|-----|
+| Hero Slides | ✅ | ✅ | `GET/POST/PUT/DELETE /api/hero-slides` |
+| News Ticker | ✅ | ✅ | `GET/POST/PUT/DELETE /api/news-ticker` |
+| Notices | ✅ | ✅ | `GET/POST/PUT/DELETE /api/notices` |
+| Events | ✅ | ✅ | `GET/POST/PUT/DELETE /api/events` |
+| Achievements | ✅ | ✅ | `GET/POST/PUT/DELETE /api/achievements` |
+| Testimonials | ✅ | ✅ | `GET/POST/PUT/DELETE /api/testimonials` |
+| Gallery | ✅ | Upload only | `GET/POST/DELETE /api/gallery` |
+| Placements | ✅ | ✅ | `GET/POST/PUT/DELETE /api/placements` |
+| Placement Partners | ✅ | ✅ | `GET/POST/PUT/DELETE /api/placement-partners` |
+| Enquiries | ✅ | Read-only | `GET /api/enquiries` |
+
+**Architecture highlights:**
+- `admin/context/AuthContext.tsx` — token + user stored in `localStorage` (restored on refresh, no `/me` call)
+- `admin/api/client.ts` — base fetch wrapper that injects the Bearer token from `localStorage`
+- All 20+ pages created and routed in `App.tsx`
+- `npx tsc --noEmit` passes with zero errors

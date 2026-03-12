@@ -11,10 +11,8 @@ Get the project running locally from zero.
 | Node.js | 20.x LTS | https://nodejs.org |
 | npm | 10.x | Comes with Node |
 | Git | Any recent | https://git-scm.com |
-| PHP (optional) | 8.0+ | For running the API locally |
-| MySQL (optional) | 5.7+ | For running the DB locally |
 
-> The frontend runs independently without PHP/MySQL. You only need PHP+MySQL if you want to test the admin panel or dynamic API data locally.
+> No PHP or MySQL required. The frontend connects to a remote Laravel API.
 
 ---
 
@@ -35,7 +33,31 @@ npm install
 
 ---
 
-## Step 3 — Start the dev server
+## Step 3 — Configure the API URL
+
+Copy `.env.example` to `.env.local` and set the backend URL:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local`:
+
+```env
+VITE_API_URL=https://vcet.edu.in
+```
+
+> **Note:** Do **not** add `/api` to the end. Each service file in `services/` appends `/api/` internally. Adding it here will result in double-prefixed paths like `/api/api/notices`.
+
+For local backend development (if you have the [backend repo](https://github.com/ivory-26/vcet) running):
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+---
+
+## Step 4 — Start the dev server
 
 ```bash
 npm run dev
@@ -43,58 +65,29 @@ npm run dev
 
 The app will be live at **http://localhost:5173**
 
-Hot module replacement (HMR) is enabled via Vite — changes to `.tsx` and `.css` files reflect instantly without a full page reload.
+Hot module replacement (HMR) is enabled via Vite — changes to `.tsx` files reflect instantly without a full page reload.
+
+- Public website: **http://localhost:5173/**
+- Admin panel:    **http://localhost:5173/admin/login**
 
 ---
 
-## Step 4 — (Optional) Set up the PHP backend locally
+## (Optional) Run the backend locally
 
-If you want to test the dynamic API (`/api/`) or admin panel locally:
-
-### Option A — XAMPP / Laragon (Windows)
-
-1. Install [XAMPP](https://www.apachefriends.org/) or [Laragon](https://laragon.org/)
-2. Place the entire project inside `htdocs/vcet.edu.in/`
-3. Start Apache + MySQL
-4. Create a database named `vcet_db`
-5. Run `db/schema.sql` via phpMyAdmin
-6. Edit `api/config/config.php`:
-
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'vcet_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');      // XAMPP default is empty, change if needed
-define('SITE_URL', 'http://localhost/vcet.edu.in');
-```
-
-7. Run the seeder to create the default admin:
-   Visit: `http://localhost/vcet.edu.in/db/seed.php`
-   - **Username:** `admin`
-   - **Password:** `Admin@vcet2025`
-   - **Delete `seed.php` immediately after.**
-
-### Option B — PHP built-in server (Linux/Mac)
+Clone and set up the Laravel backend from the separate repo:
 
 ```bash
-cd vcet.edu.in
-php -S localhost:8000
+git clone https://github.com/ivory-26/vcet.git vcet-api
+cd vcet-api
+composer install
+cp .env.example .env
+php artisan key:generate
+# Configure DB credentials in .env, then:
+php artisan migrate --seed
+php artisan serve   # Starts at http://localhost:8000
 ```
 
----
-
-## Step 5 — Configure Vite proxy (optional)
-
-If the Vite frontend needs to call the PHP API locally, add a proxy to `vite.config.ts`:
-
-```ts
-server: {
-  proxy: {
-    '/api': 'http://localhost:8000',
-    '/admin': 'http://localhost:8000',
-  }
-}
-```
+Then set `VITE_API_URL=http://localhost:8000` in `.env.local`.
 
 ---
 
@@ -115,5 +108,6 @@ server: {
 | `Module not found` errors | Run `npm install` again |
 | Port 5173 already in use | Kill the process or change port in `vite.config.ts` |
 | Tailwind classes not applying | Ensure `tailwind.config.js` includes the correct `content` paths |
-| PHP API returning 404 locally | Ensure Apache is running and `.htaccess` is in the project root |
-| CORS errors on API calls | The PHP API includes CORS headers — check `api/config/helpers.php` |
+| CORS errors on API calls | Check that `VITE_API_URL` points to the correct API origin and CORS is configured on the backend |
+| Admin login fails | Verify the backend is running and `VITE_API_URL` is set correctly |
+

@@ -1,6 +1,9 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
+import { AuthProvider } from './admin/context/AuthContext';
+import ProtectedRoute from './admin/components/ProtectedRoute';
+import AdminLayout from './admin/components/AdminLayout';
 
 /* ── Homepage Components ── */
 import Header from './components/Header';
@@ -127,6 +130,28 @@ const NAACScore = lazy(() => import('./pages/naac/NAACScore'));
 // pages/contact
 const ContactUs = lazy(() => import('./pages/contact/ContactUs'));
 
+/* ── Admin Panel Pages (lazy) ── */
+const AdminLogin      = lazy(() => import('./admin/pages/Login'));
+const AdminDashboard  = lazy(() => import('./admin/pages/Dashboard'));
+const NoticesList     = lazy(() => import('./admin/pages/notices/NoticesList'));
+const NoticeForm      = lazy(() => import('./admin/pages/notices/NoticeForm'));
+const EventsList      = lazy(() => import('./admin/pages/events/EventsList'));
+const EventForm       = lazy(() => import('./admin/pages/events/EventForm'));
+const PlacementsList  = lazy(() => import('./admin/pages/placements/PlacementsList'));
+const PlacementForm   = lazy(() => import('./admin/pages/placements/PlacementForm'));
+const HeroSlidesList       = lazy(() => import('./admin/pages/hero-slides/HeroSlidesList'));
+const HeroSlideForm        = lazy(() => import('./admin/pages/hero-slides/HeroSlideForm'));
+const NewsTickerList       = lazy(() => import('./admin/pages/news-ticker/NewsTickerList'));
+const NewsTickerForm       = lazy(() => import('./admin/pages/news-ticker/NewsTickerForm'));
+const AchievementsList     = lazy(() => import('./admin/pages/achievements/AchievementsList'));
+const AchievementsForm     = lazy(() => import('./admin/pages/achievements/AchievementsForm'));
+const TestimonialsList     = lazy(() => import('./admin/pages/testimonials/TestimonialsList'));
+const TestimonialsForm     = lazy(() => import('./admin/pages/testimonials/TestimonialsForm'));
+const GalleryPage          = lazy(() => import('./admin/pages/gallery/GalleryPage'));
+const PlacementPartnersList = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersList'));
+const PlacementPartnersForm = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersForm'));
+const EnquiriesList        = lazy(() => import('./admin/pages/enquiries/EnquiriesList'));
+
 /* ── Loading Spinner ── */
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-white">
@@ -181,6 +206,7 @@ const HomePage: React.FC = () => {
 /* ── App with Router ── */
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
@@ -291,9 +317,49 @@ function App() {
           <Route path="/e-cell" element={<ECell />} />
           <Route path="/iiic" element={<IIIC />} />
           <Route path="/exam-cell" element={<ExamCell />} />
+
+          {/* ─── Admin Panel ─── */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="notices" element={<NoticesList />} />
+            <Route path="notices/new" element={<NoticeForm />} />
+            <Route path="notices/:id/edit" element={<NoticeForm />} />
+            <Route path="events" element={<EventsList />} />
+            <Route path="events/new" element={<EventForm />} />
+            <Route path="events/:id/edit" element={<EventForm />} />
+            <Route path="placements" element={<PlacementsList />} />
+            <Route path="placements/new" element={<PlacementForm />} />
+            <Route path="placements/:id/edit" element={<PlacementForm />} />
+            <Route path="hero-slides" element={<HeroSlidesList />} />
+            <Route path="hero-slides/new" element={<HeroSlideForm />} />
+            <Route path="hero-slides/:id/edit" element={<HeroSlideForm />} />
+            <Route path="news-ticker" element={<NewsTickerList />} />
+            <Route path="news-ticker/new" element={<NewsTickerForm />} />
+            <Route path="news-ticker/:id/edit" element={<NewsTickerForm />} />
+            <Route path="achievements" element={<AchievementsList />} />
+            <Route path="achievements/new" element={<AchievementsForm />} />
+            <Route path="achievements/:id/edit" element={<AchievementsForm />} />
+            <Route path="testimonials" element={<TestimonialsList />} />
+            <Route path="testimonials/new" element={<TestimonialsForm />} />
+            <Route path="testimonials/:id/edit" element={<TestimonialsForm />} />
+            <Route path="gallery" element={<GalleryPage />} />
+            <Route path="placement-partners" element={<PlacementPartnersList />} />
+            <Route path="placement-partners/new" element={<PlacementPartnersForm />} />
+            <Route path="placement-partners/:id/edit" element={<PlacementPartnersForm />} />
+            <Route path="enquiries" element={<EnquiriesList />} />
+          </Route>
         </Routes>
       </Suspense>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

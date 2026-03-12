@@ -22,9 +22,10 @@ The old website remains the **single source of truth for all content** — names
 | Styling    | Tailwind CSS                         |
 | Routing    | React Router v7                      |
 | Animation  | Framer Motion                        |
-| Backend    | PHP 8+ (Apache, shared hosting)      |
-| Database   | MySQL 5.7+ / MariaDB 10.3+           |
-| Hosting    | Bluehost Pro Shared (Apache + cPanel)|
+| Backend    | Laravel 12, PHP 8.5 (REST JSON API)  |
+| Auth       | Laravel Sanctum (Bearer tokens)      |
+| Database   | SQLite (dev) / MySQL (production)    |
+| Hosting    | Bluehost (frontend) + API server     |
 
 ---
 
@@ -33,15 +34,16 @@ The old website remains the **single source of truth for all content** — names
 | Page | Description |
 |------|-------------|
 | [Developer Setup](Developer-Setup) | Local environment setup from scratch |
-| [Project Architecture](Project-Architecture) | How frontend + backend fit together |
+| [Project Architecture](Project-Architecture) | Frontend + backend + data layers |
 | [Site Map](Site-Map) | All 81 pages, routes, files, and statuses |
 | [Component Guide](Component-Guide) | All reusable components with props and usage |
 | [Design System](Design-System) | Colors, typography, spacing, animations |
-| [API Reference](API-Reference) | All PHP API endpoints |
+| [API Reference](API-Reference) | Full API contract (auth + all 38 endpoints) |
+| [API Endpoint Map](API-Endpoint-Map) | Endpoint ↔ component ↔ admin route quick-reference |
 | [Database Schema](Database-Schema) | Tables, columns, relationships |
 | [Deployment Guide](Deployment-Guide) | How to deploy to Bluehost |
 | [Git & Contributing](Git-and-Contributing) | Branching, commits, PR checklist |
-| [Issue Groups & Tracker](Issue-Groups-and-Tracker) | 12 redesign groups, assignments, status |
+| [Issue Groups & Tracker](Issue-Groups-and-Tracker) | 14 issue groups, assignments, status |
 | [Content Rules](Content-Rules) | What you can and cannot change |
 | [Admin Panel Guide](Admin-Panel-Guide) | How to use the CMS at /admin/ |
 | [Image & Asset Guidelines](Image-and-Asset-Guidelines) | File naming, sizes, folder structure |
@@ -67,6 +69,6 @@ The old website remains the **single source of truth for all content** — names
 
 ---
 
-> **Rule #1:** Never commit credentials (`api/config/config.php` must never contain real passwords in Git).
+> **Rule #1:** Never commit credentials (`VITE_API_URL` secrets must never appear in committed files).
 > **Rule #2:** All content must match [vcet.edu.in](https://vcet.edu.in).
 > **Rule #3:** One branch per issue. No direct commits to `main`.

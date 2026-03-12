@@ -1,5 +1,5 @@
 # ============================================================
-# Root .htaccess — React SPA + PHP API routing
+# Root .htaccess — React SPA
 # ============================================================
 
 Options -Indexes
@@ -24,24 +24,10 @@ Options -Indexes
     ExpiresByType application/javascript "access plus 6 months"
 </IfModule>
 
-# ── Block direct access to PHP config ───────────────────────
-<FilesMatch "config\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# ── Protect db/ directory ────────────────────────────────────
+# ── Route all non-file, non-directory requests to React SPA ──
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Block access to db/ seed script (extra safety)
-    RewriteRule ^db/ - [F,L]
-
-    # Route all non-file, non-directory requests to index.html (React SPA)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI}      !^/api/
-    RewriteCond %{REQUEST_URI}      !^/admin/
-    RewriteCond %{REQUEST_URI}      !^/uploads/
     RewriteRule ^ /index.html [L]
 </IfModule>
