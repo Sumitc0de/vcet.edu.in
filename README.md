@@ -18,6 +18,7 @@ You are free to redesign layouts, improve UI/UX, and add new features, but the i
 6. [Content Rules](#content-rules)
 7. [Contributing — Git Workflow](#contributing--git-workflow)
 8. [GitHub Rules and Engineering Standards](#github-rules-and-engineering-standards)
+9. [Contributors](#contributors)
 
 ---
 
@@ -563,4 +564,24 @@ git push origin v1.0.0
 ### 12. The Git log is documentation
 
 Your commit history tells the story of this project. Write commit messages as if the person reading them has no context. A message like `fix stuff` is useless six months later. A message like `fix(hero): remove duplicate IntersectionObserver on remount` tells exactly what broke and where.
+
+---
+
+## Contributors
+
+This project is built by an amazing team of developers committed to creating a world-class website for VCET. Special thanks to:
+
+| # | Contributor | GitHub |
+|---|-------------|--------|
+| 1 | **frag2win** | [@frag2win](https://github.com/frag2win) |
+| 2 | **Sahil2802-coder** | [@Sahil2802-coder](https://github.com/Sahil2802-coder) |
+| 3 | **yashhh-23** | [@yashhh-23](https://github.com/yashhh-23) |
+| 4 | **RedRex101** | [@RedRex101](https://github.com/RedRex101) |
+| 5 | **ivory-26** | [@ivory-26](https://github.com/ivory-26) |
+| 6 | **sawantshreya008** | [@sawantshreya008](https://github.com/sawantshreya008) |
+| 7 | **sumritasawant101-droid** | [@sumritasawant101-droid](https://github.com/sumritasawant101-droid) |
+
+### How to contribute
+
+If you would like to contribute to this project, please follow the guidelines outlined in the [Contributing — Git Workflow](#contributing--git-workflow) and [GitHub Rules and Engineering Standards](#github-rules-and-engineering-standards) sections above. We welcome bug reports, feature suggestions, and pull requests from the community.
 
