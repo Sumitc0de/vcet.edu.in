@@ -6,79 +6,10 @@
     <title>VCET - Vidyavardhini's College of Engineering & Technology</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/Images/VCET%20logo.jpeg" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-              display: ['Playfair Display', 'Georgia', 'serif'],
-            },
-            colors: {
-              /* ── Primary institutional blue — strong, clear, trustworthy ── */
-              'brand-blue':       '#1a4b7c',
-              /* ── Supporting lighter blue — cards, hover states, accents ── */
-              'brand-sky':        '#3a6fa8',
-              /* ── Deep readable text / dark backgrounds ── */
-              'brand-dark':       '#1C2B3A',
-              /* ── Soft blue-tinted page background ── */
-              'brand-light':      '#e8eef6',
-              /* ── Golden Yellow — accent, highlights ── */
-              'brand-gold':       '#fdb813',
-              /* ── Lighter gold for gradient ends / hover ── */
-              'brand-gold-light': '#fec740',
-              /* ── Navy for secondary headings / banners ── */
-              'brand-navy':       '#1a4b7c',
-              /* ── Near-white page surface ── */
-              'nova-white':       '#F8FAFC',
-              /* ── Dept page sidebar background ── */
-              'brand-navylight':  '#dce6f4',
-              /* ── Dept page gold-tinted background ── */
-              'brand-goldlight':  '#fffbee',
-            },
-            animation: {
-              'scroll-up': 'scroll-up 10s linear infinite',
-              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
-              'slide-in-right': 'slideInRight 0.5s ease-out forwards',
-              'counter-up': 'counterUp 0.4s ease-out forwards',
-              'marquee': 'marquee 30s linear infinite',
-            },
-            keyframes: {
-              'scroll-up': {
-                '0%': { transform: 'translateY(0)' },
-                '100%': { transform: 'translateY(-50%)' },
-              },
-              'fadeInUp': {
-                '0%': { opacity: '0', transform: 'translateY(24px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              'fadeIn': {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              },
-              'slideInRight': {
-                '0%': { opacity: '0', transform: 'translateX(-20px)' },
-                '100%': { opacity: '1', transform: 'translateX(0)' },
-              },
-              'counterUp': {
-                '0%': { opacity: '0', transform: 'scale(0.8)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              },
-              'marquee': {
-                '0%': { transform: 'translateX(0)' },
-                '100%': { transform: 'translateX(-50%)' },
-              },
-            }
-          }
-        }
-      }
-    </script>
     <style>
       html {
         scroll-behavior: smooth;
