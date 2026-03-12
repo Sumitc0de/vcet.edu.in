@@ -88,11 +88,7 @@ const DeptAIDS: React.FC = () => {
           <span className="text-brand-gold font-semibold">AI &amp; Data Science</span>
         </nav>
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="flex items-center justify-center gap-4 mb-5">
-            <span className="flex-shrink-0 w-10 h-px bg-brand-gold/70" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-gold whitespace-nowrap">Department of Engineering</span>
-            <span className="flex-shrink-0 w-10 h-px bg-brand-gold/70" />
-          </div>
+
           <h1 className="font-display font-bold text-white leading-[1.08] tracking-tight text-center">
             <span className="block text-4xl md:text-5xl lg:text-6xl">Artificial Intelligence</span>
             <span className="block text-3xl md:text-4xl lg:text-5xl mt-3 text-brand-gold font-semibold italic">&amp; Data Science</span>
