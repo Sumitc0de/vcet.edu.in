@@ -39,6 +39,7 @@ const menuGroups: MenuGroup[] = [
       { label: 'Administration',           href: '/administration' },
       { label: 'Strategic Plan',           href: '/strategic-plan' },
       { label: 'Code of Conduct',          href: '/code-of-conduct' },
+      { label: 'Contact Us',               href: '/contact-us' },
     ],
   },
 
@@ -204,12 +205,6 @@ const menuGroups: MenuGroup[] = [
       { label: 'Best Practices & Institutional Distinctiveness', href: '/best-practices' },
       { label: 'NAAC Accreditation Score', href: '/naac-score' },
     ],
-  },
-
-  // 11. CONTACT US
-  {
-    label: 'Contact',
-    href: '/contact-us',
   },
 
   // 12. TRAINING & PLACEMENT
