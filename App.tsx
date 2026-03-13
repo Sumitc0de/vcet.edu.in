@@ -235,14 +235,21 @@ function App() {
 
           {/* Departments */}
           <Route path="/computer-engineering" element={<DeptComputerEngg />} />
+          <Route path="/computer-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/cs-data-science" element={<DeptCSDS />} />
           <Route path="/cs-data-science/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/information-technology" element={<DeptIT />} />
+          <Route path="/information-technology/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/ai-data-science" element={<DeptAIDS />} />
+          <Route path="/ai-data-science/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/mechanical-engineering" element={<DeptMech />} />
+          <Route path="/mechanical-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/electronics-telecomm" element={<DeptENTC />} />
+          <Route path="/electronics-telecommunication/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/civil-engineering" element={<DeptCivil />} />
+          <Route path="/civil-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
           <Route path="/first-year-engineering" element={<DeptFE />} />
+          <Route path="/first-year-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
 
           {/* Academics */}
           <Route path="/dean-academics" element={<DeanAcademics />} />

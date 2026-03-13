@@ -1,70 +1,89 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import PageLayout from '../../../components/PageLayout';
 import { csdsfaculty } from './facultyProfiles';
+import FacultyProfileView, { FacultyData } from './FacultyProfileView';
+import ceFacultyMap from '../ComputerEngineering/ceFacultyMap';
+import itFacultyMap from '../IT/itFacultyMap';
+import aidsFacultyMap from '../AIDS/aidsFacultyMap';
+import { basicFacultyMaps } from '../basicFacultyMaps';
 
-/** Renders a string that may contain URLs/emails as clickable links */
-const LinkedText: React.FC<{ text: string }> = ({ text }) => {
-  const urlRegex = /(https?:\/\/[^\s,]+|www\.[^\s,]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
-  const parts = text.split(urlRegex);
-  return (
-    <>
-      {parts.map((part, i) => {
-        if (/^https?:\/\//.test(part) || /^www\./.test(part)) {
-          const href = part.startsWith('http') ? part : `https://${part}`;
-          return (
-            <a key={i} href={href} target="_blank" rel="noopener noreferrer"
-              className="text-[#1a4b7c] underline hover:text-[#fdb813] transition-colors break-all">
-              {part}
-            </a>
-          );
-        }
-        if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(part)) {
-          return (
-            <a key={i} href={`mailto:${part}`}
-              className="text-[#1a4b7c] underline hover:text-[#fdb813] transition-colors">
-              {part}
-            </a>
-          );
-        }
-        return <span key={i}>{part}</span>;
-      })}
-    </>
-  );
-};
+const toList = (value?: string): string[] =>
+  (value ?? '')
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean);
 
-const Row: React.FC<{ label: string; value: string; shade: boolean }> = ({ label, value, shade }) => {
-  if (!value) return null;
-  return (
-    <tr className={shade ? 'bg-gray-50' : 'bg-white'}>
-      <td className="w-52 px-5 py-4 align-top font-bold text-[#1a4b7c] text-sm border border-gray-200 leading-snug">
-        {label}
-      </td>
-      <td className="px-5 py-4 align-top text-sm text-gray-700 border border-gray-200 leading-relaxed">
-        {value.split('\n').map((line, i, arr) => (
-          <React.Fragment key={i}>
-            <LinkedText text={line} />
-            {i < arr.length - 1 && <br />}
-          </React.Fragment>
-        ))}
-      </td>
-    </tr>
-  );
-};
+const toLinks = (value?: string) =>
+  toList(value)
+    .filter((line) => /^https?:\/\//i.test(line) || /^www\./i.test(line))
+    .map((line) => ({
+      href: /^https?:\/\//i.test(line) ? line : `https://${line}`,
+      name: line,
+      sub: '',
+    }));
+
+const toFacultyData = (profile: (typeof csdsfaculty)[number]): FacultyData => ({
+  name: profile.name,
+  designation: profile.designation,
+  department: profile.department,
+  dateOfBirth: profile.dob,
+  dateOfJoining: profile.doj,
+  email: profile.email,
+  experienceYears: profile.experience,
+  papersPublished: profile.papersPublished,
+  photo: profile.photo,
+  qualifications: toList(profile.qualifications),
+  specialization: toList(profile.specialization),
+  pgProjects: profile.pgProjectsGuided ? [{ label: 'PG Projects Guided', detail: profile.pgProjectsGuided }] : [],
+  consultancy: toList(profile.consultancy).map((title) => ({ title })),
+  books: toList(profile.booksPatents).map((title, index) => ({ count: index + 1, title })),
+  patents: toList(profile.patent).map((title) => ({ title })),
+  awards: toList(profile.awards).map((title) => ({ title })),
+  websites: toLinks(profile.websiteLink),
+  memberships: toList(profile.professionalMemberships).map((label) => ({ label })),
+  eResources: toLinks(profile.eResources).map((item) => ({ title: item.name, url: item.href })),
+});
 
 export default function FacultyProfilePage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const profile = csdsfaculty.find((f) => f.slug === slug);
+  const location = useLocation();
+  const facultyRouteConfig = [
+    { prefix: '/computer-engineering/faculty/', backPath: '/computer-engineering', map: ceFacultyMap },
+    { prefix: '/information-technology/faculty/', backPath: '/information-technology', map: itFacultyMap },
+    { prefix: '/ai-data-science/faculty/', backPath: '/ai-data-science', map: aidsFacultyMap },
+    { prefix: '/mechanical-engineering/faculty/', backPath: '/mechanical-engineering', map: basicFacultyMaps['mechanical-engineering'] ?? {} },
+    { prefix: '/electronics-telecommunication/faculty/', backPath: '/electronics-telecomm', map: basicFacultyMaps['electronics-telecommunication'] ?? {} },
+    { prefix: '/civil-engineering/faculty/', backPath: '/civil-engineering', map: basicFacultyMaps['civil-engineering'] ?? {} },
+    { prefix: '/first-year-engineering/faculty/', backPath: '/first-year-engineering', map: basicFacultyMaps['first-year-engineering'] ?? {} },
+  ] as const;
 
-  if (!profile) {
+  const matchedRoute = facultyRouteConfig.find((route) => location.pathname.startsWith(route.prefix));
+  const isComputerEngineering = matchedRoute?.prefix === '/computer-engineering/faculty/';
+  const backPath = matchedRoute?.backPath ?? '/cs-data-science';
+  const csdsProfile = csdsfaculty.find((f) => f.slug === slug);
+  const mappedProfile = slug && matchedRoute ? matchedRoute.map[slug] : undefined;
+
+  const profileData = matchedRoute
+    ? (mappedProfile
+        ? {
+            ...mappedProfile,
+            photo: mappedProfile.photo.startsWith('/')
+              ? mappedProfile.photo
+              : `/Images/departments/comp/faculty/${slug}.jpg`,
+          }
+        : undefined)
+    : (csdsProfile ? toFacultyData(csdsProfile) : undefined);
+
+  if (!profileData) {
     return (
       <PageLayout>
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
           <h2 className="text-2xl font-bold text-[#1a4b7c] mb-4">Faculty profile not found.</h2>
           <button
-            onClick={() => navigate('/cs-data-science')}
+            onClick={() => navigate(backPath)}
             className="mt-4 inline-flex items-center gap-2 text-sm text-[#1a4b7c] hover:text-[#fdb813] font-medium transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Department
@@ -74,77 +93,5 @@ export default function FacultyProfilePage() {
     );
   }
 
-  const rows: { label: string; key: keyof typeof profile }[] = [
-    { label: 'Designation',                      key: 'designation' },
-    { label: 'Department',                        key: 'department' },
-    { label: 'Date of Birth',                     key: 'dob' },
-    { label: 'Date of Joining the Institution',   key: 'doj' },
-    { label: 'Qualifications with Class/Grade',   key: 'qualifications' },
-    { label: 'Specialization',                    key: 'specialization' },
-    { label: 'Email Address',                     key: 'email' },
-    { label: 'Total Experience in Years',         key: 'experience' },
-    { label: 'Papers Published',                  key: 'papersPublished' },
-    { label: 'P.G. Projects Guided',              key: 'pgProjectsGuided' },
-    { label: 'Books Published/ IPRs/Patents',     key: 'booksPatents' },
-    { label: 'Grants Fetched',                    key: 'grants' },
-    { label: 'Professional Memberships',          key: 'professionalMemberships' },
-    { label: 'Consultancy Activities',            key: 'consultancy' },
-    { label: 'Patent',                            key: 'patent' },
-    { label: 'Awards',                            key: 'awards' },
-    { label: 'Interaction with Professional Institution', key: 'interactionWithInstitution' },
-    { label: 'Website Link',                      key: 'websiteLink' },
-    { label: 'In-Charge',                         key: 'inCharge' },
-    { label: 'Research Link',                     key: 'researchLink' },
-    { label: 'Youtube channel link',              key: 'youtubeChannel' },
-    { label: 'E-resources',                       key: 'eResources' },
-  ];
-
-  return (
-    <PageLayout>
-      <div className="w-full bg-white min-h-screen font-sans">
-
-        {/* Dark header banner */}
-        <div className="bg-[#1a2a4a] py-12 px-6 flex flex-col items-center">
-          {/* Back link */}
-          <div className="w-full max-w-3xl mb-6">
-            <button
-              onClick={() => navigate('/cs-data-science')}
-              className="inline-flex items-center gap-2 text-sm text-blue-200/70 hover:text-white transition-colors font-medium"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to Department
-            </button>
-          </div>
-
-          {/* Photo */}
-          <div className="w-32 h-36 overflow-hidden mb-5 shadow-lg">
-            <img
-              src={profile.photo}
-              alt={profile.name}
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
-
-          {/* Name */}
-          <h1 className="text-2xl font-bold text-[#fdb813] text-center">{profile.name}</h1>
-        </div>
-
-        {/* Profile table */}
-        <div className="max-w-3xl mx-auto px-4 py-12">
-          <table className="w-full border-collapse text-left">
-            <tbody>
-              {rows.map(({ label, key }, i) => (
-                <Row
-                  key={label}
-                  label={label}
-                  value={String(profile[key] ?? '')}
-                  shade={i % 2 === 1}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-    </PageLayout>
-  );
+  return <FacultyProfileView faculty={profileData} />;
 }
