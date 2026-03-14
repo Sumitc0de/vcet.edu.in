@@ -27,12 +27,7 @@ const sssReportLinks = [
 const SSSReport: React.FC = () => {
   return (
     <div className="sssr-page">
-      <header className="sssr-hero">
-        <div className="sssr-hero-content">
-          <h1 className="sssr-title">SSS Report</h1>
-          <div className="sssr-breadcrumb">Home &raquo; SSS Report</div>
-        </div>
-      </header>
+      <SSRHeader />
 
       <main className="sssr-content">
         <div className="sssr-grid">

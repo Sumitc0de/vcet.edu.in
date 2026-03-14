@@ -60,7 +60,6 @@ const TeachingLearning = lazy(() => import('./pages/academics/TeachingLearning')
 const SwayamNPTEL = lazy(() => import('./pages/academics/SwayamNPTEL'));
 const HonoursMinor = lazy(() => import('./pages/academics/HonoursMinor'));
 const ExamCell = lazy(() => import('./pages/academics/ExamCell'));
-const Downloads = lazy(() => import('./pages/academics/Downloads'));
 
 // pages/research
 const ResearchIntro = lazy(() => import('./pages/research/ResearchIntro'));
@@ -271,7 +270,7 @@ function App() {
           <Route path="/iic" element={<ResearchIIC />} />
           <Route path="/nirf" element={<NIRF />} />
           <Route path="/research-downloads" element={<ResearchDownloads />} />
-          <Route path="/downloads" element={<Downloads />} />
+          <Route path="/downloads" element={<ResearchDownloads />} />
 
           {/* Facilities */}
           <Route path="/central-computing" element={<CentralComputing />} />

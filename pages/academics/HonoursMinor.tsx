@@ -7,12 +7,12 @@ const booklets = [
   {
     title: 'Honours / Minor Degree Program – Booklet Part 1',
     description: 'Overview, eligibility criteria, program structure, and registration details.',
-    url: 'https://vcet.edu.in/honours-minor-degree-program/',
+    url: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-_Booklet_Part-1-Final.pdf'
   },
   {
     title: 'Honours / Minor Degree Program – Booklet Part 2',
     description: 'Course offerings, credit requirements, and examination guidelines.',
-    url: 'https://vcet.edu.in/honours-minor-degree-program/',
+    url: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-Booklet-_Part-2_Detailed-Syllabus-Final.pdf',
   },
 ];
 

@@ -250,8 +250,10 @@ const Placements: React.FC = () => {
                                 : 'bg-gradient-to-t from-yellow-800 via-brand-gold/75 to-brand-gold/50'
                             } ${isHovered ? 'brightness-125' : ''}`}
                           />
-                          {/* Shine streak */}
-                          <div className="absolute top-0 left-[30%] w-[18%] h-full bg-white/12 blur-[2px] rounded-full pointer-events-none" />
+                          {/* Soft sheen to avoid hard vertical light streak artifacts */}
+                          <div className="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-white/16 via-white/6 to-transparent pointer-events-none" />
+                          {/* Subtle inner depth for cleaner bar edges */}
+                          <div className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06),inset_0_-10px_20px_rgba(0,0,0,0.12)] pointer-events-none" />
                           {/* Top highlight cap */}
                           <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl bg-white/30" />
                           {/* Hover glow overlay */}

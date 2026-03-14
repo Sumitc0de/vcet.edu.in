@@ -10,15 +10,15 @@ interface AcademicCalendarItem {
 }
 
 const calendars: AcademicCalendarItem[] = [
-  { title: 'EVEN SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/academic-calendar/', badge: 'Tentative' },
-  { title: 'ODD SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'EVEN SEM 2024-25', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'ODD SEM 2024-25 FE ME', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'ODD SEM 2024-25 SE TE BE', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'EVEN SEM 2023-24 SE TE BE', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'EVEN SEM 2022-23 SE TE BE', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'FE & ME EVEN SEM 2022-23', url: 'https://vcet.edu.in/academic-calendar/' },
-  { title: 'FE ODD SEM 2022-23', url: 'https://vcet.edu.in/academic-calendar/' },
+  { title: 'EVEN SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2026/01/Academic_Calendar_Even_2025-26.pdf', badge: 'Tentative' },
+  { title: 'ODD SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2025/08/acad-calen-odd-25-26.pdf' },
+  { title: 'EVEN SEM 2024-25', url: 'https://vcet.edu.in/wp-content/uploads/2024/12/Academic_Calender_2024_25_Even_2025-1.pdf' },
+  { title: 'ODD SEM 2024-25 FE ME', url: 'https://vcet.edu.in/wp-content/uploads/2024/09/Adobe-Scan-13-Sep-2024.pdf' },
+  { title: 'ODD SEM 2024-25 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/Adobe-Scan-05-Jul-2024-3.pdf' },
+  { title: 'EVEN SEM 2023-24 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2024/06/Academic-Calendar_Even-Sem_-2023-2024.pdf' },
+  { title: 'EVEN SEM 2022-23 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Even-Semester-2022-23-SE-TE-BE.pdf' },
+  { title: 'FE & ME EVEN SEM 2022-23', url: 'https://vcet.edu.in/wp-content/uploads/2023/03/FE_SemII_Academic_Calendar2022-23.pdf' },
+  { title: 'FE ODD SEM 2022-23', url: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Odd-Semester-2022-23-F.E.pdf' },
 ];
 
 const AcademicCalendar: React.FC = () => {

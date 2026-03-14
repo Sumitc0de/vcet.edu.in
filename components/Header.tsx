@@ -52,7 +52,17 @@ const menuGroups: MenuGroup[] = [
       { label: 'Scholarships',         href: '/scholarships' },
       { label: 'Brochure',             href: '/brochure' },
       { label: 'Documents Required',   href: '/documents-required' },
-      { label: 'Cut Off 24-25',        href: '/cut-off' },
+      {
+        label: 'Cut Off 24-25',
+        href: '/cut-off',
+        subItems: [
+          { label: 'F.E. (First Year Engineering) 2025-26', href: 'https://vcet.edu.in/wp-content/uploads/2026/02/F.E-CUT-OFF-25-26-New.pdf' },
+          { label: 'M.E. (Masters of Engineering) 2025-26', href: 'https://vcet.edu.in/wp-content/uploads/2026/02/ME-CUT-OFF-25-26-New.pdf' },
+          { label: 'DSE (Direct Second Year) 2025-26', href: 'https://vcet.edu.in/wp-content/uploads/2026/02/DSE-CUT-OFF-25-26-New.pdf' },
+          { label: 'MMS (Master of Management Studies) 2025-26', href: 'https://vcet.edu.in/wp-content/uploads/2026/02/MMS-CUT-OFF-25-26-New.pdf' },
+          { label: 'First Year Engineering 2022-23', href: 'https://vcet.edu.in/wp-content/uploads/2023/05/FIRST-YEAR-ENGINEERING-CUT-OFF-22-23.pdf' },
+        ],
+      },
     ],
   },
 
@@ -78,25 +88,27 @@ const menuGroups: MenuGroup[] = [
       { label: "Dean Academic's Desk",       href: '/dean-academics' },
       {
         label: 'Academic Calendar',
+        href: '/academic-calendar',
         subItems: [
-          { label: 'EVEN SEM 2025-26 SE TE BE (Tentative)', href: '/academic-calendar' },
-          { label: 'ODD SEM 2025-26 SE TE BE',               href: '/academic-calendar' },
-          { label: 'EVEN SEM 2024-25',                        href: '/academic-calendar' },
-          { label: 'ODD SEM 2024-25 FE ME',                   href: '/academic-calendar' },
-          { label: 'ODD SEM 2024-25 SE TE BE',                href: '/academic-calendar' },
-          { label: 'EVEN SEM 2023-24 SE TE BE',               href: '/academic-calendar' },
-          { label: 'EVEN SEM 2022-23 SE TE BE',               href: '/academic-calendar' },
-          { label: 'FE & ME EVEN SEM 2022-23',                href: '/academic-calendar' },
-          { label: 'FE ODD SEM 2022-23',                       href: '/academic-calendar' },
+          { label: 'EVEN SEM 2025-26 SE TE BE (Tentative)', href: 'https://vcet.edu.in/wp-content/uploads/2026/01/Academic_Calendar_Even_2025-26.pdf' },
+          { label: 'ODD SEM 2025-26 SE TE BE',               href: 'https://vcet.edu.in/wp-content/uploads/2025/08/acad-calen-odd-25-26.pdf' },
+          { label: 'EVEN SEM 2024-25',                        href: 'https://vcet.edu.in/wp-content/uploads/2024/12/Academic_Calender_2024_25_Even_2025-1.pdf' },
+          { label: 'ODD SEM 2024-25 FE ME',                   href: 'https://vcet.edu.in/wp-content/uploads/2024/09/Adobe-Scan-13-Sep-2024.pdf' },
+          { label: 'ODD SEM 2024-25 SE TE BE',                href: 'https://vcet.edu.in/wp-content/uploads/2024/07/Adobe-Scan-05-Jul-2024-3.pdf' },
+          { label: 'EVEN SEM 2023-24 SE TE BE',               href: 'https://vcet.edu.in/wp-content/uploads/2024/06/Academic-Calendar_Even-Sem_-2023-2024.pdf' },
+          { label: 'EVEN SEM 2022-23 SE TE BE',               href: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Even-Semester-2022-23-SE-TE-BE.pdf' },
+          { label: 'FE & ME EVEN SEM 2022-23',                href: 'https://vcet.edu.in/wp-content/uploads/2023/03/FE_SemII_Academic_Calendar2022-23.pdf' },
+          { label: 'FE ODD SEM 2022-23',                       href: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Odd-Semester-2022-23-F.E.pdf' },
         ],
       },
       { label: 'Teaching Learning Process',  href: '/teaching-learning' },
       { label: 'Swayam - NPTEL',             href: '/swayam-nptel' },
       {
         label: 'Honours / Minor Degree Program',
+        href:'/honours-minor',
         subItems: [
-          { label: 'Booklet Part 1', href: '/honours-minor' },
-          { label: 'Booklet Part 2', href: '/honours-minor' },
+          { label: 'Booklet Part 1', href: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-_Booklet_Part-1-Final.pdf' },
+          { label: 'Booklet Part 2', href: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-Booklet-_Part-2_Detailed-Syllabus-Final.pdf' },
         ],
       },
     ],
@@ -459,25 +471,41 @@ const DesktopDropdownItem: React.FC<DesktopDropdownItemProps> = ({ item, flipSub
   /* ── Item with sub-items → hover flyout panel to the right ── */
   if (item.subItems && item.subItems.length > 0) {
     const subSide = flipSub ? 'right-full mr-1' : 'left-full ml-1';
+    const isInternal = item.href?.startsWith('/');
+    
+    const triggerContent = (
+      <>
+        <span className="text-[11.5px] font-semibold">{item.label}</span>
+        <ChevronRight
+          className={`w-3.5 h-3.5 flex-shrink-0 ml-3 transition-all duration-250 ${
+            subOpen ? 'text-brand-blue translate-x-1' : 'text-brand-gold/50'
+          }`}
+        />
+      </>
+    );
+
+    const triggerClassName = `flex items-center justify-between px-4 py-2.5 cursor-pointer select-none transition-all duration-150 border-l-2 ${
+      subOpen
+        ? 'bg-brand-blue/8 text-brand-blue border-brand-blue'
+        : 'text-slate-700 hover:text-brand-blue hover:bg-brand-blue/5 border-transparent hover:border-brand-gold'
+    }`;
+
     return (
       <div
         className="relative"
         onMouseEnter={openSub}
         onMouseLeave={closeSub}
       >
-        {/* Trigger row */}
-        <div className={`flex items-center justify-between px-4 py-2.5 cursor-pointer select-none transition-all duration-150 border-l-2 ${
-          subOpen
-            ? 'bg-brand-blue/8 text-brand-blue border-brand-blue'
-            : 'text-slate-700 hover:text-brand-blue hover:bg-brand-blue/5 border-transparent hover:border-brand-gold'
-        }`}>
-          <span className="text-[11.5px] font-semibold">{item.label}</span>
-          <ChevronRight
-            className={`w-3.5 h-3.5 flex-shrink-0 ml-3 transition-all duration-250 ${
-              subOpen ? 'text-brand-blue translate-x-1' : 'text-brand-gold/50'
-            }`}
-          />
-        </div>
+        {/* Trigger row — clickable link to navigate */}
+        {isInternal ? (
+          <Link to={item.href!} className={triggerClassName}>
+            {triggerContent}
+          </Link>
+        ) : (
+          <a href={item.href} target="_blank" rel="noopener noreferrer" className={triggerClassName}>
+            {triggerContent}
+          </a>
+        )}
 
         {/* Sub-flyout panel */}
         <div
