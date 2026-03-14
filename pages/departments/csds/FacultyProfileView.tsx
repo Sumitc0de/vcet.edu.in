@@ -157,6 +157,21 @@ function initials(name: string): string {
     .join("");
 }
 
+function parsePublicationLink(title: string): { text: string; url?: string } {
+  const urlMatch = title.match(/(https?:\/\/\S+)/i);
+  if (!urlMatch) {
+    return { text: title };
+  }
+
+  const url = urlMatch[1];
+  const text = title
+    .replace(url, "")
+    .replace(/[\s-]+$/g, "")
+    .trim();
+
+  return { text: text || title, url };
+}
+
 /* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
    SHARED FACULTY PROFILE VIEW  (accepts any FacultyData prop)
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
@@ -190,31 +205,15 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
   ];
 
   const [activeTab, setActiveTab] = useState("profile");
-  const [showMiniBar, setShowMiniBar] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
   const heroRef   = useRef<HTMLDivElement>(null);
   const tabNavRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowMiniBar(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
+    setPhotoFailed(false);
+  }, [faculty.photo, faculty.name]);
 
   const switchTab = (id: string) => setActiveTab(id);
-  const switchTabAndScroll = (id: string) => {
-    setActiveTab(id);
-    tabNavRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const miniTabs = allTabs.map(({ id, label }) => ({
-    id,
-    label: label.split(" ")[0],
-  }));
 
   const panel = (id: string) => `tab-panel${activeTab === id ? " active" : ""}`;
   const abbr  = initials(faculty.name);
@@ -224,38 +223,6 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
 
   return (
     <div className="faculty-profile-root">
-      {/* ÔöÇÔöÇ MINI-BAR ÔöÇÔöÇ */}
-      <div className={`mini-bar${showMiniBar ? " show" : ""}`}>
-        <div className="mini-ava">{abbr}</div>
-        <div className="mini-info">
-          <div className="mini-name">{faculty.name}</div>
-          <div className="mini-desig">{faculty.designation}</div>
-        </div>
-        <nav className="mini-tabs">
-          {miniTabs.map(({ id, label }) => (
-            <button
-              key={id}
-              className={`mt-btn${activeTab === id ? " active" : ""}`}
-              onClick={() => switchTabAndScroll(id)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {/* ÔöÇÔöÇ SITE HEADER ÔöÇÔöÇ */}
-      <header className="site-hdr">
-        <div className="hdr-in">
-          <div className="hd-brand">
-            <div className="hd-logo">{abbr}</div>
-            <span className="hd-title">Faculty Profile</span>
-          </div>
-          <span className="hd-pill">{faculty.department}</span>
-        </div>
-      </header>
-      <div className="accent-bar"></div>
-
       <div className="wrap">
 
         {/* ÔöÇÔöÇ HERO ÔöÇÔöÇ */}
@@ -263,7 +230,25 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
           <div className="hero-g">
             <div className="ph-wrap">
               <div className="ph-circle">
-                <img src={photoSrc} alt={faculty.name} />
+                {!photoFailed ? (
+                  <img src={photoSrc} alt={faculty.name} onError={() => setPhotoFailed(true)} />
+                ) : (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: '#1a4b7c',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      fontSize: '2rem',
+                    }}
+                  >
+                    {abbr}
+                  </div>
+                )}
               </div>
               {faculty.qualifications?.some(
                 (q) => q.toLowerCase().startsWith("ph.d") || q.toLowerCase().startsWith("phd")
@@ -287,8 +272,18 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
               <div className="sr-ico"><i className="fas fa-chalkboard-teacher"></i></div>
               <div>
                 <div className="sr-val">{faculty.experienceYears}</div>
-                <div className="sr-lbl">Years of</div>
+                <div className="sr-lbl">Experience</div>
                 <div className="sr-sub">Teaching</div>
+              </div>
+            </div>
+          )}
+          {faculty.industryYears && (
+            <div className="sr-item">
+              <div className="sr-ico"><i className="fas fa-industry"></i></div>
+              <div>
+                <div className="sr-val">{faculty.industryYears}</div>
+                <div className="sr-lbl">Experience</div>
+                <div className="sr-sub">Industry</div>
               </div>
             </div>
           )}
@@ -608,7 +603,19 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
                   <div className="con" key={i}>
                     <div className="c-num">{i + 1}</div>
                     <div>
-                      <span className="c-title">{p.title}</span>
+                      {(() => {
+                        const { text, url } = parsePublicationLink(p.title);
+                        return (
+                          <>
+                            <span className="c-title">{text}</span>
+                            {url && (
+                              <div className="c-meta">
+                                <a href={url} target="_blank" rel="noopener noreferrer">View Article</a>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                       {p.journal && (
                         <div className="c-meta">{p.journal} &mdash; {p.year}</div>
                       )}
@@ -851,13 +858,6 @@ const FacultyProfileView: React.FC<Readonly<Props>> = ({ faculty }) => {
 
       </div>{/* /wrap */}
 
-      {/* ÔöÇÔöÇ FOOTER ÔöÇÔöÇ */}
-      <footer className="site-footer">
-        <p>
-          <strong>{faculty.name}</strong>&nbsp;&middot;&nbsp;{faculty.designation}
-          &nbsp;&middot;&nbsp;{faculty.department}&nbsp;&middot;&nbsp;&copy; {new Date().getFullYear()}
-        </p>
-      </footer>
     </div>
   );
 };
