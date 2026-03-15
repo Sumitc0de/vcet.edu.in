@@ -32,8 +32,12 @@ const cycle1Links: LinkItem[] = [
   },
 ];
 
-const NaacPage: React.FC = () => {
-  const [activeCycle, setActiveCycle] = useState<CycleKey>("cycle1");
+interface NaacPageProps {
+  initialCycle?: CycleKey;
+}
+
+const NaacPage: React.FC<NaacPageProps> = ({ initialCycle = "cycle1" }) => {
+  const [activeCycle, setActiveCycle] = useState<CycleKey>(initialCycle);
 
   return (
     <div className="naac-page">
@@ -41,7 +45,10 @@ const NaacPage: React.FC = () => {
         <TopBanner />
         <Header />
       </div>
-      <NaacHeader title="SSR Cycle 1" activeCrumb="SSR Cycle 1" />
+      <NaacHeader 
+        title={activeCycle === "cycle1" ? "SSR Cycle 1" : "SSR Cycle 2"} 
+        activeCrumb={activeCycle === "cycle1" ? "SSR Cycle 1" : "SSR Cycle 2"} 
+      />
 
       <section className="naac-content">
         <div className="naac-content__container">
