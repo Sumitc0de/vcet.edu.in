@@ -203,4 +203,46 @@ export const noticesApi = {
           message: response.message,
         } as DeleteResponse;
       },
+
+  activate: USE_MOCK
+    ? async (id: number) => {
+        const response = await mock!.update(id, { is_active: true });
+        return {
+          success: true,
+          data: normalizeNotice(response.data),
+          message: 'Notice activated.',
+        } as ItemResponse<Notice>;
+      }
+    : async (id: number) => {
+        const response = await client.request<NoticeActionResponse>(`/notices/${id}/activate`, {
+          method: 'PATCH',
+        });
+
+        return {
+          success: true,
+          data: normalizeNotice(response.notice),
+          message: response.message,
+        } as ItemResponse<Notice>;
+      },
+
+  deactivate: USE_MOCK
+    ? async (id: number) => {
+        const response = await mock!.update(id, { is_active: false });
+        return {
+          success: true,
+          data: normalizeNotice(response.data),
+          message: 'Notice deactivated.',
+        } as ItemResponse<Notice>;
+      }
+    : async (id: number) => {
+        const response = await client.request<NoticeActionResponse>(`/notices/${id}/deactivate`, {
+          method: 'PATCH',
+        });
+
+        return {
+          success: true,
+          data: normalizeNotice(response.notice),
+          message: response.message,
+        } as ItemResponse<Notice>;
+      },
 };

@@ -25,9 +25,19 @@ function normalizeNotice(notice: NoticeRecord): NoticeRecord {
   };
 }
 
+function isNoticeVisible(notice: NoticeRecord): boolean {
+  if (!notice.is_active) return false;
+  if (!notice.deactivates_at) return true;
+
+  const deactivatesAt = new Date(notice.deactivates_at);
+  if (Number.isNaN(deactivatesAt.getTime())) return true;
+
+  return deactivatesAt.getTime() > Date.now();
+}
+
 export const noticesService = {
   list: async () => {
     const notices = await get<NoticeRecord[]>('/notices');
-    return notices.map(normalizeNotice);
+    return notices.map(normalizeNotice).filter(isNoticeVisible);
   },
 };
