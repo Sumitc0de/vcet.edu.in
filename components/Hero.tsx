@@ -488,9 +488,22 @@ const Hero: React.FC = () => {
                               key={n.id}
                               className="py-4 border-b border-white/10 last:border-0"
                             >
-                              <p className="text-[15px] font-medium text-white leading-snug">
-                                {n.title}
-                              </p>
+                              {n.pdf_url || n.link_url ? (
+                                <a
+                                  href={n.pdf_url ?? n.link_url ?? "#"}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="group inline-flex flex-col"
+                                >
+                                  <p className="text-[15px] font-medium text-white leading-snug group-hover:text-brand-gold transition-colors">
+                                    {n.title}
+                                  </p>
+                                </a>
+                              ) : (
+                                <p className="text-[15px] font-medium text-white leading-snug">
+                                  {n.title}
+                                </p>
+                              )}
                               <div className="mt-2 flex flex-wrap gap-1.5">
                                 {n.type !== "general" && (
                                   <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-red-600 text-white rounded">
@@ -503,6 +516,26 @@ const Hero: React.FC = () => {
                                     { month: "short", day: "2-digit" },
                                   )}
                                 </span>
+                                {n.has_pdf && (
+                                  <a
+                                    href={n.pdf_url ?? "#"}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-brand-gold text-brand-dark rounded hover:brightness-110 transition-all"
+                                  >
+                                    Open PDF
+                                  </a>
+                                )}
+                                {!n.has_pdf && n.link_url && (
+                                  <a
+                                    href={n.link_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white rounded border border-white/20 hover:bg-white/20 transition-colors"
+                                  >
+                                    {n.link_label || "Open Link"}
+                                  </a>
+                                )}
                               </div>
                             </div>
                           ))

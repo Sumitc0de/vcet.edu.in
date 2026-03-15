@@ -48,6 +48,12 @@ export interface Notice {
   type: 'general' | 'info' | 'warning' | 'urgent';
   link_url: string | null;
   link_label: string | null;
+  pdf_name: string | null;
+  pdf_mime_type: string | null;
+  pdf_size: number | null;
+  has_pdf: boolean;
+  pdf_url: string | null;
+  admin_pdf_url: string | null;
   is_active: boolean;
   deactivates_at: string | null;
   added_by: number;
@@ -67,6 +73,8 @@ export interface NoticePayload {
   type?: 'general' | 'info' | 'warning' | 'urgent';
   link_url?: string | null;
   link_label?: string | null;
+  pdf?: File | null;
+  remove_pdf?: boolean;
   is_active?: boolean;
   deactivates_at?: string | null;
 }

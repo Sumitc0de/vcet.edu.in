@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { noticesApi } from '../../api/notices';
 import type { NoticePayload } from '../../types';
@@ -19,6 +19,13 @@ interface NoticeFormState {
   link_label: string;
   deactivates_at: string;
   is_active: boolean;
+}
+
+interface ExistingPdfState {
+  name: string;
+  size: number | null;
+  previewUrl: string | null;
+  publicUrl: string | null;
 }
 
 const empty: NoticeFormState = {
@@ -49,10 +56,29 @@ const NoticeForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [existingPdf, setExistingPdf] = useState<ExistingPdfState | null>(null);
+  const [selectedPdf, setSelectedPdf] = useState<File | null>(null);
+  const [removePdf, setRemovePdf] = useState(false);
+  const [localPdfPreviewUrl, setLocalPdfPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setForm(empty);
+      setExistingPdf(null);
+      setSelectedPdf(null);
+      setRemovePdf(false);
+      setFetching(false);
+      setError('');
+      setSuccess('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
     setFetching(true);
+    setError('');
+    setSuccess('');
     noticesApi
       .get(Number(id))
       .then((r) => {
@@ -67,18 +93,95 @@ const NoticeForm: React.FC = () => {
             deactivates_at: toLocalDateTimeInput(d.deactivates_at),
             is_active: d.is_active,
           });
+          setExistingPdf(
+            d.has_pdf
+              ? {
+                  name: d.pdf_name ?? 'notice.pdf',
+                  size: d.pdf_size ?? null,
+                  previewUrl: d.admin_pdf_url ?? d.pdf_url,
+                  publicUrl: d.pdf_url,
+                }
+              : null,
+          );
+          setRemovePdf(false);
+          setSelectedPdf(null);
+          if (fileInputRef.current) fileInputRef.current.value = '';
         }
       })
       .catch((e: Error) => setError(e.message))
       .finally(() => setFetching(false));
   }, [id]);
 
-  const set = <K extends keyof NoticeFormState>(key: K, value: NoticeFormState[K]) =>
+  useEffect(() => {
+    if (!selectedPdf) {
+      setLocalPdfPreviewUrl(null);
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(selectedPdf);
+    setLocalPdfPreviewUrl(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [selectedPdf]);
+
+  const set = <K extends keyof NoticeFormState>(key: K, value: NoticeFormState[K]) => {
+    setSuccess('');
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const previewUrl = localPdfPreviewUrl ?? (!removePdf ? existingPdf?.previewUrl ?? null : null);
+  const publicPdfUrl = !removePdf ? existingPdf?.publicUrl ?? null : null;
+  const pdfName = selectedPdf?.name ?? (!removePdf ? existingPdf?.name ?? null : null);
+  const pdfSize = selectedPdf?.size ?? (!removePdf ? existingPdf?.size ?? null : null);
+
+  const clearNoticeForm = () => {
+    setForm(empty);
+    setExistingPdf(null);
+    setSelectedPdf(null);
+    setRemovePdf(false);
+    setError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+
+    if (file && file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      setError('Only PDF files can be uploaded for notices.');
+      e.target.value = '';
+      return;
+    }
+
+    setError('');
+    setSuccess('');
+    setSelectedPdf(file);
+    setRemovePdf(false);
+  };
+
+  const handlePdfAction = () => {
+    if (selectedPdf) {
+      setSuccess('');
+      setSelectedPdf(null);
+      setRemovePdf(false);
+      return;
+    }
+
+    if (existingPdf && !removePdf) {
+      setSuccess('');
+      setRemovePdf(true);
+      return;
+    }
+
+    if (existingPdf && removePdf) {
+      setSuccess('');
+      setRemovePdf(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     const payload: NoticePayload = {
@@ -88,18 +191,24 @@ const NoticeForm: React.FC = () => {
       link_url: form.link_url.trim() || null,
       link_label: form.link_label.trim() || null,
       deactivates_at: form.deactivates_at ? new Date(form.deactivates_at).toISOString() : null,
+      pdf: selectedPdf,
+      remove_pdf: removePdf && !selectedPdf,
       is_active: form.is_active,
     };
 
     try {
       if (isEdit) {
         await noticesApi.update(Number(id), payload);
+        setSuccess('Notice updated successfully.');
       } else {
         await noticesApi.create(payload);
+        clearNoticeForm();
+        setSuccess('Notice published successfully.');
       }
-      navigate('/admin/notices');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setLoading(false);
     }
@@ -140,6 +249,13 @@ const NoticeForm: React.FC = () => {
         <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 text-sm text-red-600 font-medium flex items-center gap-3">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-5 py-4 text-sm text-emerald-700 font-medium flex items-center gap-3">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" /></svg>
+          {success}
         </div>
       )}
 
@@ -186,19 +302,6 @@ const NoticeForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Body */}
-        <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2.5">Notice Content *</label>
-          <textarea
-            value={form.body}
-            onChange={(e) => set('body', e.target.value)}
-            rows={5}
-            className="admin-input resize-none"
-            placeholder="Write the full notice content..."
-            required
-          />
-        </div>
-
         {/* Link fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -220,6 +323,80 @@ const NoticeForm: React.FC = () => {
               className="admin-input"
               placeholder="Read More"
             />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-start justify-between gap-4 flex-col sm:flex-row sm:items-center">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2.5">Notice PDF</label>
+              <p className="text-sm text-slate-500">
+                Upload a PDF to store it in the database and open it directly from the website.
+              </p>
+            </div>
+            <label className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-sm font-bold text-slate-700 transition-colors cursor-pointer">
+              <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" className="sr-only" onChange={handlePdfChange} />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" /></svg>
+              {selectedPdf || existingPdf ? 'Replace PDF' : 'Upload PDF'}
+            </label>
+          </div>
+
+          {(pdfName || removePdf) && (
+            <div className={`rounded-2xl border px-5 py-4 ${removePdf ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-slate-50'}`}>
+              <div className="flex items-start justify-between gap-4 flex-col sm:flex-row">
+                <div>
+                  <p className="text-sm font-bold text-slate-800">
+                    {removePdf ? 'Stored PDF will be removed when you save.' : pdfName}
+                  </p>
+                  {!removePdf && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      {pdfSize ? `${(pdfSize / 1024 / 1024).toFixed(2)} MB` : 'PDF attached'}
+                      {selectedPdf ? ' • New upload ready to save' : ' • Already stored in database'}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePdfAction}
+                  className={`text-sm font-bold transition-colors ${removePdf ? 'text-emerald-700 hover:text-emerald-900' : 'text-red-600 hover:text-red-800'}`}
+                >
+                  {selectedPdf ? 'Discard selected PDF' : removePdf ? 'Keep stored PDF' : 'Remove stored PDF'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50/70 overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200/80 flex items-center justify-between gap-4 flex-col sm:flex-row">
+              <div>
+                <p className="text-sm font-bold text-slate-800">PDF Preview</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Browser preview is shown here before you publish the notice.
+                </p>
+              </div>
+              {(previewUrl || publicPdfUrl) && (
+                <a
+                  href={previewUrl ?? publicPdfUrl ?? '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-bold text-slate-700 hover:text-black transition-colors"
+                >
+                  Open in New Tab
+                </a>
+              )}
+            </div>
+
+            {previewUrl ? (
+              <iframe
+                src={previewUrl}
+                title="Notice PDF preview"
+                className="w-full h-[28rem] bg-white"
+              />
+            ) : (
+              <div className="px-5 py-16 text-center text-sm text-slate-500 bg-white">
+                Upload a PDF to preview it here.
+              </div>
+            )}
           </div>
         </div>
 

@@ -155,6 +155,25 @@ const NoticesList: React.FC = () => {
                         <span className="text-[#111827] font-bold text-sm leading-tight group-hover:text-slate-900 transition-colors">
                           {n.title}
                         </span>
+                        {n.has_pdf && (
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-sky-50 text-sky-700">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 7h10M7 11h10M7 15h6M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" /></svg>
+                              PDF Attached
+                            </span>
+                            {(n.admin_pdf_url ?? n.pdf_url) && (
+                              <a
+                                href={n.admin_pdf_url ?? n.pdf_url ?? '#'}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition-colors"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Preview
+                              </a>
+                            )}
+                          </div>
+                        )}
                         <span className="text-slate-400 text-[11px] font-medium tracking-wide">
                           Notice ID: #NOT-{n.id}
                         </span>
