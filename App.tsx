@@ -198,6 +198,7 @@ const GalleryPage = lazy(() => import('./admin/pages/gallery/GalleryPage'));
 const PlacementPartnersList = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersList'));
 const PlacementPartnersForm = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersForm'));
 const EnquiriesList = lazy(() => import('./admin/pages/enquiries/EnquiriesList'));
+const SitePages = lazy(() => import('./admin/pages/pages/SitePages'));
 
 /* ── Loading Spinner ── */
 const PageLoader = () => (
@@ -465,6 +466,8 @@ function App() {
             <Route path="placement-partners/new" element={<PlacementPartnersForm />} />
             <Route path="placement-partners/:id/edit" element={<PlacementPartnersForm />} />
             <Route path="enquiries" element={<EnquiriesList />} />
+            <Route path="pages" element={<Navigate to="home" replace />} />
+            <Route path="pages/:pageKey" element={<SitePages />} />
           </Route>
         </Routes>
       </Suspense>
