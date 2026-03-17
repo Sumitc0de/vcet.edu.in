@@ -21,33 +21,7 @@ function toChartEntries(stats: PlacementStat[]): ChartEntry[] {
 
 const CHART_H = 260; // px — usable bar area height
 
-const COVID_YEARS = [2019, 2020, 2021];
-
 const Placements: React.FC = () => {
-  const { placements } = usePlacements();
-  
-  const finalData = React.useMemo(() => {
-    if (!placements || placements.length === 0) return DEFAULT_PLACEMENT_DATA;
-    
-    const CURRENT_YEAR = new Date().getFullYear();
-    const grouped = placements.reduce((acc, curr) => {
-      acc[curr.year] = (acc[curr.year] || 0) + curr.student_count;
-      return acc;
-    }, {} as Record<number, number>);
-
-    return Object.entries(grouped)
-      .map(([yrStr, count]) => {
-        const y = parseInt(yrStr, 10);
-        const suffix = y >= CURRENT_YEAR ? '*' : '';
-        return {
-          year: `${y}-${(y + 1).toString().slice(2)}${suffix}`,
-          count,
-          isCovid: COVID_YEARS.includes(y),
-        };
-      })
-      .sort((a, b) => parseInt(a.year) - parseInt(b.year));
-  }, [placements]);
-
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -80,8 +54,8 @@ const Placements: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setAnimatedCounts(finalData.map(() => 0));
-  }, [finalData]);
+    setAnimatedCounts(placementData.map(() => 0));
+  }, [placementData]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -93,12 +67,12 @@ const Placements: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!isVisible || finalData.length === 0) return;
+    if (!isVisible || placementData.length === 0) return;
     const duration = 1800;
     const steps = 72;
     const stepDuration = duration / steps;
     const timers: ReturnType<typeof setInterval>[] = [];
-    finalData.forEach((item, index) => {
+    placementData.forEach((item, index) => {
       const delay = index * 100;
       setTimeout(() => {
         let currentStep = 0;
@@ -139,7 +113,6 @@ const Placements: React.FC = () => {
   const maxIdx   = placementData.findIndex(d => d.count === maxCount);
   const covidIndices = placementData.map((d, i) => d.isCovid ? i : -1).filter(i => i !== -1);
   const covidStartIdx = covidIndices[0];
-  const covidEndIdx   = covidIndices[covidIndices.length - 1];
 
   return (
     <section id="placements" ref={sectionRef} className="relative bg-brand-dark text-white overflow-hidden">
@@ -226,10 +199,13 @@ const Placements: React.FC = () => {
                 >
                   {/* COVID zone backdrop — spans behind the 3 COVID bars */}
                   {(() => {
+                    if (covidIndices.length === 0) return null;
+
                     const barW = 60;
                     const gap = 32; // matches gap-8 (2rem)
                     const left = covidStartIdx * (barW + gap);
                     const width = covidIndices.length * barW + (covidIndices.length - 1) * gap;
+
                     return (
                       <div
                         className="absolute top-0 bottom-0 rounded-xl pointer-events-none"
@@ -239,12 +215,11 @@ const Placements: React.FC = () => {
                           background: 'linear-gradient(180deg, rgba(34,211,238,0.06) 0%, rgba(34,211,238,0.03) 100%)',
                           border: '1px solid rgba(34,211,238,0.12)',
                         }}
-                      >
-                      </div>
+                      />
                     );
                   })()}
-                {finalData.map((item, index) => {
-                    const barH = (item.count / maxCount) * CHART_H * 0.92;
+                {placementData.map((item, index) => {
+                    const barH = maxCount > 0 ? (item.count / maxCount) * CHART_H * 0.92 : 0;
                     const isPeak = index === maxIdx;
                     const isCurrent = item.year.includes('*');
                     const isCovid = !!item.isCovid;
@@ -338,7 +313,7 @@ const Placements: React.FC = () => {
                   className="absolute bottom-0 flex items-center gap-5 md:gap-8 px-2 pl-12"
                   style={{ height: '36px' }}
                 >
-                  {finalData.map((item, index) => (
+                  {placementData.map((item, index) => (
                     <div
                       key={index}
                       style={{
