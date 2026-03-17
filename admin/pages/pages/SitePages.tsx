@@ -6,7 +6,7 @@ const homeEditables = [
   {
     title: 'Placements Stats',
     description: 'Manage placement records and yearly placement statistics shown on the homepage.',
-    links: [{ label: 'Edit Placements', to: '/admin/placements' }],
+    links: [{ label: 'Edit Placement Stats', to: '/admin/home/placement-stats' }],
   },
   {
     title: 'Where Our Alumni Thrive',
