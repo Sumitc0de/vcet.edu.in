@@ -1,19 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'motion/react';
 import { LampContainer } from '../ui/lamp';
-import { usePlacements } from '../hooks/usePlacements';
+import { placementStatsApi, type PlacementStat } from '../admin/api/placementStats';
 
-const DEFAULT_PLACEMENT_DATA = [
-  { year: '2017-18', count: 299 },
-  { year: '2018-19', count: 320 },
-  { year: '2019-20', count: 263, isCovid: true },
-  { year: '2020-21', count: 305, isCovid: true },
-  { year: '2021-22', count: 257, isCovid: true },
-  { year: '2022-23', count: 261 },
-  { year: '2023-24', count: 228 },
-  { year: '2024-25', count: 241 },
-  { year: '2025-26*', count: 140 },
-];
+interface ChartEntry {
+  year: string;
+  count: number;
+  isCovid?: boolean;
+}
+
+function toChartEntries(stats: PlacementStat[]): ChartEntry[] {
+  return stats
+    .filter((s): s is PlacementStat => s && typeof s === 'object' && 'year' in s)
+    .map((s) => ({
+      year: s.is_ongoing ? `${s.year}*` : s.year,
+      count: s.count,
+      ...(s.is_covid ? { isCovid: true } : {}),
+    }));
+}
 
 const CHART_H = 260; // px — usable bar area height
 
@@ -46,6 +50,9 @@ const Placements: React.FC = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Async-loaded chart data from the backend (or mock)
+  const [placementData, setPlacementData] = useState<ChartEntry[]>([]);
   const [animatedCounts, setAnimatedCounts] = useState<number[]>([]);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
@@ -53,6 +60,24 @@ const Placements: React.FC = () => {
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  // Fetch placement year stats from the backend
+  useEffect(() => {
+    placementStatsApi.list()
+      .then((stats) => {
+        if (!Array.isArray(stats)) {
+          console.warn('Placement stats API returned non-array:', stats);
+          return;
+        }
+        const entries = toChartEntries(stats);
+        setPlacementData(entries);
+        setAnimatedCounts(entries.map(() => 0));
+      })
+      .catch((err) => {
+        console.error('Failed to load placement stats:', err);
+        // On fetch error keep empty — chart just shows nothing gracefully
+      });
+  }, []);
 
   useEffect(() => {
     setAnimatedCounts(finalData.map(() => 0));
@@ -93,7 +118,7 @@ const Placements: React.FC = () => {
       }, delay);
     });
     return () => timers.forEach(t => clearInterval(t));
-  }, [isVisible, finalData]);
+  }, [isVisible, placementData]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
@@ -110,11 +135,11 @@ const Placements: React.FC = () => {
     scrollRef.current.scrollLeft = scrollLeft - (x - startX) * 2;
   };
 
-  const maxCount = Math.max(...finalData.map(d => d.count), 1);
-  const maxIdx   = finalData.findIndex(d => d.count === maxCount);
-  const covidIndices = finalData.map((d, i) => d.isCovid ? i : -1).filter(i => i !== -1);
-  // default to index 0 if not found so UI doesn't crash on slice
-  const covidStartIdx = covidIndices.length > 0 ? covidIndices[0] : 0;
+  const maxCount = placementData.length ? Math.max(...placementData.map(d => d.count)) : 0;
+  const maxIdx   = placementData.findIndex(d => d.count === maxCount);
+  const covidIndices = placementData.map((d, i) => d.isCovid ? i : -1).filter(i => i !== -1);
+  const covidStartIdx = covidIndices[0];
+  const covidEndIdx   = covidIndices[covidIndices.length - 1];
 
   return (
     <section id="placements" ref={sectionRef} className="relative bg-brand-dark text-white overflow-hidden">
@@ -178,7 +203,7 @@ const Placements: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/25 text-brand-gold text-xs font-semibold tracking-wide">
                 <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse" />
-                Peak: {maxCount} &nbsp;·&nbsp; {finalData[maxIdx > -1 ? maxIdx : 0]?.year}
+                Peak: {maxCount} &nbsp;·&nbsp; {maxIdx >= 0 ? placementData[maxIdx]?.year : '—'}
               </div>
             </div>
 
