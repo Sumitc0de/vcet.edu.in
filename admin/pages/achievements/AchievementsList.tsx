@@ -9,6 +9,8 @@ const AchievementsList: React.FC = () => {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState('All Entries');
 
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+
   const fetchItems = () => {
     setLoading(true);
     achievementsApi.list()
@@ -37,15 +39,40 @@ const AchievementsList: React.FC = () => {
     }
   };
 
-  const filteredItems = activeTab === 'All Entries' 
-    ? items 
-    : items.filter(item => item.category === activeTab).filter((item: any) => {
+  const filteredItems = (activeTab === 'All Entries'
+    ? items
+    : items.filter(item => item.category === activeTab)).filter((item: any) => { 
     if (statusFilter === 'all') return true;
-    const isActive = item.is_active !== undefined ? item.is_active : true;
+    const isActive = item.is_active !== undefined ? item.is_active : true;      
     if (statusFilter === 'active' && !isActive) return false;
     if (statusFilter === 'inactive' && isActive) return false;
     return true;
   });
+
+  const toggleFilter = () => {
+    setStatusFilter(prev => prev === 'all' ? 'active' : prev === 'active' ? 'inactive' : 'all');
+  };
+
+  const handleExport = () => {
+    if (!filteredItems.length) return;
+    
+    // Create CSV content
+    const headers = Object.keys(filteredItems[0]).join(',');
+    const csvContent = filteredItems.map(row => 
+      Object.values(row).map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+    
+    // Create and trigger download
+    const blob = new Blob([`${headers}\n${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `achievements_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const getInitials = (name: string | null) => {
     if (!name) return 'VC';
