@@ -28,42 +28,42 @@ const professors = [
 const developers = [
   {
     name: 'Yash Sanil',
-    qualification: 'B.E. Computer Engineering',
+    qualification: 'B.E. Computer Science & Engineering(Data Science)',
     role: 'Lead Developer',
   },
   {
     name: 'Yash Dedhia',
-    qualification: 'B.E. Information Technology',
+    qualification: 'B.E. Computer Science & Engineering(Data Science)',
     role: 'UI Architect',
   },
   {
     name: 'Sahil Karpe',
-    qualification: 'B.E. Computer Science',
+    qualification: 'B.E. Computer Science & Engineering(Data Science)',
     role: 'Systems Engineer',
   },
   {
     name: 'Shubham Pawar',
-    qualification: 'B.E. AI & Data Science',
+    qualification: 'B.E. Computer Science & Engineering(Data Science)',
     role: 'Full Stack Developer',
   },
   {
     name: 'Sahil Rane',
-    qualification: 'B.E. Electronics & Telecomm',
+    qualification: 'B.E. Computer Science & Engineering(Data Science)',
     role: 'Data Science Lead',
   },
 ];
 
 const students = [
-  { name: 'Leo Sterling', role: 'Front-end Apprentice' },
-  { name: 'Grace Kim', role: 'Back-end Apprentice' },
-  { name: 'Simon De Silva', role: 'UI Research' },
-  { name: 'Maya Angelos', role: 'QA Engineering' },
-  { name: 'Oliver Twist', role: 'API Design' },
-  { name: 'Nina Simone', role: 'Database Modeling' },
-  { name: 'Jasper Johns', role: 'DevOps Intern' },
-  { name: 'Faith Ringgold', role: 'Security Analyst' },
-  { name: 'Henri Matisse', role: 'Mobile Systems' },
-  { name: 'Zora Neale', role: 'Documentation' },
+  { name: 'Shreya Sawant', role: 'Front-end Apprentice' },
+  { name: 'Sumrita Sawant', role: 'Back-end Apprentice' },
+  { name: 'Dakshata Salgaonkar', role: 'UI Research' },
+  { name: 'Shweta Patil', role: 'QA Engineering' },
+  { name: 'Sumit Vishwakarma', role: 'API Design' },
+  { name: 'Antariksh Singh', role: 'Database Modeling' },
+  { name: 'Pratik Ravale', role: 'DevOps Intern' },
+  { name: 'Pranish Shetty', role: 'Security Analyst' },
+  { name: 'Rehan Pinjari', role: 'Mobile Systems' },
+  { name: 'Priti', role: 'Documentation' },
 ];
 
 /* ── Component ── */
