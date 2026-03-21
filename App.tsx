@@ -391,7 +391,8 @@ function App() {
             <Route path="/placement" element={<Placement />} />
             <Route path="/e-cell" element={<ECell />} />
             <Route path="/iiic" element={<IIIC />} />
-            <Route path="/exam-cell" element={<ExamCell />} />
+            <Route path="/exam" element={<ExamCell />} />
+            <Route path="/exam-cell" element={<Navigate to="/exam" replace />} />
             <Route path="/helpline-for-divyangjan" element={<HelplineForDivyangjan />} />
 
             {/* Footer Pages */}

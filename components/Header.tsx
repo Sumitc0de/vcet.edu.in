@@ -193,16 +193,19 @@ const menuGroups: MenuGroup[] = [
     ],
   },
 
-  // 9. ALUMNI & EXAM
+  // 9. ALUMNI
   {
-    label: 'Alumni & Exam',
-    dropdown: [
-      { label: 'Alumni Portal', href: 'https://alumni.vcet.edu.in/' },
-      { label: 'Exam Cell',     href: '/exam-cell' },
-    ],
+    label: 'Alumni',
+    href: 'https://alumni.vcet.edu.in/',
   },
 
-  // 10. NAAC ACCREDITATION
+  // 10. EXAM
+  {
+    label: 'Exam',
+    href: '/exam',
+  },
+
+  // 11. NAAC ACCREDITATION
   {
     label: 'NAAC',
     dropdown: [
@@ -325,12 +328,13 @@ const keywordMap: Record<string, string[]> = {
   '/training':             ['training', 'placement training', 'tpo'],
   '/e-cell':               ['ecell', 'entrepreneurship', 'startup'],
   '/iiic':                 ['iiic', 'industry interaction', 'mou'],
+  '/exam':                 ['exam', 'examination', 'results', 'hall ticket', 'exam cell'],
   '/exam-cell':            ['exam', 'examination', 'results', 'hall ticket', 'exam cell'],
 };
 
 /** Homepage section entries */
 const homepageSections: SearchEntry[] = [
-  { label: 'Home', href: '/', category: 'Homepage', keywords: ['home', 'main', 'homepage'] },
+                    { label: 'Exam',                 href: '/exam' },
   { label: 'Placements Overview', href: '/#placements', category: 'Homepage', keywords: ['placement graph', 'placement stats', 'highest package'] },
   { label: 'Recruiters', href: '/#recruiters', category: 'Homepage', keywords: ['recruiters', 'companies', 'hiring partners'] },
   { label: 'Gallery', href: '/#gallery', category: 'Homepage', keywords: ['gallery', 'photos', 'campus photos'] },
