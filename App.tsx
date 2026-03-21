@@ -246,7 +246,7 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen font-sans bg-white text-slate-800">
+    <div className="home-page min-h-screen font-sans bg-white text-slate-800">
       <SplashScreen />
       <div className="sticky top-0 z-[100] md:contents">
         <TopBanner />
