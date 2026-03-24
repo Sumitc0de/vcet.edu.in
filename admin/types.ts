@@ -323,3 +323,76 @@ export interface GalleryImagePayload {
   caption?: string;
   image: File;
 }
+
+// ── Faculty ───────────────────────────────────────────────────────────────────
+
+export interface Faculty {
+  id: number;
+  name: string;
+  department: string;
+  page: string;
+  teachingExperience: number;
+  industryExperience: number;
+  papers: number;
+  books: number;
+  patents: number;
+  dob: string;
+  joinDate: string;
+  email: string;
+  qualification: string;
+  specialization: string;
+  pgProjects: string;
+  researchDomain: string;
+  consultancyProjects: string;
+  publications: {
+    books: string;
+    isbn: string;
+    patents: string;
+    papers: string;
+  };
+  roles: string;
+  awards: string;
+  onlinePresence: {
+    website: string;
+    youtube: string;
+    resources: string;
+  };
+  memberships: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FacultyPayload {
+  name?: string;
+  department?: string;
+  page?: string;
+  teachingExperience?: number;
+  industryExperience?: number;
+  papers?: number;
+  books?: number;
+  patents?: number;
+  dob?: string;
+  joinDate?: string;
+  email?: string;
+  qualification?: string;
+  specialization?: string;
+  pgProjects?: string;
+  researchDomain?: string;
+  consultancyProjects?: string;
+  publications?: {
+    books: string;
+    isbn: string;
+    patents: string;
+    papers: string;
+  };
+  roles?: string;
+  awards?: string;
+  onlinePresence?: {
+    website: string;
+    youtube: string;
+    resources: string;
+  };
+  memberships?: string;
+  is_active?: boolean;
+}

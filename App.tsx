@@ -217,6 +217,8 @@ const PlacementPartnersList = lazy(() => import('./admin/pages/placement-partner
 const PlacementPartnersForm = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersForm'));
 const EnquiriesList = lazy(() => import('./admin/pages/enquiries/EnquiriesList'));
 const SitePages = lazy(() => import('./admin/pages/pages/SitePages'));
+const FacultyList = lazy(() => import('./admin/pages/faculty/FacultyList'));
+const FacultyForm = lazy(() => import('./admin/pages/faculty/FacultyForm'));
 
 /* ── Loading Spinner ── */
 const PageLoader = () => (
@@ -507,6 +509,9 @@ function App() {
             <Route path="placement-partners/:id/edit" element={<PlacementPartnersForm />} />
             <Route path="enquiries" element={<EnquiriesList />} />
             <Route path="pages" element={<Navigate to="home" replace />} />
+            <Route path="pages/faculty" element={<FacultyList />} />
+            <Route path="pages/faculty/create" element={<FacultyForm />} />
+            <Route path="pages/faculty/:id/edit" element={<FacultyForm />} />
             <Route path="pages/:pageKey" element={<SitePages />} />
           </Route>
         </Routes>

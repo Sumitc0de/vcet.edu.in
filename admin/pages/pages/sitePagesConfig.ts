@@ -17,4 +17,5 @@ export const SITE_PAGE_TABS: SitePageTab[] = [
   { key: 'alumni-exam', label: 'Alumni & Exam', path: '/admin/pages/alumni-exam' },
   { key: 'naac', label: 'NAAC', path: '/admin/pages/naac' },
   { key: 'training-placement', label: 'Training & Placement', path: '/admin/pages/training-placement' },
+  { key: 'faculty', label: 'Faculty', path: '/admin/pages/faculty' },
 ];
