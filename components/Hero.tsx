@@ -371,7 +371,7 @@ const Hero: React.FC = () => {
         <img
           src="/Images/Home%20background/VCET-Home-1-scaled.jpg"
           alt="VCET Campus"
-          className="absolute inset-0 w-full h-full object-contain lg:object-cover object-center"
+          className="hero-mobile-pan absolute top-0 left-[-15%] w-[130%] h-full object-cover object-center lg:left-0 lg:w-full"
         />
       </div>
 

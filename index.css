@@ -102,12 +102,33 @@ canvas {
 }
 
 @media (max-width: 1024px) {
+  .hero-mobile-pan {
+    animation: hero-pan-horizontal 16s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes hero-pan-horizontal {
+    0% {
+      transform: translateX(-10%);
+    }
+    100% {
+      transform: translateX(10%);
+    }
+  }
+
   .info-card-top {
     padding: 0.65rem 1rem;
   }
 
   .info-card-body {
     padding: 1.1rem 1rem 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mobile-pan {
+    animation: none;
+    transform: translateX(0);
   }
 }
 
