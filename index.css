@@ -103,16 +103,17 @@ canvas {
 
 @media (max-width: 1024px) {
   .hero-mobile-pan {
-    animation: hero-pan-horizontal 16s ease-in-out infinite alternate;
-    will-change: transform;
+    object-position: 0% 50%;
+    animation: hero-pan-horizontal 14s ease-in-out infinite alternate;
+    will-change: object-position;
   }
 
   @keyframes hero-pan-horizontal {
     0% {
-      transform: translateX(-10%);
+      object-position: 0% 50%;
     }
     100% {
-      transform: translateX(10%);
+      object-position: 100% 50%;
     }
   }
 
@@ -128,7 +129,7 @@ canvas {
 @media (prefers-reduced-motion: reduce) {
   .hero-mobile-pan {
     animation: none;
-    transform: translateX(0);
+    object-position: 50% 50%;
   }
 }
 
