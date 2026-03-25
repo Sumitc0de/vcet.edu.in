@@ -18,12 +18,13 @@ import ImagePreviewModal from "./ImagePreviewModal";
 
 const departments = [
   "Computer Engineering",
+  "Computer Science & Engineering (Data Science)",
   "Information Technology",
-  "Electronics & Telecom",
+  "Artificial Intelligence & Data Science",
   "Mechanical Engineering",
+  "Electronics & Telecommunication Engineering",
   "Civil Engineering",
-  "AI & Data Science",
-  "Computer Science & DS",
+  "Master of Management Studies (MBA)",
 ];
 
 const courses = ["B.E.", "M.E.", "MBA", "MCA"];
@@ -171,7 +172,7 @@ const AdmissionForm: React.FC = () => {
             </div>
 
             {/* State + City */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
                 <label className={labelCls}>State</label>
                 <input
@@ -219,7 +220,7 @@ const AdmissionForm: React.FC = () => {
             </div>
 
             {/* Course + Specialization */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
                 <label className={labelCls}>Course</label>
                 <div className="relative">
@@ -361,7 +362,7 @@ const Hero: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative h-screen w-full flex items-center overflow-hidden bg-brand-dark text-white -mt-14 pt-14 md:-mt-16 md:pt-16"
+      className="relative min-h-[100dvh] md:h-screen w-full flex items-center overflow-hidden bg-brand-dark text-white -mt-14 pt-14 md:-mt-16 md:pt-16"
     >
       {/* ── Static Background ──────────────────────────────────────────── */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -373,7 +374,7 @@ const Hero: React.FC = () => {
       </div>
 
       {/* ── Right Banner Slideshow Panel ───────────────────────────────── */}
-      <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[40%] max-w-[560px] shadow-2xl rounded-lg overflow-hidden">
+      <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[40%] max-w-[560px] shadow-2xl rounded-lg overflow-hidden">
         <div className="relative w-full">
           {/* Spacer image to set natural aspect ratio */}
           <img
@@ -403,7 +404,7 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 h-full w-full flex items-center justify-start px-6 md:px-12">
+      <div className="relative z-10 h-full w-full flex items-center justify-start px-3 sm:px-6 md:px-10 lg:px-12">
         {/* Outer wrapper — allows the toggle button to escape overflow-hidden */}
         <div
           className="relative transition-all duration-500 ease-in-out"
@@ -415,7 +416,7 @@ const Hero: React.FC = () => {
         >
           {/* Single floating card */}
           <div
-            className="w-[calc(100vw-3rem)] sm:w-[380px] flex flex-col overflow-hidden border border-white/10 shadow-2xl"
+            className="w-[calc(100vw-1.5rem)] sm:w-[380px] flex flex-col overflow-hidden border border-white/10 shadow-2xl"
             style={{
               background: "rgba(10, 20, 45, 0.72)",
               backdropFilter: "blur(18px)",

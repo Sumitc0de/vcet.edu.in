@@ -19,8 +19,8 @@ const TopBanner: React.FC = () => {
       {/* Decorative top accent line */}
       <div className="h-1 bg-gradient-to-r from-brand-blue via-brand-gold to-brand-blue"></div>
 
-      {/* ── Mobile compact row — visible on mobile only ── */}
-      <div className="flex md:hidden items-center gap-3 px-4 py-3">
+      {/* ── Compact row — visible up to tablet ── */}
+      <div className="flex lg:hidden items-center gap-3 px-3 sm:px-4 py-3">
         <img
           src="/Images/VCET%20logo.jpeg"
           alt="VCET Logo"
@@ -42,8 +42,8 @@ const TopBanner: React.FC = () => {
         </span>
       </div>
 
-      {/* ── Desktop full row (md+) ── */}
-      <div className="hidden md:block">
+      {/* ── Desktop full row (lg+) ── */}
+      <div className="hidden lg:block">
         <div className="container mx-auto px-4 md:px-6 py-3 md:py-4">
           <div className="flex flex-row items-center gap-4">
             {/* Logo + College Name */}
@@ -161,11 +161,11 @@ const TopBanner: React.FC = () => {
 
       {/* Marquee Ticker */}
       <div className="border-t border-brand-blue/10 bg-brand-blue/[0.03]">
-        <div className="flex items-center h-8 overflow-hidden">
+        <div className="flex items-center h-9 sm:h-8 overflow-hidden">
           {/* Label */}
-          <div className="flex-shrink-0 flex items-center gap-1.5 px-3 bg-brand-gold h-full">
+          <div className="flex-shrink-0 flex items-center gap-1.5 px-2.5 sm:px-3 bg-brand-gold h-full">
             <Bell className="w-3 h-3 text-brand-blue" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-blue whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-blue whitespace-nowrap">
               Latest News
             </span>
           </div>
@@ -175,7 +175,7 @@ const TopBanner: React.FC = () => {
               {[...tickerItems, ...tickerItems].map((item, i) => (
                 <span
                   key={i}
-                  className="whitespace-nowrap flex items-center gap-2 text-[11px] text-brand-navy/70 font-medium px-8"
+                  className="whitespace-nowrap flex items-center gap-2 text-[10px] sm:text-[11px] text-brand-navy/70 font-medium px-5 sm:px-8"
                 >
                   <span>{item.text}</span>
                   {item.link && (

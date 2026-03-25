@@ -85,6 +85,12 @@ const menuGroups: MenuGroup[] = [
     ],
   },
 
+  // MMS (MBA)
+  {
+    label: 'MMS (MBA)',
+    href: '/mms',
+  },
+
   // 4. ACADEMICS
   {
     label: 'Academics',
@@ -838,7 +844,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* â”€â”€â”€â”€ Desktop Nav â”€â”€â”€â”€ */}
-          <nav className="hidden md:flex items-center flex-1 min-w-0 overflow-x-auto no-scrollbar" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center flex-1 min-w-0 overflow-x-auto no-scrollbar" aria-label="Main navigation">
             <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5">
               {menuGroups.map((group, idx) => (
                 <li key={group.label} className="relative flex-shrink-0">
@@ -882,7 +888,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Right actions â€” search */}
-          <div className="hidden md:flex items-center gap-1 flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-1 flex-shrink-0">
             <button
               onClick={() => setSearchOpen(true)}
               className="p-2 rounded-lg bg-brand-gold text-blue hover:bg-brand-gold-light transition-all duration-200"
@@ -893,7 +899,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile controls */}
-          <div className="md:hidden flex items-center gap-1 ml-auto text-slate-700">
+          <div className="lg:hidden flex items-center gap-1 ml-auto text-slate-700">
             <button
               onClick={() => setSearchOpen(true)}
               className="p-2 rounded-lg bg-brand-gold text-blue hover:bg-brand-gold-light transition-all"
@@ -945,7 +951,7 @@ const Header: React.FC = () => {
           mobileOpen
             ? 'opacity-100 visible translate-x-0'
             : 'opacity-0 invisible translate-x-full pointer-events-none'
-        }`}
+          }`}
       >
         {/* Mobile top bar */}
         <div className="flex items-center justify-between px-6 h-16 border-b border-white/10 flex-shrink-0">
