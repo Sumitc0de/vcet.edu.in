@@ -4,6 +4,7 @@ import { facultyApi } from '../admin/api/faculty';
 import type { Faculty } from '../admin/types';
 import PageLayout from '../components/PageLayout';
 import './departments/csds/FacultyProfile.css';
+import fallbackFacultyData from '../components/fallbackFaculty.json';
 
 const FacultyProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,8 +17,25 @@ const FacultyProfile: React.FC = () => {
     if (!id) return;
     setLoading(true);
     facultyApi.get(id)
-      .then(r => setFaculty(r.data))
-      .catch(console.error)
+      .then(r => {
+        if (r && r.data) {
+          setFaculty(r.data);
+        } else {
+          throw new Error("Empty data from backend");
+        }
+      })
+      .catch((e) => {
+        console.warn("Failed to fetch from backend, using fallback data...", e);
+        const allFallback = Array.isArray(fallbackFacultyData) 
+          ? fallbackFacultyData as unknown as Faculty[] 
+          : ((fallbackFacultyData as any).data as Faculty[]) || [];
+          
+        const fallbackMatch = allFallback.find(
+          (f) => String(f.id) === String(id) || f.slug === id
+        );
+        
+        setFaculty(fallbackMatch || null);
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
