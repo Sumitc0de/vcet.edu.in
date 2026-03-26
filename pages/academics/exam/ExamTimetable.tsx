@@ -9,9 +9,9 @@ const timetableGroups: PDFGroup[] = [
       { name: 'TIME TABLE_SEM V_C-SCHEME_NOV 2025', url: '/pdfs/exam/TIME-TABLE_SEM-V_C-SCHEME_NOV-2025.pdf' },
       { name: 'TIME TABLE_SEM III_C-SCHEME_NOV 2025', url: '/pdfs/exam/TIME-TABLE_SEM-III_C-SCHEME_NOV-2025.pdf' },
       { name: 'TIME TABLE_SEM I_C-SCHEME_NOV 2025', url: '/pdfs/exam/TIME-TABLE_SEM-I-_C-SCHEME_-NOV-2025.pdf' },
-      { name: 'TIME TABLE _SEM VII_C-SCHEME_MAY 2025', url: 'vcet.edu.in/public/pdfs/exam/TIME-TABLE-_SEM-VII_C-SCHEME_MAY-2025.pdf' },
-      { name: 'TIME TABLE _SEM V_C-SCHEME_MAY 2025', url: 'vcet.edu.in/public/pdfs/exam/TIME-TABLE-_SEM-V_C-SCHEME_MAY-2025.pdf' },
-      { name: 'TIME TABLE _SEM III_C-SCHEME_MAY 2025', url: 'vcet.edu.in/public/pdfs/exam/TIME-TABLE-_SEM-III_C-SCHEME_MAY-2025.pdf' }
+      { name: 'TIME TABLE _SEM VII_C-SCHEME_MAY 2025', url: '/pdfs/exam/TIME-TABLE-_SEM-VII_C-SCHEME_MAY-2025.pdf' },
+      { name: 'TIME TABLE _SEM V_C-SCHEME_MAY 2025', url: '/pdfs/exam/TIME-TABLE-_SEM-V_C-SCHEME_MAY-2025.pdf' },
+      { name: 'TIME TABLE _SEM III_C-SCHEME_MAY 2025', url: '/pdfs/exam/TIME-TABLE-_SEM-III_C-SCHEME_MAY-2025.pdf' }
     ]
   }
 ];
