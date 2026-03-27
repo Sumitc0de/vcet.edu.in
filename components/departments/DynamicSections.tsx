@@ -83,3 +83,44 @@ export const DynamicLinksList = ({ items, deptName, title, labelKey, urlKey }: {
     </section>
   );
 };
+
+export const DynamicFacultyAchievements = ({ achievements, deptName }: { achievements: any[], deptName: string }) => {
+  return (
+    <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100 space-y-8">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="w-8 h-px bg-brand-gold" />
+        <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-gold">{deptName}</span>
+      </div>
+      <h3 className="text-2xl font-bold text-brand-navy relative inline-block">Faculty Achievements<span className="absolute -bottom-2 left-0 w-12 h-1 bg-brand-gold rounded-full" /></h3>
+      
+      {(!achievements || achievements.length === 0) ? (
+        <p className="text-slate-500 italic">Faculty achievements will be updated soon.</p>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {achievements.map((ach, idx) => (
+            <div key={idx} className="flex flex-col bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:shadow-md transition-shadow">
+              {ach.image && (
+                <div className="h-40 mb-4 rounded-xl overflow-hidden bg-slate-200">
+                  <img src={resolveApiUrl(ach.image as string)} alt={ach.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <h4 className="font-bold text-brand-navy mb-2">{ach.title}</h4>
+              <p className="text-sm text-slate-600 mb-4 flex-grow">{ach.description}</p>
+              {ach.pdf && (
+                <a 
+                  href={resolveApiUrl(ach.pdf as string)} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 text-brand-gold font-semibold text-sm hover:text-brand-navy transition-colors"
+                >
+                  <i className="ph ph-file-pdf text-lg" />
+                  View PDF
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};
