@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { pagesApi } from '../../api/pagesApi';
-import type { AdmissionData, AdmissionPayload, AdmissionDocument } from '../../types';
+import type { AdmissionData, AdmissionPayload, AdmissionDocument, CourseIntakeItem } from '../../types';
 
 /* ── Toast Component ────────────────────────────────────────────────────────── */
 const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -151,6 +151,71 @@ const DocumentListManager: React.FC<{
   );
 };
 
+/* ── Course List Manager ──────────────────────────────────────────────────── */
+const CourseListManager: React.FC<{
+  title: string;
+  items: CourseIntakeItem[];
+  onChange: (items: CourseIntakeItem[]) => void;
+}> = ({ title, items, onChange }) => {
+  const addItem = () => onChange([...(items || []), { name: '', intake: '' }]);
+  const removeItem = (index: number) => onChange(items.filter((_, i) => i !== index));
+  const updateItem = (index: number, updates: Partial<CourseIntakeItem>) => {
+    const next = [...items];
+    next[index] = { ...next[index], ...updates };
+    onChange(next);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">{title}</h4>
+        <button 
+          type="button" 
+          onClick={addItem}
+          className="px-3 py-1.5 rounded-lg bg-slate-900 shadow-sm text-white text-[10px] font-black uppercase tracking-wider hover:bg-slate-800 transition-all flex items-center gap-1.5"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
+          Add Course
+        </button>
+      </div>
+      {(items || []).map((item, idx) => (
+        <div key={idx} className="flex items-center gap-4 bg-white ring-1 ring-slate-200 rounded-2xl p-4 transition-all hover:ring-[#2563EB] group">
+          <div className="flex-grow grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-3">
+              <input 
+                placeholder="Course Name"
+                className="w-full bg-transparent border-0 focus:ring-0 px-0 py-1 text-sm font-bold text-slate-700 outline-none"
+                value={item.name}
+                onChange={e => updateItem(idx, { name: e.target.value })}
+              />
+            </div>
+            <div className="md:col-span-1">
+              <input 
+                placeholder="Intake"
+                className="w-full bg-slate-50 ring-1 ring-slate-100 rounded-xl px-4 py-1.5 text-sm font-black text-slate-900 outline-none text-center focus:ring-2 focus:ring-[#2563EB]"
+                value={item.intake}
+                onChange={e => updateItem(idx, { intake: e.target.value })}
+              />
+            </div>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => removeItem(idx)}
+            className="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+      ))}
+      {(!items || items.length === 0) && (
+        <div className="py-8 text-center border-2 border-dashed border-slate-100 rounded-[2rem]">
+          <p className="text-xs text-slate-300 font-bold uppercase tracking-widest">No courses added yet</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 /* ── Main Admission Form ──────────────────────────────────────────────────── */
 interface AdmissionFormProps {
   activeSection?: string;
@@ -159,7 +224,9 @@ interface AdmissionFormProps {
 
 const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) => {
   const [data, setData] = useState<AdmissionData | null>(null);
-  const [payload, setPayload] = useState<AdmissionPayload>({});
+  const [payload, setPayload] = useState<AdmissionPayload>({
+    courses: { ug: [], pg: [], management: [] }
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -169,8 +236,7 @@ const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) 
       .then(res => {
         setData(res.data);
         setPayload({
-          intakeSeats: res.data?.intakeSeats || '',
-          intakeDetails: res.data?.intakeDetails || '',
+          courses: res.data?.courses || { ug: [], pg: [], management: [] },
           feesStructure: Array.isArray(res.data?.feesStructure) ? res.data.feesStructure : [],
           documentsRequired: Array.isArray(res.data?.documentsRequired) ? res.data.documentsRequired : [],
           cutOffs: Array.isArray(res.data?.cutOffs) ? res.data.cutOffs : [],
@@ -244,28 +310,22 @@ const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) 
         {/* Courses & Intake */}
         {(!activeSection || activeSection === 'intake') && (
           <SectionCard title="Courses & Intake" icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>}>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="md:col-span-1">
-                <label className={labelBase}>Intake Seats</label>
-                <input 
-                  name="intakeSeats" 
-                  value={payload.intakeSeats || ''} 
-                  onChange={handleChange} 
-                  className={inputBase} 
-                  placeholder="600"
-                />
-              </div>
-              <div className="md:col-span-3">
-                <label className={labelBase}>Intake Details (Max 40 chars)</label>
-                <input 
-                  name="intakeDetails" 
-                  maxLength={40}
-                  value={payload.intakeDetails || ''} 
-                  onChange={handleChange} 
-                  className={inputBase} 
-                  placeholder="e.g. across 5 core programs"
-                />
-              </div>
+            <div className="space-y-12">
+              <CourseListManager 
+                title="Under Graduate Program" 
+                items={payload.courses?.ug || []} 
+                onChange={items => setPayload(prev => ({ ...prev, courses: { ...prev.courses!, ug: items } }))}
+              />
+              <CourseListManager 
+                title="Post Graduate Program" 
+                items={payload.courses?.pg || []} 
+                onChange={items => setPayload(prev => ({ ...prev, courses: { ...prev.courses!, pg: items } }))}
+              />
+              <CourseListManager 
+                title="Management Course Program" 
+                items={payload.courses?.management || []} 
+                onChange={items => setPayload(prev => ({ ...prev, courses: { ...prev.courses!, management: items } }))}
+              />
             </div>
           </SectionCard>
         )}

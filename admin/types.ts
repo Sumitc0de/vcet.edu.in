@@ -483,22 +483,38 @@ export interface AdmissionDocument {
   fileName: string | null;
 }
 
+export interface CourseIntakeItem {
+  id?: string;
+  name: string;
+  intake: string;
+}
+
 export interface AdmissionData {
-  intakeSeats: string;
-  intakeDetails: string;
+  id: string;
+  courses: {
+    ug: CourseIntakeItem[];
+    pg: CourseIntakeItem[];
+    management: CourseIntakeItem[];
+  };
   feesStructure: AdmissionDocument[];
-  brochure: { fileName: string | null; fileUrl: string | null };
+  brochure: {
+    fileName: string;
+    fileUrl: string;
+  };
   documentsRequired: AdmissionDocument[];
   cutOffs: AdmissionDocument[];
-  updatedAt?: string;
+  updatedAt: string;
 }
 
 export interface AdmissionPayload {
-  intakeSeats?: string;
-  intakeDetails?: string;
-  feesStructure?: (AdmissionDocument & { file?: File | null })[];
-  documentsRequired?: (AdmissionDocument & { file?: File | null })[];
-  cutOffs?: (AdmissionDocument & { file?: File | null })[];
+  courses?: {
+    ug: CourseIntakeItem[];
+    pg: CourseIntakeItem[];
+    management: CourseIntakeItem[];
+  };
+  feesStructure?: AdmissionDocument[];
+  documentsRequired?: AdmissionDocument[];
+  cutOffs?: AdmissionDocument[];
 
   // Single Files
   brochureFile?: File | null;

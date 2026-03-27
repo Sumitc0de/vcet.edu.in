@@ -733,8 +733,23 @@ export const MOCK_DEPARTMENTS: Department[] = [
 /* ── Admission & Academics Singletons ───────────────────────────────────────── */
 
 const MOCK_ADMISSION: AdmissionData = {
-  intakeSeats: "600",
-  intakeDetails: "across 5 core engineering programs",
+  id: 'admission-1',
+  courses: {
+    ug: [
+      { name: 'Computer Engineering', intake: '180' },
+      { name: 'Computer Science and Engineering (Data Science)', intake: '180' },
+      { name: 'Information Technology', intake: '60' },
+      { name: 'Artificial Intelligence and Data Science', intake: '120' },
+      { name: 'Mechanical Engineering', intake: '60' },
+      { name: 'Electronics and Telecommunication Engineering', intake: '60' },
+    ],
+    pg: [
+      { name: 'M.E. Computer Engineering', intake: '18' },
+    ],
+    management: [
+      { name: 'Master of Management Studies (MMS)', intake: '120' },
+    ],
+  },
   feesStructure: [
     { title: 'F.E. Fee Structure', description: 'Regular First Year Admission', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-Fee-2024-25.pdf', fileName: 'FE-Fee.pdf' },
     { title: 'Direct S.E. Fee', description: 'Lateral Entry Admission', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-Fee-2024-25.pdf', fileName: 'DSE-Fee.pdf' },

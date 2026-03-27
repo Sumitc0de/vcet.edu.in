@@ -28,8 +28,7 @@ export const pagesApi = {
       if (USE_MOCK) return mockAdmission.update(payload);
       
       const formData = new FormData();
-      if (payload.intakeSeats) formData.append('intakeSeats', payload.intakeSeats);
-      if (payload.intakeDetails) formData.append('intakeDetails', payload.intakeDetails);
+      if (payload.courses) formData.append('courses', JSON.stringify(payload.courses));
       
       if (payload.brochureFile) formData.append('brochure', payload.brochureFile);
 
