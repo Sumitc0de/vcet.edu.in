@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
+import { useAdmissionSection } from '../../hooks/useAdmissionSection';
+import { getSectionContentValue } from './admissionSectionUtils';
 
 type CutOffItem = {
   id: number;
@@ -19,7 +21,7 @@ type TimelineItemProps = {
   item: CutOffItem;
 };
 
-const CUT_OFF_DATA: CutOffItem[] = [
+const FALLBACK_CUT_OFF_DATA: CutOffItem[] = [
   {
     id: 1,
     title: 'F.E. (First Year Engineering) 2025-26',
@@ -104,26 +106,42 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => (
 );
 
 const CutOff: React.FC = () => {
+  const { section, error } = useAdmissionSection('cut-off');
+  const cutOffData: CutOffItem[] = section?.items?.map((item) => ({
+    id: item.id,
+    title: item.title,
+    url: item.document_url || item.external_url || '#',
+    badge: item.badge || undefined,
+    year: item.academic_year || 'Latest',
+    category: item.category || 'Admissions',
+  })) ?? FALLBACK_CUT_OFF_DATA;
+
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#fcfdff] font-sans selection:bg-[#e6a315] selection:text-white">
         <PageBanner
-          title="Cut Off Details"
+          title={section?.title || 'Cut Off Details'}
           breadcrumbs={[{ label: 'Cut Off' }]}
         />
 
         <main className="relative z-20 mx-auto mt-12 max-w-4xl px-6 pb-24 md:mt-20">
+          {error && (
+            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-medium text-amber-800">
+              Showing the last bundled cut-off archive because the live admission API could not be loaded.
+            </div>
+          )}
+
           <div className="mb-10 flex items-center justify-between border-b border-gray-100 pb-6">
             <div>
               <h2 className="text-2xl font-black text-[#1e4e85]">
-                Centralized Admission Process
+                {getSectionContentValue(section, 'heading', 'Centralized Admission Process')}
               </h2>
               <p className="mt-1 text-sm text-gray-400">
-                Archive of CAP Round cut-offs for various years
+                {getSectionContentValue(section, 'subheading', 'Archive of CAP Round cut-offs for various years')}
               </p>
             </div>
             <div className="hidden text-right sm:block">
-              <span className="text-3xl font-black text-[#e6a315]">{CUT_OFF_DATA.length}</span>
+              <span className="text-3xl font-black text-[#e6a315]">{cutOffData.length}</span>
               <p className="text-[10px] font-bold uppercase leading-none tracking-tighter text-gray-400">
                 Total Documents
               </p>
@@ -131,7 +149,7 @@ const CutOff: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            {CUT_OFF_DATA.map((item) => (
+            {cutOffData.map((item) => (
               <TimelineItem key={item.id} item={item} />
             ))}
           </div>

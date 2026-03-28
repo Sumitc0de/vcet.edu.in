@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SITE_PAGE_TABS } from './sitePagesConfig';
 import AdmissionForm from '../admission/AdmissionForm';
+import ScholarshipForm from '../admission/ScholarshipForm';
 import AcademicsForm from '../academics/AcademicsForm';
 import ExamsForm from '../exams/ExamsForm';
 import CommitteesForm from '../committees/CommitteesForm';
@@ -156,6 +157,9 @@ const SitePages: React.FC = () => {
 
   // Handle Section-specific Editors
   if (activeTab.key === 'admission' && activeSection) {
+    if (activeSection === 'scholarships') {
+      return <ScholarshipForm onBack={() => setActiveSection(null)} />;
+    }
     return <AdmissionForm activeSection={activeSection} onBack={() => setActiveSection(null)} />;
   }
 

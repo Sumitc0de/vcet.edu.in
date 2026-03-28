@@ -76,9 +76,20 @@ function applyCsrfHeader(headers: Headers): void {
 }
 
 function extractErrorMessage(status: number, json: unknown): string {
-  const payload = json as { message?: string } | null;
+  const payload = json as {
+    message?: string;
+    errors?: Record<string, string[] | string>;
+  } | null;
   if (status === 419) {
     return "Your admin session expired or the CSRF token is missing. Refresh the page and sign in again if needed.";
+  }
+
+  const firstError = payload?.errors
+    ? Object.values(payload.errors).flatMap((value) => Array.isArray(value) ? value : [value])[0]
+    : null;
+
+  if (firstError) {
+    return String(firstError);
   }
 
   return payload?.message ?? `HTTP ${status}`;

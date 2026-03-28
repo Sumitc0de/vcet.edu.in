@@ -1,9 +1,11 @@
 import React from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
-import { FileText, Download, Calendar, ShieldCheck } from 'lucide-react';
+import { FileText, Download, Calendar } from 'lucide-react';
+import { useAdmissionSection } from '../../hooks/useAdmissionSection';
+import { getSectionContentValue } from './admissionSectionUtils';
 
-const feesData = [
+const fallbackFeesData = [
   {
     title: 'FE Fee Structure',
     description: 'First Year Engineering fee details for 2025-26.',
@@ -43,10 +45,18 @@ const feesData = [
 ];
 
 const FeesStructure: React.FC = () => {
+  const { section, error } = useAdmissionSection('fees-structure');
+  const feesData = section?.items?.map((item) => ({
+    title: item.title,
+    description: item.description || '',
+    link: item.document_url || item.external_url || '#',
+    year: item.academic_year || '',
+  })) ?? fallbackFeesData;
+
   return (
     <PageLayout>
       <PageBanner
-        title="Fees Structure 25-26"
+        title={section?.title || 'Fees Structure 25-26'}
         breadcrumbs={[{ label: 'Fees Structure' }]}
       />
 
@@ -57,16 +67,19 @@ const FeesStructure: React.FC = () => {
           <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row md:items-end gap-12">
             <div className="flex-1">
               <span className="text-[12px] font-bold uppercase tracking-[0.4em] text-[#fdb813] mb-4 block">
-                Academic Administration
+                {getSectionContentValue(section, 'badge', 'Academic Administration')}
               </span>
               <h2 className="text-4xl md:text-5xl font-display font-bold text-[#1a4b7c] leading-tight tracking-tight">
-                Fee Structure
+                {getSectionContentValue(section, 'heading', 'Fee Structure')}
               </h2>
               <div className="w-20 h-1.5 bg-[#1a4b7c] mt-6" />
             </div>
             <p className="md:max-w-md text-[17px] text-[#6B7280] leading-[1.8] italic border-l-4 border-[#fdb813] pl-6">
-              Official fee schedules for the 2025-26 session, providing transparent 
-              breakdowns for all undergraduate and postgraduate programs.
+              {getSectionContentValue(
+                section,
+                'intro',
+                'Official fee schedules for the 2025-26 session, providing transparent breakdowns for all undergraduate and postgraduate programs.',
+              )}
             </p>
           </div>
         </section>
@@ -74,6 +87,11 @@ const FeesStructure: React.FC = () => {
         {/* ── Table Section ── */}
         <section className="py-20 px-6 bg-[#FBFBFB]">
           <div className="max-w-[1200px] mx-auto">
+            {error && (
+              <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-medium text-amber-800">
+                Showing the last bundled fee records because the live admission API could not be loaded.
+              </div>
+            )}
             
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -91,7 +109,9 @@ const FeesStructure: React.FC = () => {
                   <thead>
                     <tr className="bg-[#1a4b7c] text-white">
                       <th className="px-8 py-5 text-left text-[13px] font-bold uppercase tracking-[0.2em] border-r border-white/10 w-[80px]"></th>
-                      <th className="px-8 py-5 text-left text-[13px] font-bold uppercase tracking-[0.2em] border-r border-white/10">Program Documentation</th>
+                      <th className="px-8 py-5 text-left text-[13px] font-bold uppercase tracking-[0.2em] border-r border-white/10">
+                        {getSectionContentValue(section, 'table_heading', 'Program Documentation')}
+                      </th>
                       <th className="px-8 py-5 text-center text-[13px] font-bold uppercase tracking-[0.2em] border-r border-white/10 w-[180px]">Year</th>
                       <th className="px-8 py-5 text-right text-[13px] font-bold uppercase tracking-[0.2em] w-[200px]">Download Link</th>
                     </tr>
