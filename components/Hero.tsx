@@ -365,10 +365,10 @@ const Hero: React.FC = () => {
     <>
       <section
         id="home"
-        className="relative w-full overflow-hidden bg-transparent text-white lg:min-h-[100dvh] lg:h-screen lg:-mt-16 lg:pt-16 lg:bg-brand-dark"
+        className="relative w-full overflow-hidden bg-transparent text-white sm:min-h-[100vh] sm:h-screen sm:-mt-16 sm:pt-16 sm:bg-brand-dark"
       >
-      {/* ── Mobile hero image + card (keeps them adjacent) ───────────────── */}
-      <div className="lg:hidden flex flex-col w-full bg-brand-dark">
+      {/* ── Mobile hero image + card — only shown on xs/very small screens ───── */}
+      <div className="sm:hidden flex flex-col w-full bg-brand-dark">
         <img
           src="/Images/Home%20background/VCET-Home-1-scaled.jpg"
           alt="VCET Campus"
@@ -416,16 +416,18 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="hidden lg:block absolute inset-0 z-0 overflow-hidden">
-        <img
-          src="/Images/Home%20background/VCET-Home-1-scaled.jpg"
-          alt="VCET Campus"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-      </div>
+      {/* Full-screen background image — covered on desktop, panning on mobile touch */}
+      <div
+        className="hero-bg-pan hidden sm:block absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/Images/Home%20background/VCET-Home-1-scaled.jpg')",
+          backgroundRepeat: "no-repeat",
+        }}
+        aria-hidden="true"
+      />
 
       {/* ── Right Banner Slideshow Panel ───────────────────────────────── */}
-      <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[40%] max-w-[560px] shadow-2xl rounded-lg overflow-hidden">
+      <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[40%] max-w-[560px] shadow-2xl rounded-lg overflow-hidden">
         <div className="relative w-full">
           {/* Spacer image to set natural aspect ratio */}
           {displaySlides[0]?.src ? (
@@ -457,10 +459,10 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 hidden lg:flex h-full w-full items-center justify-start px-3 sm:px-6 md:px-10 lg:px-12">
+      <div className="relative z-10 hidden sm:flex h-full w-full items-center justify-start px-3 sm:px-6 md:px-10 lg:px-12">
         {/* Outer wrapper — allows the toggle button to escape overflow-hidden */}
         <div
-          className="hidden lg:block relative transition-all duration-500 ease-in-out"
+          className="hidden sm:block relative transition-all duration-500 ease-in-out"
           style={{
             transform: cardOpen ? "translateX(0)" : "translateX(-120%)",
             opacity: cardOpen ? 1 : 0,
@@ -474,8 +476,8 @@ const Hero: React.FC = () => {
               background: "rgba(10, 20, 45, 0.72)",
               backdropFilter: "blur(18px)",
               WebkitBackdropFilter: "blur(18px)",
-              height: "calc(100dvh - 100px)",
-              maxHeight: "calc(100dvh - 100px)",
+              height: "auto",
+              maxHeight: "calc(100vh - 100px)",
             }}
           >
             {/* Content — swaps between form and notices/events */}

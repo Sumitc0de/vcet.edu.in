@@ -22,11 +22,10 @@
         line-height: 1.6;
         letter-spacing: -0.01em;
         min-height: 100vh;
-        overflow-x: clip;
       }
       /* Hero background always covers the full viewport */
       #home {
-        height: 100dvh;
+        min-height: 100vh;
       }
       .no-scrollbar::-webkit-scrollbar {
         display: none;
@@ -190,6 +189,23 @@
       }
       @keyframes heroFadeUp {
         to { opacity: 1; transform: translateY(0); }
+      }
+      /* ── Hero background — desktop (mouse): full-cover, no animation ─── */
+      .hero-bg-pan {
+        background-size: cover;
+        background-position: center center;
+      }
+      /* ── Hero background pan — ONLY on touch/mobile devices ─────────── */
+      @media (pointer: coarse) {
+        .hero-bg-pan {
+          background-size: auto 100%;
+          background-position: left center;
+          animation: heroPan 26s ease-in-out infinite alternate;
+        }
+      }
+      @keyframes heroPan {
+        0%   { background-position: left center; }
+        100% { background-position: right center; }
       }
       /* ── Animated counter ─────────────────────────────── */
       .counter-value {
