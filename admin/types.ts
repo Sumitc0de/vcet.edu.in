@@ -521,6 +521,41 @@ export interface CommitteeMember {
   contact?: string;
   email?: string;
 }
+
+export interface CommitteeReport {
+  year: string;
+  fileName: string | null;
+  fileUrl: string | null;
+}
+
+export interface CommitteeDocument {
+  title: string;
+  fileName: string | null;
+  fileUrl: string | null;
+  pdfUrl?: string;
+}
+
+export interface CommitteeData {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  responsibilities?: string[];
+  objectives?: string[];
+  guidelines?: string[];
+  members?: CommitteeMember[];
+  reports?: CommitteeReport[];
+  documents?: CommitteeDocument[];
+}
+
+export interface CommitteePayload {
+  responsibilities?: string[];
+  objectives?: string[];
+  guidelines?: string[];
+  members?: CommitteeMember[];
+  reports?: (CommitteeReport & { file?: File | null })[];
+  documents?: (CommitteeDocument & { file?: File | null })[];
+}
 // ── Admission Sections (new structured admission system) ────────────────────────
 
 export interface AdmissionItem {

@@ -245,6 +245,10 @@ async function resolveMockSection(sectionLookup: AdmissionSectionLookup): Promis
   return section;
 }
 
+function isHttp500Error(error: unknown): boolean {
+  return error instanceof Error && /HTTP\s*500/i.test(error.message);
+}
+
 export const admissionsApi = {
   listSections: USE_MOCK
     ? async () => {
@@ -371,15 +375,43 @@ export const admissionsApi = {
       }
     : async (sectionLookup: AdmissionSectionLookup, payload: AdmissionItemPayload) => {
         const routeKey = await resolveSectionRouteKey(sectionLookup);
-        const response = await client.requestForm<AdmissionItemResponse>(
-          `/admissions/${routeKey}/items`,
-          itemToFormData(payload),
-        );
-        return {
-          success: true,
-          data: normalizeItem(response.item),
-          message: response.message,
-        } as ItemResponse<AdmissionItem>;
+
+        try {
+          const response = await client.requestForm<AdmissionItemResponse>(
+            `/admissions/${routeKey}/items`,
+            itemToFormData(payload),
+          );
+          return {
+            success: true,
+            data: normalizeItem(response.item),
+            message: response.message,
+          } as ItemResponse<AdmissionItem>;
+        } catch (primaryError) {
+          if (typeof sectionLookup !== 'string' || !isHttp500Error(primaryError)) {
+            throw primaryError;
+          }
+
+          // Backward-compat fallback for deployments that still bind the section route by numeric ID.
+          const sections = await loadSections();
+          const matchedSection = sections.find((section) => section.slug === sectionLookup);
+          if (!matchedSection) {
+            throw primaryError;
+          }
+
+          try {
+            const retryResponse = await client.requestForm<AdmissionItemResponse>(
+              `/admissions/${matchedSection.id}/items`,
+              itemToFormData(payload),
+            );
+            return {
+              success: true,
+              data: normalizeItem(retryResponse.item),
+              message: retryResponse.message,
+            } as ItemResponse<AdmissionItem>;
+          } catch {
+            throw primaryError;
+          }
+        }
       },
 
   updateItem: USE_MOCK
