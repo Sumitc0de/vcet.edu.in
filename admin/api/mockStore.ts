@@ -7,7 +7,7 @@ import type {
   Notice, Event, Placement, HeroSlide, NewsTicker,
   Achievement, Testimonial, GalleryImage, PlacementPartner, Enquiry, Faculty, Department,
   AdmissionData, AcademicsData, AdmissionDocument,
-  AdmissionSection, AdmissionItem,
+  AdmissionSection, AdmissionItem, ExamData,
   ListResponse, ItemResponse, DeleteResponse,
 } from '../types';
 
@@ -763,6 +763,10 @@ const MOCK_ADMISSION: AdmissionData = {
     { title: 'F.E. (First Year Engineering) 2024-25', description: 'Engineering Department', year: '2024-25', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-CAP-1-2024-25.pdf', fileName: 'FE-CAP-1.pdf' },
     { title: 'DSE (Direct Second Year) 2024-25', description: 'Engineering Department', year: '2024-25', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-CAP-1-2024-25.pdf', fileName: 'DSE-CAP-1.pdf' },
   ],
+  scholarships: [
+    { title: 'Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna - EBC', description: 'Government Scholarship', year: '2025-26', fileUrl: 'https://vcet.edu.in/ebc-scholarship.pdf', fileName: 'EBC-Scholarship.pdf' },
+    { title: 'Post Matric Scholarship to OBC Students - OBC Scholarship', description: 'Government Scholarship', year: '2025-26', fileUrl: 'https://vcet.edu.in/obc-scholarship.pdf', fileName: 'OBC-Scholarship.pdf' },
+  ],
   updatedAt: new Date().toISOString(),
 };
 
@@ -777,6 +781,32 @@ const MOCK_ACADEMICS: AcademicsData = {
   ],
   updatedAt: new Date().toISOString(),
 };
+
+export const MOCK_EXAM: ExamData = {
+  syllabus: [
+    { title: 'AI & DS - SE Revised 2019-20', description: 'Artificial Intelligence and Data Science', year: '2024-25', fileUrl: 'https://vcet.edu.in/syllabus/ai-ds-se.pdf', fileName: 'ai-ds-se.pdf' },
+    { title: 'Civil Engineering - TE Revised 2019-20', description: 'Civil Engineering', year: '2024-25', fileUrl: 'https://vcet.edu.in/syllabus/civil-te.pdf', fileName: 'civil-te.pdf' },
+  ],
+  timetable: [
+    { title: 'FE Semester I FH2024', description: 'First Year Engineering', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/fe-sem1-fh2024.pdf', fileName: 'fe-sem1-fh2024.pdf' },
+  ],
+  questionPapers: [
+    { title: 'Computer Engineering - Sem III Dec 2023', description: 'Computer Engineering', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/comp-sem3-dec2023.pdf', fileName: 'comp-sem3-dec2023.pdf' },
+  ],
+  samplePapers: [
+    { title: 'Sample Paper - Discrete Structures', description: 'Common for all branches', year: '2024-25', fileUrl: 'https://vcet.edu.in/exams/sample-ds.pdf', fileName: 'sample-ds.pdf' },
+  ],
+  results: [
+    { title: 'BE Semester VIII Result - May 2024', description: 'Final Year Engineering', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/be-sem8-may2024.pdf', fileName: 'be-sem8-may2024.pdf' },
+  ],
+  notices: [
+    { title: 'KT Form Notice - Sem III to VI May 2024', description: 'Exam Cell Notice', year: '2023-24', fileUrl: 'https://vcet.edu.in/notices/kt-form-may2024.pdf', fileName: 'kt-form-may2024.pdf' },
+  ],
+  updatedAt: new Date().toISOString(),
+};
+
+export const createExamCrud = () => createMockSingleton(MOCK_EXAM, 'vcet_mock_exam');
+
 
 export const createAdmissionCrud = () => createMockSingleton(MOCK_ADMISSION, 'vcet_mock_admission_v4');
 export const createAcademicsCrud = () => createMockSingleton(MOCK_ACADEMICS, 'vcet_mock_academics');
@@ -1061,6 +1091,88 @@ export const MOCK_ADMISSION_SECTIONS: AdmissionSection[] = [
         document_url: 'https://vcet.edu.in/wp-content/uploads/2024/08/Document-Required-2024-25.pdf',
         is_active: true,
         sort_order: 1,
+      },
+    ],
+  },
+  {
+    id: 4,
+    slug: 'scholarships',
+    navigation_title: 'Scholarships',
+    title: 'Scholarships',
+    summary: 'Government and institutional scholarship programs',
+    description: 'Information about scholarships available for students including government and institutional schemes.',
+    section_type: 'scholarships',
+    has_dropdown: false,
+    dropdown_key: null,
+    content: null,
+    is_active: true,
+    sort_order: 4,
+    items: [
+      {
+        id: 8,
+        admission_section_id: 4,
+        item_type: 'document',
+        title: 'Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna - EBC',
+        subtitle: null,
+        description: 'Government Scholarship for Economically Backward Class students',
+        category: 'Government',
+        academic_year: '2025-26',
+        badge: 'GOV',
+        tag: 'EBC',
+        group_key: 'scholarships',
+        group_label: 'Scholarships',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'EBC-Scholarship.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 120000,
+        pdf_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        is_active: true,
+        sort_order: 1,
+      },
+      {
+        id: 9,
+        admission_section_id: 4,
+        item_type: 'document',
+        title: 'Post Matric Scholarship to OBC Students - OBC Scholarship',
+        subtitle: null,
+        description: 'Government Scholarship for Other Backward Class students',
+        category: 'Government',
+        academic_year: '2025-26',
+        badge: 'GOV',
+        tag: 'OBC',
+        group_key: 'scholarships',
+        group_label: 'Scholarships',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'OBC-Scholarship.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 135000,
+        pdf_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        is_active: true,
+        sort_order: 2,
       },
     ],
   },

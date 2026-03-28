@@ -3,7 +3,7 @@ import { admissionsApi } from '../../api/admissions';
 import type { AdmissionItem, AdmissionItemPayload, AdmissionSection, AdmissionSectionPayload } from '../../types';
 import { GripVertical } from 'lucide-react';
 
-type SectionKey = 'intake' | 'fees' | 'documents' | 'cutoffs' | 'brochure';
+type SectionKey = 'intake' | 'fees' | 'documents' | 'cutoffs' | 'brochure' | 'scholarships';
 
 interface AdmissionFormProps {
   activeSection?: string;
@@ -84,6 +84,12 @@ const SECTION_CONFIGS: Record<SectionKey, SectionConfig> = {
     sectionType: 'document_list',
     helperText: 'Manage the brochure page copy and the brochure document itself.',
   },
+  scholarships: {
+    slug: 'scholarships',
+    label: 'Scholarships',
+    sectionType: 'document_list',
+    helperText: 'Manage scholarship information including government and institutional scholarship schemes.',
+  },
 };
 
 const COURSE_GROUPS = [
@@ -136,292 +142,21 @@ const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ t
   </div>
 );
 
-function isSectionKey(value?: string): value is SectionKey {
-  return Boolean(value && value in SECTION_CONFIGS);
+const inputBase = 'w-full bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-[#2563EB] rounded-2xl px-5 py-4 text-sm font-bold transition-all outline-none';
+const labelBase = 'block text-xs font-black text-slate-400 uppercase tracking-widest mb-2.5 ml-1';
+
+/* ── Document List Manager ─────────────────────────────────────────────────── */
+interface DocItem extends AdmissionDocument {
+  file?: File | null;
 }
 
-function toEditableItem(item: AdmissionItem): EditableItem {
-  return {
-    client_id: createEditableItemId(),
-    id: item.id,
-    item_type: item.item_type === 'course' ? 'course' : 'document',
-    title: item.title ?? '',
-    description: item.description ?? '',
-    category: item.category ?? '',
-    academic_year: item.academic_year ?? '',
-    badge: item.badge ?? '',
-    tag: item.tag ?? '',
-    group_key: item.group_key ?? '',
-    group_label: item.group_label ?? '',
-    intake: item.intake ? String(item.intake) : '',
-    external_url: item.external_url ?? '',
-    existingExternalUrl: item.external_url ?? '',
-    currentDocumentUrl: item.document_url ?? '',
-    currentDocumentName: item.pdf_name ?? '',
-    pdfFile: null,
-    is_active: item.is_active,
-    sort_order: item.sort_order ?? 0,
-  };
-}
-
-function createEmptyCourseItem(category: string): EditableItem {
-  return {
-    client_id: createEditableItemId(),
-    item_type: 'course',
-    title: '',
-    description: '',
-    category,
-    academic_year: '',
-    badge: '',
-    tag: '',
-    group_key: '',
-    group_label: '',
-    intake: '',
-    external_url: '',
-    existingExternalUrl: '',
-    currentDocumentUrl: '',
-    currentDocumentName: '',
-    pdfFile: null,
-    is_active: true,
-    sort_order: 0,
-  };
-}
-
-function createEmptyDocumentItem(sectionKey: SectionKey): EditableItem {
-  return {
-    client_id: createEditableItemId(),
-    item_type: 'document',
-    title: '',
-    description: '',
-    category: '',
-    academic_year: '',
-    badge: '',
-    tag: '',
-    group_key: '',
-    group_label: '',
-    intake: '',
-    external_url: '',
-    existingExternalUrl: '',
-    currentDocumentUrl: '',
-    currentDocumentName: '',
-    pdfFile: null,
-    is_active: true,
-    sort_order: 0,
-  };
-}
-
-function toSectionFormState(section: AdmissionSection, config: SectionConfig): SectionFormState {
-  return {
-    slug: section.slug,
-    navigation_title: section.navigation_title ?? '',
-    title: section.title ?? '',
-    summary: section.summary ?? '',
-    description: section.description ?? '',
-    section_type: section.section_type === 'course_list' ? 'course_list' : config.sectionType,
-    has_dropdown: section.has_dropdown,
-    dropdown_key: section.dropdown_key ?? '',
-    sort_order: String(section.sort_order ?? 0),
-    is_active: section.is_active,
-    content: section.content ?? {},
-  };
-}
-
-function buildSectionPayload(state: SectionFormState): AdmissionSectionPayload {
-  return {
-    slug: state.slug,
-    navigation_title: state.navigation_title.trim() || state.title.trim(),
-    title: state.title.trim(),
-    summary: state.summary.trim() || null,
-    description: state.description.trim() || null,
-    section_type: state.section_type,
-    has_dropdown: state.has_dropdown,
-    dropdown_key: state.has_dropdown ? state.dropdown_key.trim() || null : null,
-    content: state.content,
-    is_active: state.is_active,
-    sort_order: Number.parseInt(state.sort_order, 10) || 0,
-  };
-}
-
-function buildItemPayload(item: EditableItem, index: number): AdmissionItemPayload {
-  return {
-    item_type: item.item_type,
-    title: item.title.trim(),
-    description: item.description.trim() || null,
-    category: item.category.trim() || null,
-    academic_year: item.academic_year.trim() || null,
-    badge: item.badge.trim() || null,
-    tag: item.tag.trim() || null,
-    group_key: item.group_key.trim() || null,
-    group_label: item.group_label.trim() || null,
-    intake: item.item_type === 'course' ? Number.parseInt(item.intake, 10) || null : null,
-    external_url: item.external_url.trim() || null,
-    pdf: item.pdfFile,
-    is_active: item.is_active,
-    sort_order: index,
-  };
-}
-
-function getContentValue(content: Record<string, unknown>, key: string, fallback = ''): string {
-  const value = content[key];
-  return typeof value === 'string' ? value : fallback;
-}
-
-function getSectionHeading(content: Record<string, unknown>, key: string, fallback: string): string {
-  const sectionHeadings = content.section_headings;
-  if (sectionHeadings && typeof sectionHeadings === 'object' && !Array.isArray(sectionHeadings)) {
-    const value = (sectionHeadings as Record<string, unknown>)[key];
-    if (typeof value === 'string') {
-      return value;
-    }
-  }
-
-  return fallback;
-}
-
-function getAutoScrollVelocity(pointerY: number): number {
-  if (pointerY < AUTO_SCROLL_EDGE_PX) {
-    return -Math.ceil(((AUTO_SCROLL_EDGE_PX - pointerY) / AUTO_SCROLL_EDGE_PX) * AUTO_SCROLL_MAX_SPEED);
-  }
-
-  const distanceFromBottom = window.innerHeight - pointerY;
-  if (distanceFromBottom < AUTO_SCROLL_EDGE_PX) {
-    return Math.ceil(((AUTO_SCROLL_EDGE_PX - distanceFromBottom) / AUTO_SCROLL_EDGE_PX) * AUTO_SCROLL_MAX_SPEED);
-  }
-
-  return 0;
-}
-
-const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) => {
-  const sectionKey: SectionKey = isSectionKey(activeSection) ? activeSection : 'intake';
-  const config = SECTION_CONFIGS[sectionKey];
-
-  const [section, setSection] = useState<AdmissionSection | null>(null);
-  const [form, setForm] = useState<SectionFormState | null>(null);
-  const [items, setItems] = useState<EditableItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [dragState, setDragState] = useState<DragState | null>(null);
-  const [collapsedItems, setCollapsedItems] = useState<Set<string>>(new Set());
-  const itemsRef = useRef(items);
-  const dragStateRef = useRef<DragState | null>(null);
-  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const pointerClientYRef = useRef(0);
-  const autoScrollVelocityRef = useRef(0);
-  const autoScrollFrameRef = useRef<number | null>(null);
-
-  const loadSection = async () => {
-    setLoading(true);
-
-    try {
-      const response = await admissionsApi.getSection(config.slug);
-      setSection(response.data);
-      setForm(toSectionFormState(response.data, config));
-      setItems((response.data.items ?? []).map(toEditableItem));
-    } catch (error) {
-      setToast({ message: error instanceof Error ? error.message : 'Unable to load admission section', type: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    void loadSection();
-  }, [config.slug]);
-
-  useEffect(() => {
-    itemsRef.current = items;
-  }, [items]);
-
-  useEffect(() => {
-    if (items.length > 0) {
-      const allItemIds = new Set(items.map((item) => item.client_id));
-      setCollapsedItems(allItemIds);
-    }
-  }, [items]);
-
-  useEffect(() => {
-    dragStateRef.current = dragState;
-  }, [dragState]);
-
-  useEffect(() => {
-    if (!dragState) {
-      document.body.style.removeProperty('user-select');
-      document.body.style.removeProperty('cursor');
-      return undefined;
-    }
-
-    document.body.style.userSelect = 'none';
-    document.body.style.cursor = 'grabbing';
-
-    const handlePointerMove = (event: PointerEvent) => {
-      pointerClientYRef.current = event.clientY;
-      syncDraggedItem(event.clientY);
-      updateAutoScroll(event.clientY);
-    };
-
-    const handlePointerUp = () => {
-      endDrag();
-    };
-
-    const handleWindowBlur = () => {
-      endDrag();
-    };
-
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('pointercancel', handlePointerUp);
-    window.addEventListener('blur', handleWindowBlur);
-
-    return () => {
-      stopAutoScroll();
-      document.body.style.removeProperty('user-select');
-      document.body.style.removeProperty('cursor');
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerUp);
-      window.removeEventListener('blur', handleWindowBlur);
-    };
-  }, [dragState]);
-
-  const updateFormField = <K extends keyof SectionFormState>(key: K, value: SectionFormState[K]) => {
-    setForm((current) => (current ? { ...current, [key]: value } : current));
-  };
-
-  const updateContentField = (key: string, value: string) => {
-    setForm((current) => {
-      if (!current) return current;
-      return {
-        ...current,
-        content: {
-          ...current.content,
-          [key]: value,
-        },
-      };
-    });
-  };
-
-  const updateSectionHeading = (key: string, value: string) => {
-    setForm((current) => {
-      if (!current) return current;
-      const sectionHeadings = current.content.section_headings;
-      const nextHeadings =
-        sectionHeadings && typeof sectionHeadings === 'object' && !Array.isArray(sectionHeadings)
-          ? { ...(sectionHeadings as Record<string, unknown>), [key]: value }
-          : { [key]: value };
-
-      return {
-        ...current,
-        content: {
-          ...current.content,
-          section_headings: nextHeadings,
-        },
-      };
-    });
-  };
-
-  const updateItem = (index: number, updates: Partial<EditableItem>) => {
-    setItems((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, ...updates } : item)));
+const DocumentListManager: React.FC<{
+  items: DocItem[];
+  onChange: (items: DocItem[]) => void;
+  type: 'fees' | 'documents' | 'cutoffs' | 'scholarships';
+}> = ({ items, onChange, type }) => {
+  const addItem = () => {
+    onChange([...(items || []), { title: '', description: '', year: '2024-25', category: 'UG - FIRST YEAR', fileUrl: null, fileName: null }]);
   };
 
   const removeItem = (index: number) => {
@@ -477,376 +212,92 @@ const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) 
     });
   };
 
-  const moveDraggedItem = (itemId: string, listId: string, pointerY: number) => {
-    setItems((current) => {
-      const listIndices = getListIndices(listId, current);
-      if (listIndices.length < 2) {
-        return current;
-      }
-
-      const activeIndex = listIndices.findIndex((index) => current[index]?.client_id === itemId);
-      if (activeIndex === -1) {
-        return current;
-      }
-
-      const otherIndices = listIndices.filter((index) => current[index]?.client_id !== itemId);
-      let insertPosition = listIndices.length - 1;
-
-      for (let position = 0; position < otherIndices.length; position += 1) {
-        const comparedItem = current[otherIndices[position]];
-        const cardElement = itemRefs.current[comparedItem.client_id];
-        if (!cardElement) {
-          continue;
-        }
-
-        const bounds = cardElement.getBoundingClientRect();
-        const midpoint = bounds.top + bounds.height / 2;
-        if (pointerY < midpoint) {
-          insertPosition = position;
-          break;
-        }
-      }
-
-      return reorderWithinList(current, listId, itemId, insertPosition);
-    });
-  };
-
-  const stopAutoScroll = () => {
-    autoScrollVelocityRef.current = 0;
-    if (autoScrollFrameRef.current !== null) {
-      window.cancelAnimationFrame(autoScrollFrameRef.current);
-      autoScrollFrameRef.current = null;
-    }
-  };
-
-  const endDrag = () => {
-    stopAutoScroll();
-    setDragState(null);
-  };
-
-  const syncDraggedItem = (pointerY: number) => {
-    const currentDragState = dragStateRef.current;
-    if (!currentDragState) {
-      return;
-    }
-
-    moveDraggedItem(currentDragState.itemId, currentDragState.listId, pointerY);
-    setDragState((current) =>
-      current
-        ? {
-            ...current,
-            currentClientY: pointerY,
-          }
-        : current,
-    );
-  };
-
-  const startAutoScroll = () => {
-    if (autoScrollFrameRef.current !== null) {
-      return;
-    }
-
-    const step = () => {
-      const velocity = autoScrollVelocityRef.current;
-      const currentDragState = dragStateRef.current;
-
-      if (!currentDragState || velocity === 0) {
-        autoScrollFrameRef.current = null;
-        return;
-      }
-
-      const maxScrollTop = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      const nextScrollTop = Math.max(0, Math.min(window.scrollY + velocity, maxScrollTop));
-
-      if (nextScrollTop !== window.scrollY) {
-        window.scrollTo({ top: nextScrollTop });
-        syncDraggedItem(pointerClientYRef.current);
-      }
-
-      autoScrollFrameRef.current = window.requestAnimationFrame(step);
-    };
-
-    autoScrollFrameRef.current = window.requestAnimationFrame(step);
-  };
-
-  const updateAutoScroll = (pointerY: number) => {
-    autoScrollVelocityRef.current = getAutoScrollVelocity(pointerY);
-    if (autoScrollVelocityRef.current === 0) {
-      stopAutoScroll();
-      return;
-    }
-
-    startAutoScroll();
-  };
-
-  const beginDrag = (itemId: string, listId: string, event: React.PointerEvent<HTMLButtonElement>) => {
-    if (event.button !== 0) {
-      return;
-    }
-
-    event.preventDefault();
-    const itemElement = itemRefs.current[itemId];
-    if (!itemElement) {
-      return;
-    }
-
-    const itemBounds = itemElement.getBoundingClientRect();
-    pointerClientYRef.current = event.clientY;
-    setDragState({
-      itemId,
-      listId,
-      currentClientY: event.clientY,
-      grabOffsetY: event.clientY - itemBounds.top,
-    });
-  };
-
-  const registerItemRef = (itemId: string) => (node: HTMLDivElement | null) => {
-    if (node) {
-      itemRefs.current[itemId] = node;
-      return;
-    }
-
-    delete itemRefs.current[itemId];
-  };
-
-  const addCourseItem = (category: string) => {
-    setItems((current) => [...current, createEmptyCourseItem(category)]);
-  };
-
-  const addDocumentItem = () => {
-    setItems((current) => [...current, createEmptyDocumentItem(sectionKey)]);
-  };
-
-  const validateBeforeSave = (): string | null => {
-    if (!form) return 'Admission form is not ready yet.';
-    if (!form.title.trim()) return 'Section title is required.';
-    if (!form.navigation_title.trim()) return 'Navigation title is required.';
-
-    for (const item of items) {
-      if (!item.title.trim()) {
-        return 'Every admission row needs a title before saving.';
-      }
-
-      if (item.item_type === 'course' && !item.intake.trim()) {
-        return `Intake is required for "${item.title || 'course'}".`;
-      }
-
-      if (item.item_type === 'document' && !item.external_url.trim() && !item.currentDocumentUrl && !item.pdfFile) {
-        return `Add a document URL or upload a PDF for "${item.title || 'document'}".`;
-      }
-    }
-
-    return null;
-  };
-
-  const getDragCardStyle = (itemId: string): React.CSSProperties | undefined => {
-    if (!dragState || dragState.itemId !== itemId) {
-      return undefined;
-    }
-
-    const itemBounds = itemRefs.current[itemId]?.getBoundingClientRect();
-    const itemTop = itemBounds?.top ?? 0;
-
-    return {
-      position: 'relative',
-      zIndex: 30,
-      transform: `translateY(${dragState.currentClientY - dragState.grabOffsetY - itemTop}px) scale(1.01)`,
-      boxShadow: '0 28px 65px rgba(15, 23, 42, 0.18)',
-    };
-  };
-
-  const renderDragHandle = (itemId: string, listId: string, label: string) => (
-    <button
-      type="button"
-      onPointerDown={(event) => beginDrag(itemId, listId, event)}
-      className="cursor-grab rounded-xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:border-slate-300 hover:text-slate-700 active:cursor-grabbing"
-      aria-label={label}
-    >
-      <GripVertical className="h-4 w-4" />
-    </button>
-  );
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!section || !form) {
-      setToast({ message: 'Section data is still loading.', type: 'error' });
-      return;
-    }
-
-    const validationError = validateBeforeSave();
-    if (validationError) {
-      setToast({ message: validationError, type: 'error' });
-      return;
-    }
-
-    setSaving(true);
-
-    try {
-      await admissionsApi.updateSection(section.slug, buildSectionPayload(form));
-
-      const draftItems = items.filter((item) => item.title.trim());
-      const keptItemIds = new Set<number>();
-
-      for (const [index, item] of draftItems.entries()) {
-        const payload = buildItemPayload(item, index);
-
-        if (item.id) {
-          keptItemIds.add(item.id);
-          await admissionsApi.updateItem(item.id, payload);
-        } else {
-          const created = await admissionsApi.createItem(section.slug, payload);
-          keptItemIds.add(created.data.id);
-        }
-      }
-
-      for (const existingItem of section.items ?? []) {
-        if (!keptItemIds.has(existingItem.id)) {
-          await admissionsApi.deleteItem(existingItem.id);
-        }
-      }
-
-      await loadSection();
-      setToast({ message: `${config.label} updated successfully.`, type: 'success' });
-    } catch (error) {
-      setToast({ message: error instanceof Error ? error.message : 'Failed to update admission content', type: 'error' });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const renderSectionMeta = () => {
-    if (!form) return null;
-
-    return (
-      <SectionCard title="Section Settings">
-        <div className="grid gap-5 md:grid-cols-2">
-          <div>
-            <label className={labelBase}>Navigation Title</label>
-            <input className={inputBase} value={form.navigation_title} onChange={(event) => updateFormField('navigation_title', event.target.value)} />
+  return (
+    <div className="space-y-4">
+      {Array.isArray(items) && items.map((item, idx) => (
+        <div key={idx} className="relative group flex items-start gap-6 bg-slate-50 border border-slate-200 rounded-[2rem] p-6 transition-all hover:shadow-md hover:border-slate-300">
+          <div className="flex-shrink-0 w-12 h-12 border-2 border-slate-200 rounded-xl flex items-center justify-center text-slate-400 font-black text-lg bg-white">
+            {(idx + 1).toString().padStart(2, '0')}
           </div>
-          <div>
-            <label className={labelBase}>Page Title</label>
-            <input className={inputBase} value={form.title} onChange={(event) => updateFormField('title', event.target.value)} />
-          </div>
-          <div>
-            <label className={labelBase}>Summary</label>
-            <input className={inputBase} value={form.summary} onChange={(event) => updateFormField('summary', event.target.value)} />
-          </div>
-          <div>
-            <label className={labelBase}>Dropdown Key</label>
-            <input
-              className={inputBase}
-              value={form.dropdown_key}
-              onChange={(event) => updateFormField('dropdown_key', event.target.value)}
-              placeholder={form.has_dropdown ? 'e.g. academic_year' : 'Disabled for this section'}
-              disabled={!form.has_dropdown}
-            />
-          </div>
-          <div className="md:col-span-2">
-            <label className={labelBase}>Description</label>
-            <textarea className={`${inputBase} min-h-[120px] resize-y`} value={form.description} onChange={(event) => updateFormField('description', event.target.value)} />
-          </div>
-          <div>
-            <label className={labelBase}>Sort Order</label>
-            <input className={inputBase} type="number" min="0" value={form.sort_order} onChange={(event) => updateFormField('sort_order', event.target.value)} />
-          </div>
-          <div className="flex flex-wrap items-center gap-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
-            <label className="inline-flex items-center gap-3 text-sm font-semibold text-slate-700">
-              <input type="checkbox" checked={form.is_active} onChange={(event) => updateFormField('is_active', event.target.checked)} />
-              Section Active
-            </label>
-            <label className="inline-flex items-center gap-3 text-sm font-semibold text-slate-700">
-              <input type="checkbox" checked={form.has_dropdown} onChange={(event) => updateFormField('has_dropdown', event.target.checked)} />
-              Enable Dropdown Filter
-            </label>
-          </div>
-        </div>
-      </SectionCard>
-    );
-  };
+          
+          <div className="flex-grow space-y-4">
+            <button 
+              type="button" 
+              onClick={() => removeItem(idx)}
+              className="absolute -top-3 -right-3 w-8 h-8 bg-red-50 text-red-500 rounded-full flex items-center justify-center shadow-md hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 z-20"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
 
-  const renderSectionContent = () => {
-    if (!form) return null;
-
-    if (sectionKey === 'intake') {
-      return (
-        <SectionCard title="Page Copy">
-          <div className="grid gap-5 md:grid-cols-3">
-            <div>
-              <label className={labelBase}>UG Heading</label>
-              <input className={inputBase} value={getSectionHeading(form.content, 'ug', 'Under Graduate Program')} onChange={(event) => updateSectionHeading('ug', event.target.value)} />
-            </div>
-            <div>
-              <label className={labelBase}>PG Heading</label>
-              <input className={inputBase} value={getSectionHeading(form.content, 'pg', 'Post Graduate Program')} onChange={(event) => updateSectionHeading('pg', event.target.value)} />
-            </div>
-            <div>
-              <label className={labelBase}>Management Heading</label>
-              <input className={inputBase} value={getSectionHeading(form.content, 'mgmt', 'Management Program')} onChange={(event) => updateSectionHeading('mgmt', event.target.value)} />
-            </div>
-          </div>
-        </SectionCard>
-      );
-    }
-
-    if (sectionKey === 'fees') {
-      return (
-        <SectionCard title="Page Copy">
-          <div className="grid gap-5 md:grid-cols-2">
-            <div>
-              <label className={labelBase}>Badge</label>
-              <input className={inputBase} value={getContentValue(form.content, 'badge', 'Academic Administration')} onChange={(event) => updateContentField('badge', event.target.value)} />
-            </div>
-            <div>
-              <label className={labelBase}>Heading</label>
-              <input className={inputBase} value={getContentValue(form.content, 'heading', 'Fee Structure')} onChange={(event) => updateContentField('heading', event.target.value)} />
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelBase}>Intro</label>
-              <textarea className={`${inputBase} min-h-[110px] resize-y`} value={getContentValue(form.content, 'intro')} onChange={(event) => updateContentField('intro', event.target.value)} />
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelBase}>Table Heading</label>
-              <input className={inputBase} value={getContentValue(form.content, 'table_heading', 'Program Documentation')} onChange={(event) => updateContentField('table_heading', event.target.value)} />
-            </div>
-          </div>
-        </SectionCard>
-      );
-    }
-
-    if (sectionKey === 'brochure') {
-      return (
-        <SectionCard title="Page Copy">
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="md:col-span-2">
-              <label className={labelBase}>Heading</label>
-              <input className={inputBase} value={getContentValue(form.content, 'heading', 'College Brochure')} onChange={(event) => updateContentField('heading', event.target.value)} />
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelBase}>Intro</label>
-              <textarea className={`${inputBase} min-h-[110px] resize-y`} value={getContentValue(form.content, 'intro')} onChange={(event) => updateContentField('intro', event.target.value)} />
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelBase}>Description</label>
-              <textarea className={`${inputBase} min-h-[110px] resize-y`} value={getContentValue(form.content, 'description')} onChange={(event) => updateContentField('description', event.target.value)} />
-            </div>
-          </div>
-        </SectionCard>
-      );
-    }
-
-    if (sectionKey === 'cutoffs') {
-      return (
-        <SectionCard title="Page Copy">
-          <div className="grid gap-5 md:grid-cols-2">
-            <div>
-              <label className={labelBase}>Heading</label>
-              <input className={inputBase} value={getContentValue(form.content, 'heading', 'Centralized Admission Process')} onChange={(event) => updateContentField('heading', event.target.value)} />
-            </div>
-            <div>
-              <label className={labelBase}>Subheading</label>
-              <input className={inputBase} value={getContentValue(form.content, 'subheading')} onChange={(event) => updateContentField('subheading', event.target.value)} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={type === 'scholarships' ? "md:col-span-2" : "md:col-span-1"}>
+                <label className={labelBase}>
+                  {type === 'scholarships' ? 'Scholarship Name' : 'Document Title'}
+                </label>
+                <input 
+                  value={item.title} 
+                  onChange={e => updateItem(idx, { title: e.target.value })}
+                  className={inputBase}
+                  placeholder={type === 'scholarships' ? "e.g. Post Matric Scholarship for OBC" : "e.g. F.E. (First Year Engineering) 2024-25"}
+                />
+              </div>
+              {type !== 'scholarships' && (
+              <div className="md:col-span-1 text-right">
+                 <label className={labelBase}>{type === 'documents' ? 'Category' : 'Academic Year'}</label>
+                 {type === 'documents' ? (
+                   <select 
+                      value={item.category} 
+                      onChange={e => updateItem(idx, { category: e.target.value })}
+                      className={inputBase}
+                   >
+                      <option value="UG - FIRST YEAR">UG - FIRST YEAR</option>
+                      <option value="UG - DIRECT SE">UG - DIRECT SE</option>
+                      <option value="PG - M.E.">PG - M.E.</option>
+                      <option value="MANAGEMENT - MMS">MANAGEMENT - MMS</option>
+                   </select>
+                 ) : (
+                   <select 
+                      value={item.year} 
+                      onChange={e => updateItem(idx, { year: e.target.value })}
+                      className={inputBase}
+                   >
+                      <option value="2025-26">2025-26</option>
+                      <option value="2024-25">2024-25</option>
+                      <option value="2023-24">2023-24</option>
+                   </select>
+                 )}
+              </div>
+              )}
+              {type !== 'scholarships' && (
+              <div className="md:col-span-2">
+                <label className={labelBase}>{type === 'cutoffs' ? 'Subtitle (e.g. Engineering Department)' : 'Short Description'}</label>
+                <input 
+                  value={item.description} 
+                  onChange={e => updateItem(idx, { description: e.target.value })}
+                  className={inputBase}
+                  placeholder={type === 'cutoffs' ? "e.g. Engineering Department" : "Briefly explain what this document is for..."}
+                />
+              </div>
+              )}
+              <div className="md:col-span-2">
+                <label className={labelBase}>PDF Document</label>
+                <div className="relative overflow-hidden bg-white border-2 border-dashed border-slate-200 rounded-2xl p-4 transition-all hover:border-[#2563EB]">
+                  <input 
+                    type="file" 
+                    accept="application/pdf"
+                    onChange={e => updateItem(idx, { file: e.target.files?.[0] || null })}
+                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                  />
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z" /></svg>
+                    </div>
+                    <span className="text-xs font-bold text-slate-600 truncate">
+                      {item.file?.name || item.fileName || 'Click or drag to upload PDF'}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </SectionCard>
@@ -1137,8 +588,17 @@ const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) 
             </button>
           )}
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">{config.label}</h1>
-            <p className="mt-1 max-w-2xl text-sm text-slate-500">{config.helperText}</p>
+            <h1 className="text-3xl font-extrabold text-[#111827]">
+              {activeSection ? `Edit ${activeSection === 'intake' ? 'Intake' : 
+                                      activeSection === 'fees' ? 'Fees' : 
+                                      activeSection === 'documents' ? 'Documents' : 
+                                      activeSection === 'cutoffs' ? 'Cutoffs' : 
+                                      activeSection === 'brochure' ? 'Brochure' : 
+                                      activeSection === 'scholarships' ? 'Scholarships' : 'Section'}` : 'Admission Module'}
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              {activeSection ? `Manage your admission ${activeSection} details here.` : 'Manage intake, fees, and academic brochures.'}
+            </p>
           </div>
         </div>
         <div className="text-right text-xs font-bold uppercase tracking-[0.22em] text-slate-400">

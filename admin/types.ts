@@ -503,6 +503,7 @@ export interface AdmissionData {
   };
   documentsRequired: AdmissionDocument[];
   cutOffs: AdmissionDocument[];
+  scholarships: AdmissionDocument[];
   updatedAt: string;
 }
 
@@ -515,6 +516,7 @@ export interface AdmissionPayload {
   feesStructure?: AdmissionDocument[];
   documentsRequired?: AdmissionDocument[];
   cutOffs?: AdmissionDocument[];
+  scholarships?: (AdmissionDocument & { file?: File | null })[];
 
   // Single Files
   brochureFile?: File | null;
@@ -606,6 +608,27 @@ export interface AdmissionItemPayload {
   pdf?: File | null;
   remove_image?: boolean;
   remove_pdf?: boolean;
+}
+
+// ── Exam Data ─────────────────────────────────────────────────────────────────
+
+export interface ExamData {
+  syllabus: AdmissionDocument[];
+  timetable: AdmissionDocument[];
+  questionPapers: AdmissionDocument[];
+  samplePapers: AdmissionDocument[];
+  results: AdmissionDocument[];
+  notices: AdmissionDocument[];
+  updatedAt: string;
+}
+
+export interface ExamPayload {
+  syllabus?: (AdmissionDocument & { file?: File | null })[];
+  timetable?: (AdmissionDocument & { file?: File | null })[];
+  questionPapers?: (AdmissionDocument & { file?: File | null })[];
+  samplePapers?: (AdmissionDocument & { file?: File | null })[];
+  results?: (AdmissionDocument & { file?: File | null })[];
+  notices?: (AdmissionDocument & { file?: File | null })[];
 }
 
 // ── Academics ────────────────────────────────────────────────────────────────
