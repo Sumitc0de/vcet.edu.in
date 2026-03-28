@@ -682,3 +682,77 @@ export interface AcademicsPayload {
   programBooklets?: (AdmissionDocument & { file?: File | null })[];
   academicCalendars?: (AdmissionDocument & { file?: File | null })[];
 }
+
+/* ── Facilities Module ─────────────────────────────────────────────────────── */
+export interface FacilityData {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+
+  // Generic and specific fields for 7 facilities
+  stats?: { label: string; value: string }[];
+  staff?: { name: string; role: string; desc?: string }[];
+  labs?: { name: string; pcCount: string; specs: string; image: string | null; specLine: string }[];
+  general?: { title: string; description: string };
+  mentors?: { title: string; description: string }[];
+  items?: { name: string; description: string; icon?: string }[]; // Used by differently abled, health
+  activities?: { name: string; description: string }[]; // Ladies common room
+  
+  // Library specific
+  librarySections?: { heading: string; paragraph: string }[];
+  facilitiesList?: string[];
+  rules?: string[];
+  memberships?: string[];
+  tabs?: { label: string; content?: string }[];
+  contact?: { phone: string; email: string; address: string };
+  gallery?: string[];
+  
+  // Sports specific
+  sports?: { name: string; icon: string }[];
+  achievements?: string[];
+  results?: { year: string; entry: string }[];
+}
+
+export type FacilityPayload = Partial<FacilityData>;
+
+/* ── About Us Module ──────────────────────────────────────────────────────── */
+export interface AboutData {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+
+  // Institute Overview
+  paragraphs?: string[];
+  accreditation?: string[];
+  facts?: { label: string; value: string }[];
+
+  // President / Principal Desk
+  intro?: { name: string; role: string; highlightQuote: string; closingQuote: string; image: string | null };
+  messageParagraphs?: string[];
+  profileDetails?: { qualification: string; experience: string; affiliation: string }[];
+  highlightsCards?: { value: string; label: string }[];
+
+  // Governing Council
+  chairman?: { role: string; name: string; description: string };
+  councilMembers?: { role: string; name: string; description: string }[];
+
+  // Org Structure
+  orgIntro?: string;
+  orgChartImage?: string | null;
+  orgNodes?: { name: string; title: string; parent: string; order: number }[];
+
+  // Administration
+  adminCards?: { name: string; role: string; email: string; image: string | null }[];
+
+  // Strategic Plan (PDFs)
+  documents?: { label: string; year: string; fileUrl: string | null; fileName: string | null }[];
+
+  // Code of Conduct
+  conductSections?: { title: string; description: string; rules: { title: string; description: string }[] }[];
+
+  updatedAt: string;
+}
+
+export type AboutPayload = Partial<AboutData>;

@@ -11,6 +11,8 @@ import type {
   ExamData, ExamPayload,
   CommitteeData, CommitteePayload,
   ResearchData, ResearchPayload,
+  FacilityData, FacilityPayload,
+  AboutData, AboutPayload,
   ListResponse, ItemResponse, DeleteResponse,
 } from '../types';
 
@@ -878,3 +880,58 @@ export const createAcademicsCrud = () => createMockSingleton(MOCK_ACADEMICS, 'vc
 export const mockAcademics = createAcademicsCrud();
 
 export const createEnquiriesCrud = (seed: Enquiry[]) => createMockCrud(seed, 'vcet_mock_enquiries');
+
+/* ── Facilities Module ─────────────────────────────────────────────────────── */
+let MOCK_FACILITIES: any[] = [
+  { id: '1', slug: 'central-computing', name: 'Central Computing', description: 'Institutional computing infrastructure records.', stats: [], staff: [], labs: [] },
+  { id: '2', slug: 'counselling-cell', name: 'Counselling Cell', description: 'Student counselling and mentoring records.', general: { title: '', description: '' }, staff: [], mentors: [] },
+  { id: '3', slug: 'differently-abled', name: 'Differently Abled Facilities', description: 'Facilities for differently abled individuals.', items: [] },
+  { id: '4', slug: 'health-facilities', name: 'Health Facilities', description: 'Campus health and medical facilities.', items: [] },
+  { id: '5', slug: 'ladies-common-room', name: 'Ladies Common Room', description: 'Rest and recreation for female students.', general: { title: '', description: '' }, activities: [] },
+  { id: '6', slug: 'library', name: 'VCET Library', description: 'Library rules, memberships, and statistics.', librarySections: [], facilitiesList: [], rules: [], memberships: [], tabs: [], contact: { phone: '', email: '', address: '' }, stats: [], staff: [], gallery: [] },
+  { id: '7', slug: 'sports-gymkhana', name: 'Sports & Gymkhana', description: 'Sports facilities, records, and rules.', sports: [], achievements: [], results: [], rules: [], gallery: [], tabs: [] },
+];
+
+export const createFacilityCrud = () => ({
+  get: async (slug: string) => {
+    const section = MOCK_FACILITIES.find(s => s.slug === slug);
+    return { data: section || null, success: true };
+  },
+  update: async (slug: string, payload: any) => {
+    const idx = MOCK_FACILITIES.findIndex(s => s.slug === slug);
+    if (idx !== -1) {
+      MOCK_FACILITIES[idx] = { ...MOCK_FACILITIES[idx], ...payload };
+    }
+    return { data: MOCK_FACILITIES[idx], success: true };
+  }
+});
+
+export const mockFacilities = createFacilityCrud();
+
+/* ── About Us Module ──────────────────────────────────────────────────────── */
+let MOCK_ABOUT: AboutData[] = [
+  { id: '1', slug: 'overview', name: 'Institute Overview', description: 'About VCET, accreditation, and quick facts.', paragraphs: ['', '', ''], accreditation: [], facts: [], updatedAt: new Date().toISOString() },
+  { id: '2', slug: 'president-desk', name: 'President\'s Desk', description: 'Leadership message from the President.', intro: { name: '', role: '', highlightQuote: '', closingQuote: '', image: null }, messageParagraphs: [], updatedAt: new Date().toISOString() },
+  { id: '3', slug: 'principal-desk', name: 'Principal\'s Desk', description: 'Leadership message from the Principal.', intro: { name: '', role: '', highlightQuote: '', closingQuote: '', image: null }, messageParagraphs: [], profileDetails: [], highlightsCards: [], updatedAt: new Date().toISOString() },
+  { id: '4', slug: 'governing-council', name: 'Governing Council', description: 'Institutional governance and board members.', chairman: { role: '', name: '', description: '' }, councilMembers: [], updatedAt: new Date().toISOString() },
+  { id: '5', slug: 'org-structure', name: 'Organizational Structure', description: 'Institutional hierarchy and reporting lines.', orgIntro: '', orgChartImage: null, orgNodes: [], updatedAt: new Date().toISOString() },
+  { id: '6', slug: 'administration', name: 'Administration', description: 'Key administrative officers and contacts.', adminCards: [], updatedAt: new Date().toISOString() },
+  { id: '7', slug: 'strategic-plan', name: 'Strategic Plan', description: 'Institutional strategic planning documents.', documents: [], updatedAt: new Date().toISOString() },
+  { id: '8', slug: 'code-of-conduct', name: 'Code of Conduct', description: 'Rules and professional ethics for stakeholders.', conductSections: [], updatedAt: new Date().toISOString() },
+];
+
+export const createAboutCrud = () => ({
+  get: async (slug: string) => {
+    const section = MOCK_ABOUT.find(s => s.slug === slug);
+    return { data: section || null, success: true };
+  },
+  update: async (slug: string, payload: AboutPayload) => {
+    const idx = MOCK_ABOUT.findIndex(s => s.slug === slug);
+    if (idx !== -1) {
+      MOCK_ABOUT[idx] = { ...MOCK_ABOUT[idx], ...payload, updatedAt: new Date().toISOString() };
+    }
+    return { data: MOCK_ABOUT[idx], success: true };
+  }
+});
+
+export const mockAbout = createAboutCrud();
