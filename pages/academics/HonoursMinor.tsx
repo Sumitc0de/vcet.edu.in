@@ -1,29 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
 import { 
   Download, 
   FileText, 
   GraduationCap, 
-  CheckCircle2,
-  ExternalLink,
-  Lightbulb
+  Loader2
 } from 'lucide-react';
+import { academicsService, AcademicDocument } from '../../services/academics';
 
 // --- Content Data ---
-const booklets = [
-  {
-    title: 'Honours / Minor Degree Program – Booklet Part 1',
-    url: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-_Booklet_Part-1-Final.pdf',
-
-  },
-  {
-    title: 'Honours / Minor Degree Program – Booklet Part 2',
-    url: 'https://vcet.edu.in/wp-content/uploads/2022/08/Honours-Minor-Degree-Program-Booklet-_Part-2_Detailed-Syllabus-Final.pdf',
-
-  },
-];
-
 const highlights = [
   'Additional specialization alongside regular B.E. degree',
   'Interdisciplinary learning across engineering domains',
@@ -34,6 +20,22 @@ const highlights = [
 ];
 
 const HonoursMinor: React.FC = () => {
+  const [booklets, setBooklets] = useState<AcademicDocument[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    academicsService.get()
+      .then(data => {
+        setBooklets(data.programBooklets || []);
+      })
+      .catch(err => {
+        console.error('Failed to fetch program booklets:', err);
+        setError('Failed to load program booklets');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <PageLayout>
       <PageBanner
@@ -135,57 +137,91 @@ const HonoursMinor: React.FC = () => {
             </p>
           </div>
 
-          {/* Formal Ledger Table */}
-          <div className="border-[8px] border-brand-navy bg-white overflow-hidden shadow-2xl rounded-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[700px] border-collapse">
-                <thead>
-                  <tr className="bg-brand-navy text-white">
-                    <th className="px-8 py-6 text-left text-[11px] font-bold uppercase tracking-[0.25em] border-r border-white/10 w-[100px]">Index</th>
-                    <th className="px-8 py-6 text-left text-[11px] font-bold uppercase tracking-[0.25em] border-r border-white/10">Documentation Details</th>
-                    <th className="px-8 py-6 text-center text-[11px] font-bold uppercase tracking-[0.25em] w-[140px]">Download</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {booklets.map((item, idx) => (
-                    <tr 
-                      key={idx}
-                      className={`group border-b border-slate-100 last:border-b-0 transition-colors duration-300 ${
-                        idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'
-                      } hover:bg-brand-navy/5 reveal`}
-                      style={{ transitionDelay: `${idx * 0.1}s` }}
-                    >
-                      <td className="px-8 py-8 text-center border-r border-slate-100">
-                        <div className="w-12 h-12 border-2 border-brand-navy flex items-center justify-center font-bold text-brand-navy group-hover:bg-brand-navy group-hover:text-white transition-all transform group-hover:scale-110">
-                          {String(idx + 1).padStart(2, '0')}
-                        </div>
-                      </td>
-                      <td className="px-8 py-8 border-r border-slate-100">
-                        <div className="flex items-center gap-6">
-                          <div className="p-3 bg-brand-gold/10 rounded-lg group-hover:bg-brand-gold transition-colors duration-300">
-                            <FileText className="w-6 h-6 text-brand-navy group-hover:text-white" />
-                          </div>
-                          <h4 className="text-[19px] font-bold text-brand-navy group-hover:translate-x-1 transition-transform">
-                            {item.title}
-                          </h4>
-                        </div>
-                      </td>
-                      <td className="px-8 py-8 text-center">
-                        <a 
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-14 h-14 rounded-full inline-flex items-center justify-center text-brand-navy bg-slate-100 hover:bg-brand-gold hover:text-white transition-all duration-500 transform hover:rotate-[360deg] shadow-inner"
-                        >
-                          <Download className="w-6 h-6" />
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-brand-blue" />
             </div>
-          </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="text-center py-16 text-red-500">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && booklets.length === 0 && (
+            <div className="text-center py-16 text-slate-400">
+              <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>No program booklets available at the moment.</p>
+            </div>
+          )}
+
+          {/* Formal Ledger Table */}
+          {!loading && !error && booklets.length > 0 && (
+            <div className="border-[8px] border-brand-navy bg-white overflow-hidden shadow-2xl rounded-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[700px] border-collapse">
+                  <thead>
+                    <tr className="bg-brand-navy text-white">
+                      <th className="px-8 py-6 text-left text-[11px] font-bold uppercase tracking-[0.25em] border-r border-white/10 w-[100px]">Index</th>
+                      <th className="px-8 py-6 text-left text-[11px] font-bold uppercase tracking-[0.25em] border-r border-white/10">Documentation Details</th>
+                      <th className="px-8 py-6 text-center text-[11px] font-bold uppercase tracking-[0.25em] w-[140px]">Download</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {booklets.map((item, idx) => (
+                      <tr 
+                        key={idx}
+                        className={`reveal visible group border-b border-slate-100 last:border-b-0 transition-colors duration-300 ${
+                          idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'
+                        } hover:bg-brand-navy/5`}
+                        style={{ transitionDelay: `${idx * 0.1}s` }}
+                      >
+                        <td className="px-8 py-8 text-center border-r border-slate-100">
+                          <div className="w-12 h-12 border-2 border-brand-navy flex items-center justify-center font-bold text-brand-navy group-hover:bg-brand-navy group-hover:text-white transition-all transform group-hover:scale-110">
+                            {String(idx + 1).padStart(2, '0')}
+                          </div>
+                        </td>
+                        <td className="px-8 py-8 border-r border-slate-100">
+                          <div className="flex items-center gap-6">
+                            <div className="p-3 bg-brand-gold/10 rounded-lg group-hover:bg-brand-gold transition-colors duration-300">
+                              <FileText className="w-6 h-6 text-brand-navy group-hover:text-white" />
+                            </div>
+                            <div>
+                              <h4 className="text-[19px] font-bold text-brand-navy group-hover:translate-x-1 transition-transform">
+                                {item.title}
+                              </h4>
+                              {item.description && (
+                                <p className="text-sm text-slate-500 mt-1">{item.description}</p>
+                              )}
+                              {item.year && (
+                                <span className="inline-block mt-2 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded">
+                                  {item.year}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-8 py-8 text-center">
+                          <a 
+                            href={item.fileUrl || '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-14 h-14 rounded-full inline-flex items-center justify-center text-brand-navy bg-slate-100 hover:bg-brand-gold hover:text-white transition-all duration-500 transform hover:rotate-[360deg] shadow-inner"
+                          >
+                            <Download className="w-6 h-6" />
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </PageLayout>

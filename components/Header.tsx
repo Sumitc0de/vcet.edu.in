@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Search, ChevronDown, ChevronRight } from 'lucide-react';
+import { academicsService, type AcademicDocument } from '../services/academics';
 
 const CAREER_AT_VCET_PDF_URL =
   'https://drive.google.com/file/d/1grwZ4_QIjC23c4HHFCM4xPJuFywsWtgw/view?usp=sharing';
@@ -257,6 +258,47 @@ const menuGroups: MenuGroup[] = [
   },
 ];
 
+function toAcademicsSubItems(items: AcademicDocument[]): SubItem[] {
+  return items
+    .filter((item) => !!item.fileUrl && !!item.title)
+    .map((item) => ({
+      label: item.title,
+      href: item.fileUrl || undefined,
+    }));
+}
+
+function withLiveAcademicsDropdown(
+  groups: MenuGroup[],
+  calendars: AcademicDocument[],
+  booklets: AcademicDocument[],
+): MenuGroup[] {
+  return groups.map((group) => {
+    if (group.label !== 'Academics' || !group.dropdown) return group;
+
+    const liveCalendarItems = toAcademicsSubItems(calendars);
+    const liveBookletItems = toAcademicsSubItems(booklets);
+
+    return {
+      ...group,
+      dropdown: group.dropdown.map((item) => {
+        if (item.label === 'Academic Calendar') {
+          return {
+            ...item,
+            subItems: liveCalendarItems.length > 0 ? liveCalendarItems : item.subItems,
+          };
+        }
+        if (item.label === 'Honours / Minor Degree Program') {
+          return {
+            ...item,
+            subItems: liveBookletItems.length > 0 ? liveBookletItems : item.subItems,
+          };
+        }
+        return item;
+      }),
+    };
+  });
+}
+
 /* ─────────────────────────────────────────────────────
    SEARCH INDEX — built from navigation + extras
 ───────────────────────────────────────────────────── */
@@ -366,10 +408,10 @@ const homepageSections: SearchEntry[] = [
   { label: 'Admissions Enquiry', href: '/#admissions', category: 'Homepage', keywords: ['admission form', 'enquiry', 'apply'] },
 ];
 
-function buildSearchIndex(): SearchEntry[] {
+function buildSearchIndex(groups: MenuGroup[]): SearchEntry[] {
   const entries: SearchEntry[] = [];
 
-  for (const group of menuGroups) {
+  for (const group of groups) {
     // Top-level items with direct href
     if (group.href && !group.dropdown) {
       entries.push({
@@ -430,9 +472,7 @@ function buildSearchIndex(): SearchEntry[] {
   return entries;
 }
 
-const SEARCH_INDEX = buildSearchIndex();
-
-function searchPages(query: string): SearchEntry[] {
+function searchPages(query: string, index: SearchEntry[]): SearchEntry[] {
   const q = query.toLowerCase().trim();
   if (!q) return [];
 
@@ -441,7 +481,7 @@ function searchPages(query: string): SearchEntry[] {
   type Scored = { entry: SearchEntry; score: number };
   const scored: Scored[] = [];
 
-  for (const entry of SEARCH_INDEX) {
+  for (const entry of index) {
     const labelLower = entry.label.toLowerCase();
     const catLower = entry.category.toLowerCase();
     const kwJoined = entry.keywords.join(' ').toLowerCase();
@@ -771,6 +811,8 @@ const MobileAccordionItem: React.FC<MobileAccordionItemProps> = ({ item, onClose
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const [liveCalendars, setLiveCalendars] = useState<AcademicDocument[]>([]);
+  const [liveBooklets, setLiveBooklets] = useState<AcademicDocument[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -782,8 +824,28 @@ const Header: React.FC = () => {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number; right: number; alignRight: boolean }>({ top: 0, left: 0, right: 0, alignRight: false });
 
+  useEffect(() => {
+    academicsService
+      .get()
+      .then((data) => {
+        setLiveCalendars(Array.isArray(data.academicCalendars) ? data.academicCalendars : []);
+        setLiveBooklets(Array.isArray(data.programBooklets) ? data.programBooklets : []);
+      })
+      .catch(() => {
+        setLiveCalendars([]);
+        setLiveBooklets([]);
+      });
+  }, []);
+
+  const navMenuGroups = useMemo(
+    () => withLiveAcademicsDropdown(menuGroups, liveCalendars, liveBooklets),
+    [liveCalendars, liveBooklets],
+  );
+
+  const searchIndex = useMemo(() => buildSearchIndex(navMenuGroups), [navMenuGroups]);
+
   /* Compute search results reactively */
-  const searchResults = useMemo(() => searchPages(searchQuery), [searchQuery]);
+  const searchResults = useMemo(() => searchPages(searchQuery, searchIndex), [searchQuery, searchIndex]);
 
   /* Reset selection when results change */
   useEffect(() => { setSelectedResult(-1); }, [searchResults]);
@@ -879,11 +941,11 @@ const Header: React.FC = () => {
     setActiveMenu(label);
     if (el) {
       const rect = el.getBoundingClientRect();
-      const idx = menuGroups.findIndex(g => g.label === label);
-      const alignRight = idx >= menuGroups.length - 5;
+      const idx = navMenuGroups.findIndex(g => g.label === label);
+      const alignRight = idx >= navMenuGroups.length - 5;
       setDropdownPos({ top: rect.bottom, left: rect.left, right: window.innerWidth - rect.right, alignRight });
     }
-  }, []);
+  }, [navMenuGroups]);
 
   const scheduleClose = useCallback(() => {
     closeTimer.current = setTimeout(() => setActiveMenu(null), 220);
@@ -895,11 +957,11 @@ const Header: React.FC = () => {
 
   /* Last 5 items right-align their dropdown so it stays inside viewport */
   const getDropdownAlign = (idx: number) =>
-    idx >= menuGroups.length - 5 ? 'right-0' : 'left-0';
+    idx >= navMenuGroups.length - 5 ? 'right-0' : 'left-0';
 
   /* Sub-flyout flips left when the parent dropdown is near the right edge */
   const shouldFlipSub = (idx: number) =>
-    idx >= menuGroups.length - 5;
+    idx >= navMenuGroups.length - 5;
 
   /* Estimate max-height for smooth dropdown animation */
   const getDropdownMaxH = (items: DropdownItem[]) => {
@@ -929,7 +991,7 @@ const Header: React.FC = () => {
           {/* â”€â”€â”€â”€ Desktop Nav â”€â”€â”€â”€ */}
           <nav className="hidden lg:flex items-center flex-1 min-w-0 overflow-x-auto no-scrollbar" aria-label="Main navigation">
             <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5">
-              {menuGroups.map((group, idx) => (
+              {navMenuGroups.map((group, idx) => (
                 <li key={group.label} className="relative flex-shrink-0">
                   {group.dropdown ? (
                     <button
@@ -1002,9 +1064,9 @@ const Header: React.FC = () => {
 
       {/* Fixed dropdown overlay — rendered outside nav so overflow:hidden doesn't clip it */}
       {activeMenu && (() => {
-        const group = menuGroups.find(g => g.label === activeMenu);
+        const group = navMenuGroups.find(g => g.label === activeMenu);
         if (!group?.dropdown) return null;
-        const idx = menuGroups.findIndex(g => g.label === activeMenu);
+        const idx = navMenuGroups.findIndex(g => g.label === activeMenu);
         return (
           <div
             onMouseEnter={cancelClose}
@@ -1049,7 +1111,7 @@ const Header: React.FC = () => {
         {/* Scrollable list */}
         <nav className="flex-1 overflow-y-auto px-5 py-5" aria-label="Mobile navigation">
           <div className="space-y-0.5">
-            {menuGroups.map((group) => (
+            {navMenuGroups.map((group) => (
               <div key={group.label}>
                 {group.dropdown ? (
                   <>

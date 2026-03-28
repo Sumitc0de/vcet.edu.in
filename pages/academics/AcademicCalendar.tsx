@@ -1,27 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
-import { Calendar, Download, ExternalLink } from 'lucide-react';
-
-interface AcademicCalendarItem {
-  title: string;
-  url: string;
-  badge?: string;
-}
-
-const calendars: AcademicCalendarItem[] = [
-  { title: 'EVEN SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2026/01/Academic_Calendar_Even_2025-26.pdf', badge: 'Tentative' },
-  { title: 'ODD SEM 2025-26 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2025/08/acad-calen-odd-25-26.pdf' },
-  { title: 'EVEN SEM 2024-25', url: 'https://vcet.edu.in/wp-content/uploads/2024/12/Academic_Calender_2024_25_Even_2025-1.pdf' },
-  { title: 'ODD SEM 2024-25 FE ME', url: 'https://vcet.edu.in/wp-content/uploads/2024/09/Adobe-Scan-13-Sep-2024.pdf' },
-  { title: 'ODD SEM 2024-25 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/Adobe-Scan-05-Jul-2024-3.pdf' },
-  { title: 'EVEN SEM 2023-24 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2024/06/Academic-Calendar_Even-Sem_-2023-2024.pdf' },
-  { title: 'EVEN SEM 2022-23 SE TE BE', url: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Even-Semester-2022-23-SE-TE-BE.pdf' },
-  { title: 'FE & ME EVEN SEM 2022-23', url: 'https://vcet.edu.in/wp-content/uploads/2023/03/FE_SemII_Academic_Calendar2022-23.pdf' },
-  { title: 'FE ODD SEM 2022-23', url: 'https://vcet.edu.in/wp-content/uploads/2023/01/Academic-Calendar-Odd-Semester-2022-23-F.E.pdf' },
-];
+import { Calendar, Download, ExternalLink, Loader2 } from 'lucide-react';
+import { academicsService, AcademicDocument } from '../../services/academics';
 
 const AcademicCalendar: React.FC = () => {
+  const [calendars, setCalendars] = useState<AcademicDocument[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    academicsService.get()
+      .then(data => {
+        setCalendars(data.academicCalendars || []);
+      })
+      .catch(err => {
+        console.error('Failed to fetch academic calendars:', err);
+        setError('Failed to load academic calendars');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <PageLayout>
       <PageBanner
@@ -51,49 +50,78 @@ const AcademicCalendar: React.FC = () => {
               </p>
             </div>
 
-            {/* Timeline-style Calendar List */}
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-brand-gold/40 via-brand-blue/20 to-transparent" />
-
-              <div className="space-y-5">
-                {calendars.map((cal, idx) => (
-                  <a
-                    key={idx}
-                    href={cal.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="reveal group block"
-                    style={{ transitionDelay: `${idx * 0.06}s` }}
-                  >
-                    <div className="flex items-center gap-3 sm:gap-5 pl-2 md:pl-4">
-                      {/* Timeline dot */}
-                      <div className="relative z-10 flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-navy flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                      </div>
-
-                      {/* Card */}
-                      <div className="flex-1 flex items-center justify-between p-3 sm:p-5 bg-brand-light rounded-2xl border border-gray-100 hover:border-brand-gold/40 hover:shadow-lg transition-all duration-500 min-h-[52px]">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <h3 className="font-display font-bold text-brand-navy group-hover:text-brand-blue transition-colors duration-300 text-sm md:text-base">
-                            {cal.title}
-                          </h3>
-                          {cal.badge && (
-                            <span className="flex-shrink-0 px-2.5 py-0.5 bg-brand-gold/15 text-brand-gold text-[10px] font-bold uppercase tracking-wider rounded-full">
-                              {cal.badge}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-brand-blue/50 group-hover:text-brand-gold transition-colors duration-300 flex-shrink-0 ml-4">
-                          <Download className="w-4 h-4" />
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                ))}
+            {/* Loading State */}
+            {loading && (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-blue" />
               </div>
-            </div>
+            )}
+
+            {/* Error State */}
+            {error && !loading && (
+              <div className="text-center py-16 text-red-500">
+                <p>{error}</p>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!loading && !error && calendars.length === 0 && (
+              <div className="text-center py-16 text-slate-400">
+                <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No academic calendars available at the moment.</p>
+              </div>
+            )}
+
+            {/* Timeline-style Calendar List */}
+            {!loading && !error && calendars.length > 0 && (
+              <div className="relative">
+                {/* Timeline line */}
+                <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-brand-gold/40 via-brand-blue/20 to-transparent" />
+
+                <div className="space-y-5">
+                  {calendars.map((cal, idx) => (
+                    <a
+                      key={idx}
+                      href={cal.fileUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="reveal visible group block"
+                      style={{ transitionDelay: `${idx * 0.06}s` }}
+                    >
+                      <div className="flex items-center gap-3 sm:gap-5 pl-2 md:pl-4">
+                        {/* Timeline dot */}
+                        <div className="relative z-10 flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-navy flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                          <Calendar className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                        </div>
+
+                        {/* Card */}
+                        <div className="flex-1 flex items-center justify-between p-3 sm:p-5 bg-brand-light rounded-2xl border border-gray-100 hover:border-brand-gold/40 hover:shadow-lg transition-all duration-500 min-h-[52px]">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <h3 className="font-display font-bold text-brand-navy group-hover:text-brand-blue transition-colors duration-300 text-sm md:text-base">
+                              {cal.title}
+                            </h3>
+                            {cal.description && (
+                              <span className="flex-shrink-0 px-2.5 py-0.5 bg-brand-gold/15 text-brand-gold text-[10px] font-bold uppercase tracking-wider rounded-full">
+                                {cal.description}
+                              </span>
+                            )}
+                            {cal.year && (
+                              <span className="flex-shrink-0 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">
+                                {cal.year}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-brand-blue/50 group-hover:text-brand-gold transition-colors duration-300 flex-shrink-0 ml-4">
+                            <Download className="w-4 h-4" />
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -85,11 +85,28 @@ export const pagesApi = {
       
       const formData = new FormData();
       
+      // Send document metadata as JSON (without file objects)
       if (payload.programBooklets) {
-        formData.append('programBooklets', JSON.stringify(payload.programBooklets.map(f => ({ ...f, file: undefined }))));
+        formData.append('programBooklets', JSON.stringify(
+          payload.programBooklets.map(({ file, ...rest }) => rest)
+        ));
+        // Append files separately with indexed keys
+        payload.programBooklets.forEach((doc, idx) => {
+          if (doc.file) {
+            formData.append(`programBooklets[${idx}][file]`, doc.file);
+          }
+        });
       }
       if (payload.academicCalendars) {
-        formData.append('academicCalendars', JSON.stringify(payload.academicCalendars.map(f => ({ ...f, file: undefined }))));
+        formData.append('academicCalendars', JSON.stringify(
+          payload.academicCalendars.map(({ file, ...rest }) => rest)
+        ));
+        // Append files separately with indexed keys
+        payload.academicCalendars.forEach((doc, idx) => {
+          if (doc.file) {
+            formData.append(`academicCalendars[${idx}][file]`, doc.file);
+          }
+        });
       }
 
       return client.requestForm<ItemResponse<AcademicsData>>('/pages/academics', formData);
