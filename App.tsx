@@ -18,7 +18,6 @@ import Achievements from './components/Achievements';
 import ExploreUs from './components/ExploreUs';
 import Gallery from './components/Gallery';
 import Testimonials from './components/Testimonials';
-import Facilities from './components/Facilities';
 import Footer from './components/Footer';
 import SplashScreen from './components/SplashScreen';
 
@@ -69,8 +68,8 @@ const FundedResearch = lazy(() => import('./pages/research/FundedResearch'));
 const Publications = lazy(() => import('./pages/research/Publications'));
 const ConsultancyProjects = lazy(() => import('./pages/research/ConsultancyProjects'));
 const ResearchFacility = lazy(() => import('./pages/research/ResearchFacility'));
-const ResearchConventions = lazy(() => import('./pages/research/ResearchConventions'));
-const ResearchPolicy = lazy(() => import('./pages/research/ResearchPolicy'));
+
+
 const NIRF = lazy(() => import('./pages/research/NIRF'));
 const ResearchPatents = lazy(() => import('./pages/research/Patents'));
 const ResearchIIC = lazy(() => import('./pages/research/IIC'));
@@ -132,6 +131,27 @@ const NaacPage = lazy(() => import('./pages/naac/NAACPage'));
 // pages/contact
 const ContactUs = lazy(() => import('./pages/contact/ContactUs'));
 
+// pages/aicte-idea-vcet
+const AICTEIdeaVCET = lazy(() => import('./pages/AICTEIdeaVCET'));
+
+// pages/coe-siemens
+const CenterOfExcellenceSiemens = lazy(() => import('./pages/CenterOfExcellenceSiemens'));
+
+// pages/machinery-diagnostics
+const MachineryDiagnostics = lazy(() => import('./pages/MachineryDiagnostics'));
+
+// pages/texas-instruments-lab
+const TexasInstrumentsLab = lazy(() => import('./pages/TexasInstrumentsLab'));
+
+// pages/robotics-lab
+const RoboticsLab = lazy(() => import('./pages/RoboticsLab'));
+
+// pages/oracle-academy
+const OracleAcademy = lazy(() => import('./pages/OracleAcademy'));
+
+// pages/e-yantra
+const EYantra = lazy(() => import('./pages/EYantra'));
+
 // pages/footer
 const GermanLanguageClubLayout = lazy(() => import('./pages/footer/german-language-club/GermanLanguageClubLayout'));
 const GermanClubAbout = lazy(() => import('./pages/footer/german-language-club/GermanClubAbout'));
@@ -141,6 +161,8 @@ const GermanClubActivities = lazy(() => import('./pages/footer/german-language-c
 const GermanClubGallery = lazy(() => import('./pages/footer/german-language-club/GermanClubGallery'));
 const GermanClubFaculty = lazy(() => import('./pages/footer/german-language-club/GermanClubFaculty'));
 const HelplineForDivyangjan = lazy(() => import('./pages/footer/HelplineForDivyangjan'));
+const AuditedStatement = lazy(() => import('./pages/footer/AuditedStatement'));
+const FacultyProfile = lazy(() => import('./pages/FacultyProfile'));
 
 // pages/mms
 const MMSHome = lazy(() => import('./pages/mms/MMSHome'));
@@ -194,6 +216,17 @@ const MMSFacilitiesClassroom = lazy(() => import('./pages/mms/facilities/MMSFaci
 const MMSFacilitiesGymkhana = lazy(() => import('./pages/mms/facilities/MMSFacilitiesGymkhana'));
 const MMSFAQs = lazy(() => import('./pages/mms/faqs/MMSFAQs'));
 
+// pages/academics/exam
+const ExamDashboard = lazy(() => import('./pages/academics/exam/ExamDashboard'));
+const ExamAbout = lazy(() => import('./pages/academics/exam/ExamAbout'));
+const ExamSyllabus = lazy(() => import('./pages/academics/exam/ExamSyllabus'));
+const ExamTimetable = lazy(() => import('./pages/academics/exam/ExamTimetable'));
+const ExamQuestionPaper = lazy(() => import('./pages/academics/exam/ExamQuestionPaper'));
+const ExamSamplePapers = lazy(() => import('./pages/academics/exam/ExamSamplePapers'));
+const ExamResults = lazy(() => import('./pages/academics/exam/ExamResults'));
+const ExamVerification = lazy(() => import('./pages/academics/exam/ExamVerification'));
+const ExamNotices = lazy(() => import('./pages/academics/exam/ExamNotices'));
+
 /* ── Admin Panel Pages (lazy) ── */
 const AdminLogin = lazy(() => import('./admin/pages/Login'));
 const AdminDashboard = lazy(() => import('./admin/pages/Dashboard'));
@@ -219,6 +252,11 @@ const PlacementPartnersList = lazy(() => import('./admin/pages/placement-partner
 const PlacementPartnersForm = lazy(() => import('./admin/pages/placement-partners/PlacementPartnersForm'));
 const EnquiriesList = lazy(() => import('./admin/pages/enquiries/EnquiriesList'));
 const SitePages = lazy(() => import('./admin/pages/pages/SitePages'));
+const FacultyList = lazy(() => import('./admin/pages/faculty/FacultyList'));
+const FacultyForm = lazy(() => import('./admin/pages/faculty/FacultyForm'));
+const DepartmentLanding = lazy(() => import('./admin/pages/departments/DepartmentLanding'));
+const DepartmentList = lazy(() => import('./admin/pages/departments/DepartmentList'));
+const DepartmentForm = lazy(() => import('./admin/pages/departments/DepartmentForm'));
 
 /* ── Loading Spinner ── */
 const PageLoader = () => (
@@ -256,9 +294,9 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen font-sans bg-white text-slate-800">
+    <div className="home-page min-h-screen font-sans bg-white text-slate-800">
       <SplashScreen />
-      <div className="sticky top-0 z-[100] md:contents">
+      <div className="relative z-[100]">
         <TopBanner />
         <Header />
       </div>
@@ -272,7 +310,6 @@ const HomePage: React.FC = () => {
         <ExploreUs />
         <Gallery />
         <Testimonials />
-        <Facilities />
       </main>
       <Footer />
     </div>
@@ -326,6 +363,7 @@ function App() {
             <Route path="/civil-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
             <Route path="/first-year-engineering" element={<DeptFE />} />
             <Route path="/first-year-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
+            <Route path="/faculty/:id" element={<FacultyProfile />} />
 
           {/* Academics */}
           <Route path="/dean-academics" element={<DeanAcademics />} />
@@ -341,8 +379,8 @@ function App() {
           <Route path="/parents" element={<Parents />} />
           <Route path="/consultancy-projects" element={<ConsultancyProjects />} />
           <Route path="/research-facility" element={<ResearchFacility />} />
-          <Route path="/research-conventions" element={<ResearchConventions />} />
-          <Route path="/research-policy" element={<ResearchPolicy />} />
+
+
           <Route path="/iic" element={<ResearchIIC />} />
           <Route path="/nirf" element={<NIRF />} />
           <Route path="/research-downloads" element={<ResearchDownloads />} />
@@ -398,12 +436,30 @@ function App() {
 
             {/* Contact & Others */}
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/aicte-idea-vcet" element={<AICTEIdeaVCET />} />
+            <Route path="/coe-siemens" element={<CenterOfExcellenceSiemens />} />
+            <Route path="/machinery-diagnostics" element={<MachineryDiagnostics />} />
+            <Route path="/texas-instruments-lab" element={<TexasInstrumentsLab />} />
+            <Route path="/robotics-lab" element={<RoboticsLab />} />
+            <Route path="/oracle-academy" element={<OracleAcademy />} />
+            <Route path="/e-yantra" element={<EYantra />} />
             <Route path="/training" element={<Training />} />
             <Route path="/placement" element={<Placement />} />
             <Route path="/e-cell" element={<ECell />} />
             <Route path="/iiic" element={<IIIC />} />
-            <Route path="/exam-cell" element={<ExamCell />} />
+            {/* Exam Section */}
+            <Route path="/exam" element={<ExamDashboard />} />
+            <Route path="/exam/about" element={<ExamAbout />} />
+            <Route path="/exam/syllabus" element={<ExamSyllabus />} />
+            <Route path="/exam/timetable" element={<ExamTimetable />} />
+            <Route path="/exam/question-paper" element={<ExamQuestionPaper />} />
+            <Route path="/exam/sample-papers" element={<ExamSamplePapers />} />
+            <Route path="/exam/results" element={<ExamResults />} />
+            <Route path="/exam/verification" element={<ExamVerification />} />
+            <Route path="/exam/notices" element={<ExamNotices />} />
+            <Route path="/exam-cell" element={<Navigate to="/exam" replace />} />
             <Route path="/helpline-for-divyangjan" element={<HelplineForDivyangjan />} />
+            <Route path="/audited-statement" element={<AuditedStatement />} />
 
             {/* Footer Pages */}
             <Route path="/german-language-club" element={<GermanLanguageClubLayout />}>
@@ -517,6 +573,13 @@ function App() {
             <Route path="placement-partners/:id/edit" element={<PlacementPartnersForm />} />
             <Route path="enquiries" element={<EnquiriesList />} />
             <Route path="pages" element={<Navigate to="home" replace />} />
+            <Route path="pages/departments" element={<DepartmentLanding />} />
+            <Route path="pages/departments/list" element={<DepartmentList />} />
+            <Route path="pages/departments/list/create" element={<DepartmentForm />} />
+            <Route path="pages/departments/list/:slug/edit" element={<DepartmentForm />} />
+            <Route path="pages/faculty" element={<FacultyList />} />
+            <Route path="pages/faculty/create" element={<FacultyForm />} />
+            <Route path="pages/faculty/:id/edit" element={<FacultyForm />} />
             <Route path="pages/:pageKey" element={<SitePages />} />
           </Route>
         </Routes>

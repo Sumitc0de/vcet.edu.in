@@ -2,27 +2,43 @@ import React from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
 import { Download, BookOpen, Image } from 'lucide-react';
+import { useAdmissionSection } from '../../hooks/useAdmissionSection';
+import { getSectionContentValue } from './admissionSectionUtils';
 
 const BROCHURE_PDF_URL = '/documents/admissions/vcet-brochure.pdf';
 const BROCHURE_FILE_NAME = 'vcet-brochure.pdf';
 
 const Brochure: React.FC = () => {
+  const { section, error } = useAdmissionSection('brochure');
+  const brochureItem = section?.items?.[0];
+  const brochureUrl = brochureItem?.document_url || brochureItem?.external_url || BROCHURE_PDF_URL;
+  const brochureFileName = brochureItem?.pdf_name || BROCHURE_FILE_NAME;
+
   return (
     <PageLayout>
       <PageBanner
-        title="Brochure"
+        title={section?.title || 'Brochure'}
         breadcrumbs={[{ label: 'Brochure' }]}
       />
 
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-8 md:py-16 lg:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl mx-auto text-center mb-14 reveal">
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-navy mb-4">
-              College Brochure
+          {error && (
+            <div className="mx-auto mb-10 max-w-3xl rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-medium text-amber-800">
+              Showing the bundled brochure because the live admission API could not be loaded.
+            </div>
+          )}
+
+          <div className="max-w-3xl mx-auto text-center mb-8 md:mb-14 reveal">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-brand-navy mb-3 md:mb-4">
+              {getSectionContentValue(section, 'heading', 'College Brochure')}
             </h2>
-            <p className="text-slate-500 text-lg leading-relaxed">
-              Get a comprehensive overview of VCET - our programs, campus, facilities,
-              achievements, and more - all in one place.
+            <p className="text-slate-500 text-base md:text-lg leading-relaxed">
+              {getSectionContentValue(
+                section,
+                'intro',
+                'Get a comprehensive overview of VCET - our programs, campus, facilities, achievements, and more - all in one place.',
+              )}
             </p>
           </div>
 
@@ -44,36 +60,39 @@ const Brochure: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-8 md:p-10 text-center">
-                <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-5 md:p-8 lg:p-10 text-center">
+                <div className="flex items-center justify-center gap-3 mb-3 md:mb-4">
                   <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-navy rounded-xl flex items-center justify-center">
                     <BookOpen className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-xl font-display font-bold text-brand-navy">
-                    VCET College Brochure
+                  <h3 className="text-lg md:text-xl font-display font-bold text-brand-navy">
+                    {brochureItem?.title || 'VCET College Brochure'}
                   </h3>
                 </div>
 
-                <p className="text-sm text-slate-400 leading-relaxed max-w-md mx-auto mb-8">
-                  Explore everything about Vidyavardhini&apos;s College of Engineering and Technology -
-                  our rich legacy, diverse programs, cutting-edge facilities, and vibrant campus life.
+                <p className="text-sm text-slate-400 leading-relaxed max-w-md mx-auto mb-6 md:mb-8">
+                  {getSectionContentValue(
+                    section,
+                    'description',
+                    'Explore everything about Vidyavardhini\'s College of Engineering and Technology - our rich legacy, diverse programs, cutting-edge facilities, and vibrant campus life.',
+                  )}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                   <a
-                    href={BROCHURE_PDF_URL}
+                    href={brochureUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-brand-blue to-brand-navy text-white font-display font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-brand-gold hover:to-yellow-600 transition-all duration-500 hover:-translate-y-0.5 group/btn"
+                    className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-brand-blue to-brand-navy text-white font-display font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-brand-gold hover:to-yellow-600 transition-all duration-500 hover:-translate-y-0.5 group/btn min-h-[44px]"
                   >
                     <BookOpen className="w-5 h-5" />
                     Open Brochure
                   </a>
 
                   <a
-                    href={BROCHURE_PDF_URL}
-                    download={BROCHURE_FILE_NAME}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-white text-brand-navy font-display font-bold rounded-xl border border-brand-blue/20 shadow-sm hover:border-brand-gold/40 hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-500"
+                    href={brochureUrl}
+                    download={brochureFileName}
+                    className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 bg-white text-brand-navy font-display font-bold rounded-xl border border-brand-blue/20 shadow-sm hover:border-brand-gold/40 hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-500 min-h-[44px]"
                   >
                     <Download className="w-5 h-5" />
                     Download PDF

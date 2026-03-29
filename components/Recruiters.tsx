@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // -- Data (all logos from /public/Images/recriters/) ---------------------------
 type Recruiter = { name: string; logo: string; url: string };
@@ -188,13 +188,30 @@ const MarqueeRow: React.FC<MarqueeRowProps> = ({ items, direction = "left", spee
     el.style.transform = `translateX(${-posRef.current}px)`;
   };
 
+  const lastTapTimeRef = useRef<number>(0);
+
   const onPointerUp = () => {
     const wasClick = !wasDragRef.current;
     draggingRef.current = false;
     scheduleResume();
+    
     // If it was a click (not a drag), fire the click handler
     if (wasClick && clickTargetRef.current && onItemClick) {
-      onItemClick(clickTargetRef.current);
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        const now = Date.now();
+        if (now - lastTapTimeRef.current < 400) {
+          // Double hit verified
+          onItemClick(clickTargetRef.current);
+          lastTapTimeRef.current = 0;
+        } else {
+          // First hit on mobile - wait for second
+          lastTapTimeRef.current = now;
+        }
+      } else {
+        // Single click always works on desktop
+        onItemClick(clickTargetRef.current);
+      }
     }
     clickTargetRef.current = null;
   };
@@ -335,7 +352,7 @@ const Recruiters: React.FC = () => {
     </div>
   )}
 
-  <section id="recruiters" className="py-24 relative overflow-hidden">
+  <section id="recruiters" className="py-14 sm:py-18 md:py-24 relative overflow-hidden">
 
     {/* Background image */}
     <img
@@ -350,8 +367,8 @@ const Recruiters: React.FC = () => {
 
     {/* Ambient glows */}
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-blue-300/20 rounded-full blur-[140px]" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px]" />
+      <div className="absolute top-0 left-1/4 w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] md:w-[600px] md:h-[600px] bg-blue-300/20 rounded-full blur-[100px] sm:blur-[130px] md:blur-[140px]" />
+      <div className="absolute bottom-0 right-1/4 w-[240px] h-[240px] sm:w-[340px] sm:h-[340px] md:w-[400px] md:h-[400px] bg-blue-500/10 rounded-full blur-[70px] sm:blur-[90px] md:blur-[100px]" />
     </div>
 
     {/* Corner decorations */}
@@ -406,7 +423,7 @@ const Recruiters: React.FC = () => {
 
         {/* 1 — Hero stat: Campus Offers */}
         <BentoBox
-          className="md:col-span-2 p-8 justify-between min-h-[220px] border"
+          className="md:col-span-2 p-5 sm:p-6 md:p-8 justify-between min-h-[220px] border"
           style={{
             background: "rgba(255,255,255,0.55)",
             backdropFilter: "blur(20px)",
@@ -434,7 +451,7 @@ const Recruiters: React.FC = () => {
 
         {/* 2 — Highest Package */}
         <BentoBox
-          className="p-8 justify-between min-h-[220px] border"
+          className="p-5 sm:p-6 md:p-8 justify-between min-h-[220px] border"
           style={{
             background: "rgba(255,255,255,0.55)",
             backdropFilter: "blur(20px)",
@@ -457,7 +474,7 @@ const Recruiters: React.FC = () => {
 
         {/* 3 — Placement Rate */}
         <BentoBox
-          className="p-8 justify-between border"
+          className="p-5 sm:p-6 md:p-8 justify-between border"
           style={{
             background: "rgba(255,255,255,0.55)",
             backdropFilter: "blur(20px)",
@@ -478,7 +495,7 @@ const Recruiters: React.FC = () => {
 
         {/* 4 — Average Package */}
         <BentoBox
-          className="md:col-span-2 p-8 justify-between border"
+          className="md:col-span-2 p-5 sm:p-6 md:p-8 justify-between border"
           style={{
             background: "rgba(255,255,255,0.55)",
             backdropFilter: "blur(20px)",
@@ -502,7 +519,7 @@ const Recruiters: React.FC = () => {
         {/* 5 — Hiring Partners — auto-scrolling marquee */}
         <div className="md:col-span-3 overflow-hidden border" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
           {/* Header strip */}
-          <div className="px-8 pt-8 pb-6" style={{ background: "#0B3D91" }}>
+          <div className="px-5 sm:px-6 md:px-8 pt-6 sm:pt-7 md:pt-8 pb-5 sm:pb-6" style={{ background: "#0B3D91" }}>
             <div className="flex items-center gap-3 mb-1">
               <div className="w-6 h-px" style={{ background: "#F4B400" }} />
               <p className="text-[14px] font-bold uppercase tracking-[0.25em]" style={{ color: "#EAF2FB" }}>

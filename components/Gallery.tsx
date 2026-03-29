@@ -1,6 +1,7 @@
 import React from 'react';
 import { PixelImage } from '../ui/pixel-image';
 import { useGalleries } from '../hooks/useGalleries';
+import { Link } from 'react-router-dom';
 
 interface FallbackGalleryItem {
   title: string;
@@ -17,7 +18,7 @@ const fallbackGalleryItems: FallbackGalleryItem[] = [
   {
     title: 'AICTE IDEA Lab',
     subtitle: 'Innovation & Design',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/Images/gallery/aicte_idea_lab.png',
   },
   {
     title: 'Center of Excellence',
@@ -32,7 +33,7 @@ const fallbackGalleryItems: FallbackGalleryItem[] = [
   {
     title: 'Texas Instruments Lab',
     subtitle: 'Embedded Systems',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/Images/gallery/texas_instruments_lab.png',
   },
   {
     title: 'Robotics Lab',
@@ -98,6 +99,15 @@ const Gallery: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[200px] sm:auto-rows-[260px]">
           {displayGalleries.map((item, idx) => {
             const isFeatured = idx === 0;
+            let linkTo = null;
+            if (item.title === 'AICTE IDEA Lab') linkTo = '/aicte-idea-vcet';
+            if (item.title === 'Center of Excellence') linkTo = '/coe-siemens';
+            if (item.title === 'Machinery Diagnostics') linkTo = '/machinery-diagnostics';
+            if (item.title === 'Texas Instruments Lab') linkTo = '/texas-instruments-lab';
+            if (item.title === 'Robotics Lab') linkTo = '/robotics-lab';
+            if (item.title === 'Oracle Academy') linkTo = '/oracle-academy';
+            if (item.title === 'e-Yantra Lab') linkTo = '/e-yantra';
+            
             return (
               <div
                 key={item.id}
@@ -106,18 +116,28 @@ const Gallery: React.FC = () => {
                   isFeatured ? 'sm:col-span-2 lg:col-span-2 md:row-span-2 lg:row-span-2' : '',
                 ].join(' ')}
               >
-                {/* Pixel-reveal image — staggered by card index */}
-                <PixelImage
-                  src={item.src}
-                  alt={item.title}
-                  customGrid={isFeatured ? { rows: 6, cols: 8 } : { rows: 4, cols: 6 }}
-                  grayscaleAnimation
-                  pixelFadeInDuration={500}
-                  maxAnimationDelay={600}
-                  colorRevealDelay={700}
-                  animationDelay={idx * STAGGER_MS}
-                  className="absolute inset-0"
-                />
+                {linkTo ? (
+                  <Link to={linkTo} className="absolute inset-0 z-20">
+                    <span className="sr-only">View {item.title}</span>
+                  </Link>
+                ) : null}
+                {/* Pixel-reveal image — load for featured item or specific labs with images */}
+                {isFeatured || item.title === 'AICTE IDEA Lab' || item.title === 'Texas Instruments Lab' ? (
+                  <PixelImage
+                    src={item.src}
+                    alt={item.title}
+                    customGrid={isFeatured ? { rows: 6, cols: 8 } : { rows: 4, cols: 4 }}
+                    grayscaleAnimation
+                    pixelFadeInDuration={500}
+                    maxAnimationDelay={600}
+                    colorRevealDelay={700}
+                    animationDelay={idx * STAGGER_MS}
+                    className="absolute inset-0"
+                  />
+                ) : (
+                  /* Image placeholder for other non-featured items */
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-300 to-slate-400 animate-pulse" />
+                )}
 
                 {/* Label overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent pointer-events-none" />

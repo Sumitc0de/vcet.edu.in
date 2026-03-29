@@ -5,7 +5,16 @@
 
 import type {
   Notice, Event, Placement, HeroSlide, NewsTicker,
-  Achievement, Testimonial, GalleryImage, PlacementPartner, Enquiry,
+  Achievement, Testimonial, GalleryImage, PlacementPartner, Enquiry, Faculty, Department,
+  AdmissionData, AdmissionDocument,
+  AcademicsData, AcademicsPayload,
+  ExamData, ExamPayload,
+  CommitteeData, CommitteePayload,
+  ResearchData, ResearchPayload,
+  FacilityData, FacilityPayload,
+  AboutData, AboutPayload,
+  AdmissionData, AcademicsData, AdmissionDocument,
+  AdmissionSection, AdmissionItem, ExamData,
   ListResponse, ItemResponse, DeleteResponse,
 } from '../types';
 
@@ -25,7 +34,7 @@ const fileToDataUrl = (file: File): Promise<string> => {
 };
 
 const hydrateDataUrl = (dataUrl: string | null): string | null => {
-  if (!dataUrl || !dataUrl.startsWith('data:')) return dataUrl;
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) return dataUrl;
   try {
     const [header, base64] = dataUrl.split(',');
     const mime = header.match(/:(.*?);/)?.[1] || '';
@@ -41,28 +50,71 @@ const hydrateDataUrl = (dataUrl: string | null): string | null => {
   }
 };
 
+const processFiles = async (data: any): Promise<any> => {
+  if (typeof File !== 'undefined' && data instanceof File) {
+    return await fileToDataUrl(data);
+  }
+  if (Array.isArray(data)) {
+    return await Promise.all(data.map(processFiles));
+  }
+  if (data && typeof data === 'object' && !(data instanceof Date)) {
+    const result: any = {};
+    for (const [key, value] of Object.entries(data)) {
+      result[key] = await processFiles(value);
+    }
+    return result;
+  }
+  return data;
+};
+
+function hydrateStoredValue<T>(value: T): T {
+  if (typeof value === 'string') {
+    return hydrateDataUrl(value) as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => hydrateStoredValue(entry)) as T;
+  }
+
+  if (value && typeof value === 'object' && !(value instanceof Date)) {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        hydrateStoredValue(entry),
+      ]),
+    ) as T;
+  }
+
+  return value;
+}
+
+export function readMockCollection<T>(storageKey: string, seed: T[]): T[] {
+  if (typeof localStorage === 'undefined') {
+    return seed.map((item) => hydrateStoredValue(item));
+  }
+
+  try {
+    const stored = localStorage.getItem(storageKey);
+    if (stored) {
+      const parsed = JSON.parse(stored) as T[];
+      return Array.isArray(parsed)
+        ? parsed.map((item) => hydrateStoredValue(item))
+        : seed.map((item) => hydrateStoredValue(item));
+    }
+  } catch (e) {
+    console.error(`Failed to parse ${storageKey} from localStorage`, e);
+  }
+
+  return seed.map((item) => hydrateStoredValue(item));
+}
+
 // ── Generic CRUD factory ─────────────────────────────────────────────────────
 export function createMockCrud<T extends { id: number }>(seed: T[], storageKey: string) {
-  const initStore = () => {
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as T[];
-        // Hydrate attachments/images back to object URLs so iframe viewers don't break CSP
-        return parsed.map((item: any) => {
-          if (item.attachment) item.attachment = hydrateDataUrl(item.attachment);
-          if (item.image) item.image = hydrateDataUrl(item.image);
-          return item;
-        });
-      }
-    } catch (e) {
-      console.error(`Failed to parse ${storageKey} from localStorage`, e);
-    }
-    // Seed arrays might also have base64 or mock URLs, but let's just return seed
-    return [...seed];
-  };
+  let store = readMockCollection(storageKey, seed);
 
-  let store = initStore();
+  const syncFromStorage = () => {
+    store = readMockCollection(storageKey, seed);
+  };
 
   const persist = () => {
     try {
@@ -75,11 +127,13 @@ export function createMockCrud<T extends { id: number }>(seed: T[], storageKey: 
   return {
     list: async (): Promise<ListResponse<T>> => {
       await delay();
+      syncFromStorage();
       return { success: true, data: [...store] };
     },
 
     get: async (id: number): Promise<ItemResponse<T>> => {
       await delay();
+      syncFromStorage();
       const item = store.find((i) => i.id === id);
       if (!item) throw new Error(`Item ${id} not found`);
       return { success: true, data: { ...item } };
@@ -87,15 +141,9 @@ export function createMockCrud<T extends { id: number }>(seed: T[], storageKey: 
 
     create: async (payload: Partial<T>): Promise<ItemResponse<T>> => {
       await delay(300);
+      syncFromStorage();
       
-      // Handle mock file uploads by generating local object URLs
-      const processedPayload = { ...payload } as Record<string, any>;
-      if (processedPayload.attachment instanceof File) {
-        processedPayload.attachment = await fileToDataUrl(processedPayload.attachment);
-      }
-      if (processedPayload.image instanceof File) {
-        processedPayload.image = await fileToDataUrl(processedPayload.image);
-      }
+      const processedPayload = await processFiles(payload);
 
       const item = {
         id: nextId(),
@@ -106,45 +154,58 @@ export function createMockCrud<T extends { id: number }>(seed: T[], storageKey: 
       store.unshift(item);
       persist();
 
-      const returnItem = { ...item } as any;
-      if (returnItem.attachment) returnItem.attachment = hydrateDataUrl(returnItem.attachment);
-      if (returnItem.image) returnItem.image = hydrateDataUrl(returnItem.image);
-
-      return { success: true, data: returnItem, message: 'Created successfully' };
+      return { success: true, data: hydrateStoredValue(item), message: 'Created successfully' };
     },
 
     update: async (id: number, payload: Partial<T>): Promise<ItemResponse<T>> => {
       await delay(300);
+      syncFromStorage();
       const idx = store.findIndex((i) => i.id === id);
       if (idx === -1) throw new Error(`Item ${id} not found`);
 
-      // Handle mock file uploads
-      const processedPayload = { ...payload } as Record<string, any>;
-      if (processedPayload.attachment instanceof File) {
-        processedPayload.attachment = await fileToDataUrl(processedPayload.attachment);
-      }
-      if (processedPayload.image instanceof File) {
-        processedPayload.image = await fileToDataUrl(processedPayload.image);
-      }
+      const processedPayload = await processFiles(payload);
 
       store[idx] = { ...store[idx], ...processedPayload, updated_at: now() };
       persist();
 
-      const returnItem = { ...store[idx] } as any;
-      if (returnItem.attachment) returnItem.attachment = hydrateDataUrl(returnItem.attachment);
-      if (returnItem.image) returnItem.image = hydrateDataUrl(returnItem.image);
-
-      return { success: true, data: returnItem, message: 'Updated successfully' };
+      return { success: true, data: hydrateStoredValue(store[idx]), message: 'Updated successfully' };
     },
 
     delete: async (id: number): Promise<DeleteResponse> => {
       await delay(200);
+      syncFromStorage();
       store = store.filter((i) => i.id !== id);
       persist();
       return { success: true, message: 'Deleted successfully' };
     },
   };
 }
+
+export const createMockSingleton = <T>(initialData: T, storageKey: string) => {
+  const hydrate = (): T => {
+    const stored = localStorage.getItem(storageKey);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        return initialData;
+      }
+    }
+    return initialData;
+  };
+
+  return {
+    get: async () => ({ data: hydrate() }),
+    update: async (payload: any) => {
+      const current = hydrate();
+      const updatedData = await processFiles(payload);
+      
+      const newData = { ...current, ...updatedData, updatedAt: new Date().toISOString() };
+      localStorage.setItem(storageKey, JSON.stringify(newData));
+      return { data: newData as unknown as T };
+    }
+  };
+};
 
 // ── Seed Data ────────────────────────────────────────────────────────────────
 
@@ -248,7 +309,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Hands-on workshop on building mobile apps with React Native.',
     date: '2024-10-15', time: '10:00 AM - 01:00 PM', venue: 'IoT Lab, 3rd Floor',
     image: null, category: 'Workshop', status: 'Completed', is_featured: true, is_active: true,
-    expiry_date: '2024-10-15', expiry_time: '13:00', // Intentionally past expiry
+    expiry_date: '2024-10-15', expiry_time: '13:00',
     attachment: null, external_link: null, external_link_label: null,
     created_at: '2024-02-20T10:00:00Z', updated_at: '2024-02-20T10:00:00Z',
   },
@@ -365,7 +426,7 @@ export const MOCK_ACHIEVEMENTS: Achievement[] = [
     created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z',
   },
   {
-    id: 3, title: 'IEEE Journal Publication (AI/ML)', value: 'Scientific Paper',
+    id: 2, title: 'IEEE Journal Publication (AI/ML)', value: 'Scientific Paper',
     participant_name: 'Dr. S. Meenakshi', participant_role: 'Associate Professor - IT', participant_avatar: null,
     date: '2024-01-05', category: 'Research', document_name: 'IEEE_Paper.pdf', document_url: '#',
     description: 'Published a research paper on AI/ML in IEEE journal.',
@@ -448,26 +509,153 @@ export const MOCK_ENQUIRIES: Enquiry[] = [
   },
 ];
 
+export const MOCK_FACULTY: Faculty[] = [
+  {
+    id: 1,
+    basicInfo: {
+      fullName: 'Dr. Sunita Mehta',
+      designation: 'Professor & HOD',
+      department: 'Computer Engineering',
+      email: 'sunita.mehta@vcet.edu.in',
+      dob: '1978-06-15',
+      joinDate: '2006-07-01',
+      isActive: true,
+    },
+    profileImage: { url: '/Images/departments/computer/faculty/sunita-mehta.jpg', public_id: 'mock-img-1' },
+    qualifications: {
+      degrees: ['Ph.D. Computer Science', 'M.Tech CSE', 'B.E. IT'],
+      specialization: 'Machine Learning & AI',
+    },
+    experience: {
+      teachingYears: 18,
+      industryYears: 4,
+      totalPapers: 32,
+      totalBooks: 3,
+      totalPatents: 2,
+    },
+    academic: {
+      pgProjects: '12 M.Tech projects guided',
+      researchDomains: ['Artificial Intelligence', 'Deep Learning', 'Computer Vision'],
+      consultancyProjects: ['Smart City Analytics for Mumbai Municipal Corp'],
+    },
+    publications: {
+      books: [{ title: 'Machine Learning Fundamentals (Springer, 2022)', isbn: '978-3-030-12345-6' }],
+      patents: [{ title: 'AI-based Traffic Management System (IN202100345)', date: '2021-05-12' }],
+      researchPapers: ['32 papers in IEEE, Elsevier, Springer'],
+    },
+    rolesAndAwards: {
+      roles: ['Head of Department - Computer Engineering', 'Member - Board of Studies'],
+      awards: ['Best Researcher Award 2023 - University of Mumbai'],
+    },
+    onlineLinks: {
+      website: 'https://scholar.google.com/sunita-mehta',
+      youtube: '',
+      github: 'https://github.com/sunita-mehta',
+    },
+    memberships: {
+      organizations: ['IEEE Senior Member', 'ACM Professional Member', 'CSI Life Member'],
+    },
+    createdAt: '2024-01-10T10:00:00Z',
+    updatedAt: '2024-01-10T10:00:00Z',
+  },
+  {
+    id: 2,
+    basicInfo: {
+      fullName: 'Prof. Rajesh Kulkarni',
+      designation: 'Associate Professor',
+      department: 'Information Technology',
+      email: 'rajesh.kulkarni@vcet.edu.in',
+      dob: '1984-03-22',
+      joinDate: '2012-08-15',
+      isActive: true,
+    },
+    profileImage: { url: '/Images/departments/it/faculty/rajesh-kulkarni.jpg', public_id: 'mock-img-2' },
+    qualifications: {
+      degrees: ['M.Tech Information Technology', 'B.E. IT'],
+      specialization: 'Cybersecurity & Network Systems',
+    },
+    experience: {
+      teachingYears: 12,
+      industryYears: 6,
+      totalPapers: 18,
+      totalBooks: 1,
+      totalPatents: 0,
+    },
+    academic: {
+      pgProjects: '8 M.Tech projects guided',
+      researchDomains: ['Network Security', 'Blockchain'],
+      consultancyProjects: ['Cybersecurity Audit for State Bank of India'],
+    },
+    publications: {
+      books: [{ title: 'Network Security Essentials (Pearson, 2023)', isbn: '978-0-13-456789-0' }],
+      patents: [],
+      researchPapers: ['18 papers in IEEE, ACM conferences'],
+    },
+    rolesAndAwards: {
+      roles: ['Cybersecurity Lab In-charge', 'NBA Coordinator'],
+      awards: ['Best Paper Award - IEEE ICCCNT 2022'],
+    },
+    onlineLinks: {
+      website: 'https://rajeshk.dev',
+      youtube: 'https://youtube.com/@rajeshk-cybersec',
+      github: '',
+    },
+    memberships: {
+      organizations: ['IEEE Member', 'ISCA Member'],
+    },
+    createdAt: '2024-02-15T10:00:00Z',
+    updatedAt: '2024-02-15T10:00:00Z',
+  },
+];
+
+// Special CRUD handler for Faculty to support _id instead of id
+export function createFacultyMockCrud(seed: Faculty[], storageKey: string = 'vcet_mock_faculty_v3') {
+  let store = readMockCollection(storageKey, seed);
+
+  const persist = () => localStorage.setItem(storageKey, JSON.stringify(store));
+
+  return {
+    list: async () => ({ success: true, data: [...store] }),
+    get: async (id: string) => {
+      const item = store.find(f => f.id === Number(id));
+      if (!item) throw new Error('Faculty not found');
+      return { success: true, data: { ...item } };
+    },
+    create: async (payload: any) => {
+      const newItem = { 
+        ...payload, 
+        id: `mock-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      store.unshift(newItem);
+      persist();
+      return { success: true, data: newItem };
+    },
+    update: async (id: string, payload: any) => {
+      const idx = store.findIndex(f => f.id === Number(id));
+      if (idx === -1) throw new Error('Faculty not found');
+      store[idx] = { ...store[idx], ...payload, updatedAt: new Date().toISOString() };
+      persist();
+      return { success: true, data: store[idx] };
+    },
+    delete: async (id: string) => {
+      store = store.filter(f => f.id !== Number(id));
+      persist();
+      return { success: true };
+    }
+  };
+}
+
+export const mockFacultyApi = createFacultyMockCrud(MOCK_FACULTY);
+
 // ── Gallery-specific CRUD (no "get" or "update", only upload + delete) ───────
 export function createGalleryCrud(seed: GalleryImage[], storageKey: string = 'vcet_mock_gallery') {
-  const initStore = () => {
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as GalleryImage[];
-        return parsed.map((item) => {
-          if (item.image) item.image = hydrateDataUrl(item.image) || item.image;
-          return item;
-        });
-      }
-    } catch (e) {
-      console.error(`Failed to parse ${storageKey} from localStorage`, e);
-    }
-    // Seed arrays might also have base64 or mock URLs, but let's just return seed
-    return [...seed];
-  };
+  let store = readMockCollection(storageKey, seed);
 
-  let store = initStore();
+  const syncFromStorage = () => {
+    store = readMockCollection(storageKey, seed);
+  };
 
   const persist = () => {
     try {
@@ -480,10 +668,12 @@ export function createGalleryCrud(seed: GalleryImage[], storageKey: string = 'vc
   return {
     list: async (): Promise<ListResponse<GalleryImage>> => {
       await delay();
+      syncFromStorage();
       return { success: true, data: [...store] };
     },
     upload: async (payload: { image: File; caption?: string }): Promise<{ data: GalleryImage; message: string }> => {
       await delay(400);
+      syncFromStorage();
       const base64Image = await fileToDataUrl(payload.image);
       const item: GalleryImage = {
         id: nextId(),
@@ -499,6 +689,7 @@ export function createGalleryCrud(seed: GalleryImage[], storageKey: string = 'vc
     },
     delete: async (id: number): Promise<DeleteResponse> => {
       await delay(200);
+      syncFromStorage();
       store = store.filter((i) => i.id !== id);
       persist();
       return { success: true, message: 'Deleted successfully' };
@@ -506,18 +697,636 @@ export function createGalleryCrud(seed: GalleryImage[], storageKey: string = 'vc
   };
 }
 
-// ── Enquiries CRUD (read-only) ───────────────────────────────────────────────
-export function createEnquiriesCrud(seed: Enquiry[]) {
-  const store = [...seed];
+export const MOCK_DEPARTMENTS: Department[] = [
+  {
+    id: 1,
+    name: 'Information Technology',
+    slug: 'information-technology',
+    is_active: true,
+    created_at: now(),
+    updated_at: now(),
+    content: {
+      dabMembers: [
+        { name: 'Dr. John Doe', designation: 'Professor', organization: 'IIT Bombay' },
+        { name: 'Mr. Jane Smith', designation: 'Senior Engineer', organization: 'TCS' }
+      ],
+      faculty: [1, 2],
+      toppers: [
+        { name: 'Aarav Patel', year: '2023-24', cgpa: '9.8' },
+        { name: 'Riya Gupta', year: '2022-23', cgpa: '9.7' }
+      ],
+      newsletter: [
+        { title: 'Jan 2024 Edition', link: 'https://vcet.edu.in/newsletter-2024.pdf' }
+      ],
+      patents: [
+        { title: 'AI-based Traffic Management System', description: 'Smart traffic light control using computer vision.', pdf: '' }
+      ],
+      mous: [
+        { organization: 'Microsoft', description: 'Collaboration for student training in Azure Cloud services.', pdf: '' }
+      ],
+      syllabus: [
+        { title: 'Semester 3 - C-Scheme', pdf: '' }
+      ],
+      timetable: [
+        { class: 'SE', pdf: '' }
+      ],
+      facultyAchievements: [],
+      studentAchievements: [],
+      activities: []
+    }
+  }
+];
 
-  return {
-    list: async (_page = 1): Promise<ListResponse<Enquiry>> => {
-      await delay();
-      return {
-        success: true,
-        data: [...store],
-        meta: { current_page: 1, last_page: 1, total: store.length, per_page: 20 },
-      };
+/* ── Admission & Academics Singletons ───────────────────────────────────────── */
+
+const MOCK_ADMISSION: AdmissionData = {
+  id: 'admission-1',
+  courses: {
+    ug: [
+      { name: 'Computer Engineering', intake: '180' },
+      { name: 'Computer Science and Engineering (Data Science)', intake: '180' },
+      { name: 'Information Technology', intake: '60' },
+      { name: 'Artificial Intelligence and Data Science', intake: '120' },
+      { name: 'Mechanical Engineering', intake: '60' },
+      { name: 'Electronics and Telecommunication Engineering', intake: '60' },
+    ],
+    pg: [
+      { name: 'M.E. Computer Engineering', intake: '18' },
+    ],
+    management: [
+      { name: 'Master of Management Studies (MMS)', intake: '120' },
+    ],
+  },
+  feesStructure: [
+    { title: 'F.E. Fee Structure', description: 'Regular First Year Admission', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-Fee-2024-25.pdf', fileName: 'FE-Fee.pdf' },
+    { title: 'Direct S.E. Fee', description: 'Lateral Entry Admission', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-Fee-2024-25.pdf', fileName: 'DSE-Fee.pdf' },
+  ],
+  brochure: { fileName: "VCET_Brochure_2025.pdf", fileUrl: "https://vcet.edu.in/wp-content/uploads/2024/05/VCET-Brochure.pdf" },
+  documentsRequired: [
+    { title: 'Mandatory Documents', description: 'For all engineering programs', category: 'UG - FIRST YEAR', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/08/Document-Required-2024-25.pdf', fileName: 'Docs-Required.pdf' },
+  ],
+  cutOffs: [
+    { title: 'F.E. (First Year Engineering) 2024-25', description: 'Engineering Department', year: '2024-25', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-CAP-1-2024-25.pdf', fileName: 'FE-CAP-1.pdf' },
+    { title: 'DSE (Direct Second Year) 2024-25', description: 'Engineering Department', year: '2024-25', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-CAP-1-2024-25.pdf', fileName: 'DSE-CAP-1.pdf' },
+  ],
+  scholarships: [
+    { title: 'Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna - EBC', description: 'Government Scholarship', year: '2025-26', fileUrl: 'https://vcet.edu.in/ebc-scholarship.pdf', fileName: 'EBC-Scholarship.pdf' },
+    { title: 'Post Matric Scholarship to OBC Students - OBC Scholarship', description: 'Government Scholarship', year: '2025-26', fileUrl: 'https://vcet.edu.in/obc-scholarship.pdf', fileName: 'OBC-Scholarship.pdf' },
+  ],
+  updatedAt: new Date().toISOString(),
+};
+
+const MOCK_ACADEMICS: AcademicsData = {
+  programBooklets: [
+    { title: 'Honours / Minor Degree Program - Booklet Part 1', description: 'Access the official institutional booklets for program structure and syllabus details.', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/05/Honours-Syllabus-1.pdf', fileName: 'Booklet-Part1.pdf' },
+    { title: 'Honours / Minor Degree Program - Booklet Part 2', description: 'Access the official institutional booklets for program structure and syllabus details.', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/05/Honours-Syllabus-2.pdf', fileName: 'Booklet-Part2.pdf' },
+  ],
+  academicCalendars: [
+    { title: 'EVEN SEM 2025-26 SE TE BE', description: 'TENTATIVE', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/05/Acad-Calendar-Even.pdf', fileName: 'Even-Sem-25-26.pdf' },
+    { title: 'ODD SEM 2025-26 SE TE BE', description: 'Confirmed', year: '2025-26', fileUrl: 'https://vcet.edu.in/wp-content/uploads/2024/05/Acad-Calendar-Odd.pdf', fileName: 'Odd-Sem-25-26.pdf' },
+  ],
+  updatedAt: new Date().toISOString(),
+};
+
+export const MOCK_EXAM: ExamData = {
+  syllabus: [
+    {
+      department: 'Artificial Intelligence and Data Science',
+      documents: [
+        { title: 'AI & DS_SE_Revised 2019-20', description: 'Syllabus for Second Year', year: '2024-25', fileUrl: 'https://vcet.edu.in/syllabus/ai-ds-se.pdf', fileName: 'ai-ds-se.pdf' },
+        { title: 'AI & DS_TE_Revised 2019-20', description: 'Syllabus for Third Year', year: '2024-25', fileUrl: null, fileName: null },
+        { title: 'AI & DS_BE_Revised 2019-20', description: 'Syllabus for Final Year', year: '2024-25', fileUrl: null, fileName: null },
+      ]
     },
-  };
-}
+    {
+      department: 'Civil Engineering',
+      documents: [
+        { title: 'CIVIL_BE_2016', description: 'Syllabus for Final Year', year: '2024-25', fileUrl: 'https://vcet.edu.in/syllabus/civil-te.pdf', fileName: 'civil-te.pdf' },
+        { title: 'CIVIL_SE_2019C', description: 'Syllabus for Second Year', year: '2024-25', fileUrl: null, fileName: null },
+      ]
+    }
+  ],
+  timetable: [
+    { title: 'FE Semester I FH2024', description: 'First Year Engineering', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/fe-sem1-fh2024.pdf', fileName: 'fe-sem1-fh2024.pdf' },
+  ],
+  questionPapers: [
+    { title: 'Computer Engineering - Sem III Dec 2023', description: 'Computer Engineering', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/comp-sem3-dec2023.pdf', fileName: 'comp-sem3-dec2023.pdf' },
+  ],
+  samplePapers: [
+    { title: 'Sample Paper - Discrete Structures', description: 'Common for all branches', year: '2024-25', fileUrl: 'https://vcet.edu.in/exams/sample-ds.pdf', fileName: 'sample-ds.pdf' },
+  ],
+  results: [
+    {
+      title: 'December 2021',
+      department: 'Artificial Intelligence and Data Science',
+      documents: [
+        { title: 'SEM-III_Rev-2019_AIDSC-Scheme', description: 'Standard Semester III', year: '2023-24', fileUrl: 'https://vcet.edu.in/exams/be-sem8-may2024.pdf', fileName: 'be-sem8-may2024.pdf' },
+        { title: 'SEM III_Rev 2019_AIDS_DSE(C-Scheme)', description: 'Direct Second Year', year: '2023-24', fileUrl: null, fileName: null },
+      ]
+    },
+    {
+      title: 'December 2021',
+      department: 'Computer Science and Engineering (Data Science)',
+      documents: [
+        { title: 'SEM III_Rev 2019_CSEDS(C-Scheme)', description: 'Standard Semester III', year: '2023-24', fileUrl: null, fileName: null },
+        { title: 'SEM III DSE_(C-Scheme) _FEB 2022', description: 'Direct Second Year', year: '2023-24', fileUrl: null, fileName: null },
+      ]
+    }
+  ],
+  notices: [
+    { title: 'KT Form Notice - Sem III to VI May 2024', description: 'Exam Cell Notice', year: '2023-24', fileUrl: 'https://vcet.edu.in/notices/kt-form-may2024.pdf', fileName: 'kt-form-may2024.pdf' },
+  ],
+  updatedAt: new Date().toISOString(),
+};
+
+/* ── Committees Module ─────────────────────────────────────────────────────── */
+let MOCK_COMMITTEES: CommitteeData[] = [
+  { id: '1', slug: 'cdc', name: 'College Development Committee', description: 'Institutional planning and development governance.', responsibilities: [], members: [] },
+  { id: '2', slug: 'iqac', name: 'IQAC', description: 'Quality assurance and academic excellence monitoring.', objectives: [], members: [], reports: [] },
+  { id: '3', slug: 'anti-ragging', name: 'Anti-Ragging Committee', description: 'Ensuring a safe and ragging-free campus environment.', objectives: [], members: [] },
+  { id: '4', slug: 'grievance', name: 'Grievance Redressal Committee', description: 'Addressing institutional and staff grievances.', objectives: [], members: [] },
+  { id: '5', slug: 'sgrc', name: 'Student Grievance Redressal Committee (SGRC)', description: 'Handling student-specific concerns and complaints.', guidelines: [], members: [] },
+  { id: '6', slug: 'sc-st', name: 'SC-ST Committee', description: 'Promoting welfare and equal opportunities for SC/ST students.', objectives: [], members: [] },
+  { id: '7', slug: 'icc', name: 'Internal Complaint Committee', description: 'Prevention and redressal of sexual harassment.', objectives: [], members: [] },
+  { id: '8', slug: 'equal-opportunity', name: 'Equal Opportunity Cell', description: 'Ensuring non-discrimination and inclusivity.', documents: [] },
+  { id: '9', slug: 'sedg', name: 'SEDG Cell', description: 'Socio-Economically Disadvantaged Groups welfare.', documents: [] },
+];
+
+export const createCommitteeCrud = () => ({
+  get: async (slug: string) => {
+    const committee = MOCK_COMMITTEES.find(c => c.slug === slug);
+    return { data: committee || null, success: true };
+  },
+  update: async (slug: string, payload: CommitteePayload) => {
+    const idx = MOCK_COMMITTEES.findIndex(c => c.slug === slug);
+    if (idx !== -1) {
+      MOCK_COMMITTEES[idx] = { ...MOCK_COMMITTEES[idx], ...payload };
+    }
+    return { data: MOCK_COMMITTEES[idx], success: true };
+  }
+});
+
+export const mockCommittees = createCommitteeCrud();
+
+/* ── Research Module ───────────────────────────────────────────────────────── */
+let MOCK_RESEARCH: ResearchData[] = [
+  { id: '1', slug: 'research-intro', name: 'Research Introduction', description: 'Institutional R&D Hub and PhD datasets.', hubCards: [], objectives: [], phdPursuing: [], phdHolders: [], dean: { name: '', designation: '', researchInterest: '' }, quickLinks: [] },
+  { id: '2', slug: 'funded-research', name: 'Funded Research', description: 'External funding records and reports.', funding: [], fundingReport: { fileUrl: null, fileName: null } },
+  { id: '3', slug: 'publications', name: 'Publications', description: 'Books, Journals, and Conference papers.', books: [], journals: [], publicationReport: { fileUrl: null, fileName: null } },
+  { id: '4', slug: 'patents', name: 'Patents', description: 'Intellectual property and patent records.', patents: [], patentStats: {} },
+  { id: '5', slug: 'consultancy', name: 'Consultancy Projects', description: 'Industry projects and revenue datasets.', consultancyRevenue: [], consultancyReport: { fileUrl: null, fileName: null }, industryPartners: [], consultancyStats: {} },
+  { id: '6', slug: 'research-facility', name: 'Research Facility', description: 'Infrastructure and specialized R&D labs.', facilities: [], fallbackFacility: { title: '', description: '', imageUrl: null } },
+  { id: '7', slug: 'conventions', name: 'Research Conventions', description: 'PDF-based convention records.', documents: [] },
+  { id: '8', slug: 'research-policy', name: 'Research Policy', description: 'Institutional policy documents.', documents: [] },
+  { id: '9', slug: 'iic', name: 'IIC', description: 'Innovation cell achievements and reports.', iicAchievements: [], iicGallery: [], iicCommittee: [], iicReports: [] },
+  { id: '10', slug: 'nirf', name: 'NIRF', description: 'NIRF ranking documents.', documents: [] },
+  { id: '11', slug: 'downloads', name: 'Downloads', description: 'Research-related downloadable forms.', documents: [] },
+];
+
+export const createResearchCrud = () => ({
+  get: async (slug: string) => {
+    const section = MOCK_RESEARCH.find(s => s.slug === slug);
+    return { data: section || null, success: true };
+  },
+  update: async (slug: string, payload: ResearchPayload) => {
+    const idx = MOCK_RESEARCH.findIndex(s => s.slug === slug);
+    if (idx !== -1) {
+      MOCK_RESEARCH[idx] = { ...MOCK_RESEARCH[idx], ...payload };
+    }
+    return { data: MOCK_RESEARCH[idx], success: true };
+  }
+});
+
+export const mockResearch = createResearchCrud();
+
+/* ── Legacy Hub Creators ───────────────────────────────────────────────────── */
+export const createExamCrud = () => createMockSingleton(MOCK_EXAM, 'vcet_mock_exam');
+export const mockExam = createExamCrud();
+
+export const createAdmissionCrud = () => createMockSingleton(MOCK_ADMISSION, 'vcet_mock_admission_v4');
+export const mockAdmission = createAdmissionCrud();
+
+export const createAcademicsCrud = () => createMockSingleton(MOCK_ACADEMICS, 'vcet_mock_academics');
+export const mockAcademics = createAcademicsCrud();
+
+export const createEnquiriesCrud = (seed: Enquiry[]) => createMockCrud(seed, 'vcet_mock_enquiries');
+
+/* ── Facilities Module ─────────────────────────────────────────────────────── */
+let MOCK_FACILITIES: any[] = [
+  { id: '1', slug: 'central-computing', name: 'Central Computing', description: 'Institutional computing infrastructure records.', stats: [], staff: [], labs: [] },
+  { id: '2', slug: 'counselling-cell', name: 'Counselling Cell', description: 'Student counselling and mentoring records.', general: { title: '', description: '' }, staff: [], mentors: [] },
+  { id: '3', slug: 'differently-abled', name: 'Differently Abled Facilities', description: 'Facilities for differently abled individuals.', items: [] },
+  { id: '4', slug: 'health-facilities', name: 'Health Facilities', description: 'Campus health and medical facilities.', items: [] },
+  { id: '5', slug: 'ladies-common-room', name: 'Ladies Common Room', description: 'Rest and recreation for female students.', general: { title: '', description: '' }, activities: [] },
+  { id: '6', slug: 'library', name: 'VCET Library', description: 'Library rules, memberships, and statistics.', librarySections: [], facilitiesList: [], rules: [], memberships: [], tabs: [], contact: { phone: '', email: '', address: '' }, stats: [], staff: [], gallery: [] },
+  { id: '7', slug: 'sports-gymkhana', name: 'Sports & Gymkhana', description: 'Sports facilities, records, and rules.', sports: [], achievements: [], results: [], rules: [], gallery: [], tabs: [] },
+];
+
+export const createFacilityCrud = () => ({
+  get: async (slug: string) => {
+    const section = MOCK_FACILITIES.find(s => s.slug === slug);
+    return { data: section || null, success: true };
+  },
+  update: async (slug: string, payload: any) => {
+    const idx = MOCK_FACILITIES.findIndex(s => s.slug === slug);
+    if (idx !== -1) {
+      MOCK_FACILITIES[idx] = { ...MOCK_FACILITIES[idx], ...payload };
+    }
+    return { data: MOCK_FACILITIES[idx], success: true };
+  }
+});
+
+export const mockFacilities = createFacilityCrud();
+
+/* ── About Us Module ──────────────────────────────────────────────────────── */
+let MOCK_ABOUT: AboutData[] = [
+  { id: '1', slug: 'overview', name: 'Institute Overview', description: 'About VCET, accreditation, and quick facts.', paragraphs: ['', '', ''], accreditation: [], facts: [], updatedAt: new Date().toISOString() },
+  { id: '2', slug: 'president-desk', name: 'President\'s Desk', description: 'Leadership message from the President.', intro: { name: '', role: '', highlightQuote: '', closingQuote: '', image: null }, messageParagraphs: [], updatedAt: new Date().toISOString() },
+  { id: '3', slug: 'principal-desk', name: 'Principal\'s Desk', description: 'Leadership message from the Principal.', intro: { name: '', role: '', highlightQuote: '', closingQuote: '', image: null }, messageParagraphs: [], profileDetails: [], highlightsCards: [], updatedAt: new Date().toISOString() },
+  { id: '4', slug: 'governing-council', name: 'Governing Council', description: 'Institutional governance and board members.', chairman: { role: '', name: '', description: '' }, councilMembers: [], updatedAt: new Date().toISOString() },
+  { id: '5', slug: 'org-structure', name: 'Organizational Structure', description: 'Institutional hierarchy and reporting lines.', orgIntro: '', orgChartImage: null, orgNodes: [], updatedAt: new Date().toISOString() },
+  { id: '6', slug: 'administration', name: 'Administration', description: 'Key administrative officers and contacts.', adminCards: [], updatedAt: new Date().toISOString() },
+  { id: '7', slug: 'strategic-plan', name: 'Strategic Plan', description: 'Institutional strategic planning documents.', documents: [], updatedAt: new Date().toISOString() },
+  { id: '8', slug: 'code-of-conduct', name: 'Code of Conduct', description: 'Rules and professional ethics for stakeholders.', conductSections: [], updatedAt: new Date().toISOString() },
+];
+
+export const createAboutCrud = () => ({
+  get: async (slug: string) => {
+    const section = MOCK_ABOUT.find(s => s.slug === slug);
+    return { data: section || null, success: true };
+  },
+  update: async (slug: string, payload: AboutPayload) => {
+    const idx = MOCK_ABOUT.findIndex(s => s.slug === slug);
+    if (idx !== -1) {
+      MOCK_ABOUT[idx] = { ...MOCK_ABOUT[idx], ...payload, updatedAt: new Date().toISOString() };
+    }
+    return { data: MOCK_ABOUT[idx], success: true };
+  }
+});
+
+export const mockAbout = createAboutCrud();
+/* ── Admission Sections (new structured system) ───────────────────────────────── */
+
+export const MOCK_ADMISSION_SECTIONS: AdmissionSection[] = [
+  {
+    id: 1,
+    slug: 'courses-intake',
+    navigation_title: 'Courses & Intake',
+    title: 'Courses & Intake',
+    summary: 'Undergraduate and Postgraduate programs offered',
+    description: 'Comprehensive list of all engineering and management programs with seat intake.',
+    section_type: 'courses',
+    has_dropdown: false,
+    dropdown_key: null,
+    content: null,
+    is_active: true,
+    sort_order: 1,
+    items: [
+      {
+        id: 1,
+        admission_section_id: 1,
+        item_type: 'course',
+        title: 'Computer Engineering',
+        subtitle: 'B.E. - 4 Years',
+        description: 'Bachelor of Engineering in Computer Engineering',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'B.E.',
+        group_key: 'ug',
+        group_label: 'Undergraduate',
+        intake: 180,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: false,
+        pdf_name: null,
+        pdf_mime_type: null,
+        pdf_size: null,
+        pdf_url: null,
+        admin_pdf_url: null,
+        has_document: false,
+        document_url: null,
+        is_active: true,
+        sort_order: 1,
+      },
+      {
+        id: 2,
+        admission_section_id: 1,
+        item_type: 'course',
+        title: 'Computer Science & Engineering (Data Science)',
+        subtitle: 'B.E. - 4 Years',
+        description: 'Bachelor of Engineering in CS with specialization in Data Science',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'B.E.',
+        group_key: 'ug',
+        group_label: 'Undergraduate',
+        intake: 180,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: false,
+        pdf_name: null,
+        pdf_mime_type: null,
+        pdf_size: null,
+        pdf_url: null,
+        admin_pdf_url: null,
+        has_document: false,
+        document_url: null,
+        is_active: true,
+        sort_order: 2,
+      },
+      {
+        id: 3,
+        admission_section_id: 1,
+        item_type: 'course',
+        title: 'Information Technology',
+        subtitle: 'B.E. - 4 Years',
+        description: 'Bachelor of Engineering in Information Technology',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'B.E.',
+        group_key: 'ug',
+        group_label: 'Undergraduate',
+        intake: 60,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: false,
+        pdf_name: null,
+        pdf_mime_type: null,
+        pdf_size: null,
+        pdf_url: null,
+        admin_pdf_url: null,
+        has_document: false,
+        document_url: null,
+        is_active: true,
+        sort_order: 3,
+      },
+      {
+        id: 4,
+        admission_section_id: 1,
+        item_type: 'course',
+        title: 'Master of Management Studies',
+        subtitle: 'M.M.S. - 2 Years',
+        description: 'Postgraduate management degree program',
+        category: 'Management',
+        academic_year: '2025-26',
+        badge: 'PG',
+        tag: 'MMS',
+        group_key: 'pg',
+        group_label: 'Postgraduate',
+        intake: 120,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: false,
+        pdf_name: null,
+        pdf_mime_type: null,
+        pdf_size: null,
+        pdf_url: null,
+        admin_pdf_url: null,
+        has_document: false,
+        document_url: null,
+        is_active: true,
+        sort_order: 4,
+      },
+    ],
+  },
+  {
+    id: 2,
+    slug: 'fees-structure',
+    navigation_title: 'Fees Structure',
+    title: 'Fees Structure',
+    summary: 'Detailed fee structure for all programs',
+    description: 'Official fee structure for undergraduate and postgraduate admissions.',
+    section_type: 'fees',
+    has_dropdown: false,
+    dropdown_key: null,
+    content: null,
+    is_active: true,
+    sort_order: 2,
+    items: [
+      {
+        id: 5,
+        admission_section_id: 2,
+        item_type: 'document',
+        title: 'First Year (F.E.) Fee Structure 2025-26',
+        subtitle: null,
+        description: 'CAP fee structure for First Year Engineering admission',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'F.E.',
+        group_key: 'fees',
+        group_label: 'Fee Structure',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'FE-Fee-2024-25.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 150000,
+        pdf_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-Fee-2024-25.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-Fee-2024-25.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/FE-Fee-2024-25.pdf',
+        is_active: true,
+        sort_order: 1,
+      },
+      {
+        id: 6,
+        admission_section_id: 2,
+        item_type: 'document',
+        title: 'Direct Second Year (D.S.E.) Fee Structure 2025-26',
+        subtitle: null,
+        description: 'Lateral entry fee structure for Direct Second Year admission',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'DSE',
+        group_key: 'fees',
+        group_label: 'Fee Structure',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'DSE-Fee-2024-25.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 120000,
+        pdf_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-Fee-2024-25.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-Fee-2024-25.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/wp-content/uploads/2024/09/DSE-Fee-2024-25.pdf',
+        is_active: true,
+        sort_order: 2,
+      },
+    ],
+  },
+  {
+    id: 3,
+    slug: 'documents-required',
+    navigation_title: 'Documents Required',
+    title: 'Documents Required',
+    summary: 'List of documents needed for admission',
+    description: 'Essential documents required for the admission process.',
+    section_type: 'documents',
+    has_dropdown: false,
+    dropdown_key: null,
+    content: null,
+    is_active: true,
+    sort_order: 3,
+    items: [
+      {
+        id: 7,
+        admission_section_id: 3,
+        item_type: 'document',
+        title: 'First Year Engineering Documents',
+        subtitle: null,
+        description: 'List of mandatory documents for CAP round admission',
+        category: 'Engineering',
+        academic_year: '2025-26',
+        badge: 'UG',
+        tag: 'F.E.',
+        group_key: 'documents',
+        group_label: 'Required Documents',
+        intake: null,
+        metadata: null,
+        external_url: 'https://vcet.edu.in/wp-content/uploads/2024/08/Document-Required-2024-25.pdf',
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: false,
+        pdf_name: null,
+        pdf_mime_type: null,
+        pdf_size: null,
+        pdf_url: null,
+        admin_pdf_url: null,
+        has_document: true,
+        document_url: 'https://vcet.edu.in/wp-content/uploads/2024/08/Document-Required-2024-25.pdf',
+        is_active: true,
+        sort_order: 1,
+      },
+    ],
+  },
+  {
+    id: 4,
+    slug: 'scholarships',
+    navigation_title: 'Scholarships',
+    title: 'Scholarships',
+    summary: 'Government and institutional scholarship programs',
+    description: 'Information about scholarships available for students including government and institutional schemes.',
+    section_type: 'scholarships',
+    has_dropdown: false,
+    dropdown_key: null,
+    content: null,
+    is_active: true,
+    sort_order: 4,
+    items: [
+      {
+        id: 8,
+        admission_section_id: 4,
+        item_type: 'document',
+        title: 'Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna - EBC',
+        subtitle: null,
+        description: 'Government Scholarship for Economically Backward Class students',
+        category: 'Government',
+        academic_year: '2025-26',
+        badge: 'GOV',
+        tag: 'EBC',
+        group_key: 'scholarships',
+        group_label: 'Scholarships',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'EBC-Scholarship.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 120000,
+        pdf_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/ebc-scholarship.pdf',
+        is_active: true,
+        sort_order: 1,
+      },
+      {
+        id: 9,
+        admission_section_id: 4,
+        item_type: 'document',
+        title: 'Post Matric Scholarship to OBC Students - OBC Scholarship',
+        subtitle: null,
+        description: 'Government Scholarship for Other Backward Class students',
+        category: 'Government',
+        academic_year: '2025-26',
+        badge: 'GOV',
+        tag: 'OBC',
+        group_key: 'scholarships',
+        group_label: 'Scholarships',
+        intake: null,
+        metadata: null,
+        external_url: null,
+        image_name: null,
+        image_mime_type: null,
+        image_size: null,
+        has_image: false,
+        image_url: null,
+        admin_image_url: null,
+        has_pdf: true,
+        pdf_name: 'OBC-Scholarship.pdf',
+        pdf_mime_type: 'application/pdf',
+        pdf_size: 135000,
+        pdf_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        admin_pdf_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        has_document: true,
+        document_url: 'https://vcet.edu.in/obc-scholarship.pdf',
+        is_active: true,
+        sort_order: 2,
+      },
+    ],
+  },
+];

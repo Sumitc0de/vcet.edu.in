@@ -305,7 +305,7 @@ const NSS: React.FC = () => {
       </section>
 
       {/* ── Objectives ── */}
-      <section className="py-16 md:py-24 bg-brand-light">
+      <section className="py-8 md:py-16 lg:py-24 bg-brand-light">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center mb-14 reveal">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -481,7 +481,7 @@ const NSS: React.FC = () => {
       </section>
 
       {/* ── Activities ── */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-8 md:py-16 lg:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center mb-14 reveal">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-navy mb-4">
@@ -513,7 +513,7 @@ const NSS: React.FC = () => {
       </section>
 
       {/* ── Leadership & Core Team ── */}
-      <section className="py-16 md:py-24 bg-brand-light">
+      <section className="py-8 md:py-16 lg:py-24 bg-brand-light">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center mb-14 reveal">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -611,7 +611,7 @@ const NSS: React.FC = () => {
       </section>
 
       {/* ── Milestones ── */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-8 md:py-16 lg:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center mb-14 reveal">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-navy mb-4">

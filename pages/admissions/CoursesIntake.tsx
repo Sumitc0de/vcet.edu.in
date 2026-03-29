@@ -39,7 +39,7 @@ interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = ({ icon: Icon, title, active, onClick }) => (
   <div 
     onClick={onClick}
-    className={`group flex items-center justify-between px-6 py-4 cursor-pointer transition-all duration-300 ${
+    className={`group flex items-center justify-between px-4 md:px-6 py-3 md:py-4 cursor-pointer transition-all duration-300 min-h-[44px] ${
       active 
       ? 'bg-[#1e4e85] text-white shadow-md' 
       : 'bg-white text-slate-600 hover:bg-slate-50 hover:text-[#1e4e85]'
@@ -129,8 +129,8 @@ const CoursesIntake: React.FC = () => {
         breadcrumbs={[{ label: 'Courses and Intake' }]}
       />
 
-      <div className="bg-[#eff3f8] min-h-screen font-sans py-12 px-6 lg:px-12">
-        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 items-start">
+      <div className="bg-[#eff3f8] min-h-screen font-sans py-6 md:py-12 px-4 sm:px-6 lg:px-12">
+        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-6 md:gap-12 items-start">
           
           {/* Sidebar Navigation */}
           <aside className="w-full lg:w-[420px] lg:sticky lg:top-32 shrink-0">
@@ -171,7 +171,7 @@ const CoursesIntake: React.FC = () => {
               {(activeTab === 'all' || activeTab === 'ug') && (
                 <section>
                   <div className="flex items-center gap-4 mb-6">
-                    <h4 className="text-2xl font-black text-[#1e4e85] uppercase tracking-tight whitespace-nowrap">Under Graduate Program</h4>
+                    <h4 className="text-lg sm:text-xl md:text-2xl font-black text-[#1e4e85] uppercase tracking-tight">Under Graduate Program</h4>
                     <div className="h-px bg-slate-200 flex-1"></div>
                   </div>
                   <CourseTable courses={ugCourses} startIndex={1} />
@@ -181,7 +181,7 @@ const CoursesIntake: React.FC = () => {
               {(activeTab === 'all' || activeTab === 'pg') && (
                 <section>
                   <div className="flex items-center gap-4 mb-6">
-                    <h4 className="text-2xl font-black text-[#1e4e85] uppercase tracking-tight whitespace-nowrap">Post Graduate Program</h4>
+                    <h4 className="text-lg sm:text-xl md:text-2xl font-black text-[#1e4e85] uppercase tracking-tight">Post Graduate Program</h4>
                     <div className="h-px bg-slate-200 flex-1"></div>
                   </div>
                   <CourseTable courses={pgCourses} startIndex={ugCourses.length + 1} />
@@ -191,7 +191,7 @@ const CoursesIntake: React.FC = () => {
               {(activeTab === 'all' || activeTab === 'mgmt') && (
                 <section>
                   <div className="flex items-center gap-4 mb-6">
-                    <h4 className="text-2xl font-black text-[#1e4e85] uppercase tracking-tight whitespace-nowrap">Management Program</h4>
+                    <h4 className="text-lg sm:text-xl md:text-2xl font-black text-[#1e4e85] uppercase tracking-tight">Management Program</h4>
                     <div className="h-px bg-slate-200 flex-1"></div>
                   </div>
                   <CourseTable courses={mgmtCourses} startIndex={ugCourses.length + pgCourses.length + 1} />

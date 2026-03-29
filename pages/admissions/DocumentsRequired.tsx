@@ -1,9 +1,11 @@
 import React from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
-import { FileText, Download, Calendar, ShieldCheck } from 'lucide-react';
+import { FileText, Download } from 'lucide-react';
+import { useAdmissionSection } from '../../hooks/useAdmissionSection';
+import { getSectionContentValue } from './admissionSectionUtils';
 
-const documents = [
+const fallbackDocuments = [
   {
     title: 'FE Admission Documents Required',
     description: 'List of documents and fee structure for First Year Engineering admission under CAP.',
@@ -31,10 +33,18 @@ const documents = [
 ];
 
 const DocumentsRequired: React.FC = () => {
+  const { section, error } = useAdmissionSection('documents-required');
+  const documents = section?.items?.map((item) => ({
+    title: item.title,
+    description: item.description || '',
+    link: item.document_url || item.external_url || '#',
+    tag: item.tag || item.category || '',
+  })) ?? fallbackDocuments;
+
   return (
     <PageLayout>
       <PageBanner
-        title="Documents Required"
+        title={section?.title || 'Documents Required'}
         breadcrumbs={[{ label: 'Documents Required' }]}
       />
 
@@ -44,12 +54,19 @@ const DocumentsRequired: React.FC = () => {
 
 
         {/* ── Table Section ── */}
-        <section className="py-20 px-6 bg-[#FBFBFB]">
+        <section className="py-10 md:py-20 px-4 sm:px-6 bg-[#FBFBFB]">
           <div className="max-w-[1200px] mx-auto">
+            {error && (
+              <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-medium text-amber-800">
+                Showing the last bundled document checklist because the live admission API could not be loaded.
+              </div>
+            )}
             
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <h3 className="text-xl font-display font-bold text-[#1a4b7c] uppercase tracking-wider">Required Documentation</h3>
+                <h3 className="text-xl font-display font-bold text-[#1a4b7c] uppercase tracking-wider">
+                  {getSectionContentValue(section, 'heading', 'Required Documentation')}
+                </h3>
               </div>
               <div className="hidden md:flex items-center gap-2 text-[11px] font-bold text-[#6B7280] uppercase tracking-[0.2em]">
 

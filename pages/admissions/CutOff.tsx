@@ -112,7 +112,7 @@ const CutOff: React.FC = () => {
           breadcrumbs={[{ label: 'Cut Off' }]}
         />
 
-        <main className="relative z-20 mx-auto mt-12 max-w-4xl px-6 pb-24 md:mt-20">
+        <main className="relative z-20 mx-auto mt-6 md:mt-12 lg:mt-20 max-w-4xl px-4 sm:px-6 pb-12 md:pb-24">
           <div className="mb-10 flex items-center justify-between border-b border-gray-100 pb-6">
             <div>
               <h2 className="text-2xl font-black text-[#1e4e85]">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Youtube, ArrowRight, MapPin, Phone, Mail, ExternalLink } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -22,6 +23,7 @@ const Footer: React.FC = () => {
                 { label: 'FRA FEE PROPOSAL 2025-26-ME', href: 'https://vcet.edu.in/wp-content/uploads/2025/05/FRA-FEE-PROPOSAL-2025-26-ME.pdf', external: true },
                 { label: 'FRA FEE PROPOSAL 2025-26-MBA', href: 'https://vcet.edu.in/wp-content/uploads/2025/05/FRA-FEE-PROPOSAL-2025-26-MBA.pdf', external: true },
                 { label: 'Fee Approved By FRA for 25-26', href: 'https://vcet.edu.in/wp-content/uploads/2025/10/FRA-Fee-2025-26-17.7.25.pdf', external: true },
+                { label: 'Audited Statement', href: '/audited-statement', external: false },
                 { label: 'EOA 1994 to 2024', href: 'https://vcet.edu.in/wp-content/uploads/2026/03/EOA-1994-2024.pdf', external: true },
                 { label: 'EOA Report 25-26', href: 'https://vcet.edu.in/wp-content/uploads/2025/06/EOA-Report-2025-2026.pdf', external: true },
                 { label: 'Certificate – Medium of Instruction', href: 'https://vcet.edu.in/wp-content/uploads/2026/03/Medium-of-Instruction-Cert.pdf', external: true },
@@ -60,9 +62,9 @@ const Footer: React.FC = () => {
                     href={item.href} 
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="text-white/40 text-[13px] hover:text-white hover:pl-1 transition-all duration-300 flex items-center gap-1.5"
+                    className="text-white/40 text-[13px] hover:text-white hover:pl-1 transition-all duration-300 flex items-start gap-1.5 min-w-0"
                   >
-                    {item.label}
+                    <span className="break-words leading-snug">{item.label}</span>
                     {item.external && <ExternalLink className="w-3 h-3 opacity-40" />}
                   </a>
                 </li>
@@ -154,7 +156,12 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-white/5 text-[11px] text-white/25 uppercase tracking-widest">
           <p>&copy; 2025 VCET. All Rights Reserved.</p>
-          <p className="mt-2 md:mt-0">Designed by VCET</p>
+          <Link
+            to="/developers"
+            className="mt-2 md:mt-0 text-white/60 hover:text-white transition-all duration-300 drop-shadow-[0_0_6px_rgba(255,255,255,0.25)] hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+          >
+            Designed by VCET Developer's Team
+          </Link>
         </div>
       </div>
     </footer>

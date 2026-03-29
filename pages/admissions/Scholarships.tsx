@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
-import { Award, FileText, ExternalLink, BookOpen, Download } from 'lucide-react';
+import { Award, FileText, ExternalLink, BookOpen } from 'lucide-react';
+import { useAdmissionSection } from '../../hooks/useAdmissionSection';
+import { getSectionContentValue, groupItemsByGroupKey } from './admissionSectionUtils';
 
-const governmentScholarships = [
+const fallbackGovernmentScholarships = [
   {
     title: 'Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna - EBC',
     link: 'https://vcet.edu.in/wp-content/uploads/2022/11/Rajarshi-Chhatrapati-Shahu-Maharaj-Shikshan-Shulkh-Shishyavrutti-Yojna-EBC..pdf',
@@ -54,7 +56,7 @@ const governmentScholarships = [
   },
 ];
 
-const aicteSchemes = [
+const fallbackAicteSchemes = [
   { 
     title: 'AICTE Swanath Scheme Document_Sept 2021', 
     link: 'https://vcet.edu.in/wp-content/uploads/2021/12/AICTE-Swanath-Scheme-Document_Sept-2021-1.pdf' 
@@ -75,6 +77,16 @@ const aicteSchemes = [
 
 const Scholarships: React.FC = () => {
   const [activeSection, setActiveSection] = useState('govt');
+  const { section, error } = useAdmissionSection('scholarships');
+  const groupedItems = groupItemsByGroupKey(section?.items ?? []);
+  const governmentScholarships = groupedItems.govt?.map((item) => ({
+    title: item.title,
+    link: item.document_url || item.external_url || '#',
+  })) ?? fallbackGovernmentScholarships;
+  const aicteSchemes = groupedItems.aicte?.map((item) => ({
+    title: item.title,
+    link: item.document_url || item.external_url || '#',
+  })) ?? fallbackAicteSchemes;
 
   const scrollTo = (id: string, section: string) => {
     setActiveSection(section);
@@ -87,7 +99,7 @@ const Scholarships: React.FC = () => {
   return (
     <PageLayout>
       <PageBanner
-        title="Scholarships"
+        title={section?.title || 'Scholarships'}
         breadcrumbs={[{ label: 'Scholarships' }]}
       />
 
@@ -129,18 +141,27 @@ const Scholarships: React.FC = () => {
               <div className="mt-6 bg-[#e6a315] p-6 rounded-2xl shadow-lg shadow-yellow-600/20 text-white">
                 <h4 className="text-lg font-bold mb-2">Notice</h4>
                 <p className="text-xs opacity-90 leading-relaxed font-medium">
-                  Please ensure all scholarship applications are submitted before the official state deadlines to avoid rejection.
+                  {getSectionContentValue(
+                    section,
+                    'notice',
+                    'Please ensure all scholarship applications are submitted before the official state deadlines to avoid rejection.',
+                  )}
                 </p>
               </div>
             </aside>
 
             {/* MAIN CONTENT AREA */}
             <main className="flex-1 w-full">
+              {error && (
+                <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-medium text-amber-800">
+                  Showing the last bundled scholarship resources because the live admission API could not be loaded.
+                </div>
+              )}
               
               {/* SECTION: GOVERNMENT */}
               <div id="govt-section" className="mb-12 scroll-mt-10">
                 <div className="flex items-center gap-4 mb-8">
-                  <h2 className="text-2xl font-bold text-[#1e4e85] whitespace-nowrap">Government Scholarships</h2>
+                  <h2 className="text-2xl font-bold text-[#1e4e85]">Government Scholarships</h2>
                   <div className="h-px bg-slate-200 w-full"></div>
                 </div>
 
@@ -184,7 +205,7 @@ const Scholarships: React.FC = () => {
               {/* SECTION: AICTE */}
               <div id="aicte-section" className="scroll-mt-10">
                 <div className="flex items-center gap-4 mb-8">
-                  <h2 className="text-2xl font-bold text-[#1e4e85] whitespace-nowrap">AICTE & Notices</h2>
+                  <h2 className="text-2xl font-bold text-[#1e4e85]">AICTE & Notices</h2>
                   <div className="h-px bg-slate-200 w-full"></div>
                 </div>
 
