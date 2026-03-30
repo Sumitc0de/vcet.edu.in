@@ -733,6 +733,24 @@ export interface SssReportUploadPayload {
   pdf?: File | null;
 }
 
+/* ── Best Practice Uploads ─────────────────────────────────────────────────── */
+
+export interface BestPracticeUpload {
+  id: number;
+  title: string;
+  pdf_name: string;
+  pdf_mime_type: string | null;
+  pdf_size: number | null;
+  pdf_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BestPracticeUploadPayload {
+  title: string;
+  pdf?: File | null;
+}
+
 /* ── Facilities Module ─────────────────────────────────────────────────────── */
 
 export interface FacilityData {

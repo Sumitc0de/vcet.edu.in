@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { sssReportUploadsApi } from '../../api/sssReportUploads';
-import type { SssReportUpload } from '../../types';
+import { bestPracticeUploadsApi } from '../../api/bestPracticeUploads';
+import type { BestPracticeUpload, SssReportUpload } from '../../types';
 
 /* ── Toast Component ────────────────────────────────────────────────────────── */
 const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -207,6 +208,7 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
   const [data, setData] = useState<any>({ name: slug.replace(/-/g, ' ').toUpperCase() });
   const [payload, setPayload] = useState<any>({});
   const [sssOriginalIds, setSssOriginalIds] = useState<number[]>([]);
+  const [bestPracticeOriginalIds, setBestPracticeOriginalIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -215,26 +217,47 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
     let isMounted = true;
     const load = async () => {
       setLoading(true);
-      if (slug !== 'sss-report') {
+      if (slug !== 'sss-report' && slug !== 'best-practices') {
         if (isMounted) setLoading(false);
         return;
       }
 
       try {
-        const response = await sssReportUploadsApi.list();
-        if (!isMounted) return;
-        const items = response.data.map((item: SssReportUpload) => ({
-          id: item.id,
-          title: item.title,
-          fileName: item.pdf_name,
-          fileUrl: item.pdf_url,
-          isNew: false,
-        }));
-        setPayload((prev: any) => ({ ...prev, sssUploads: items }));
-        setSssOriginalIds(items.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
+        if (slug === 'sss-report') {
+          const response = await sssReportUploadsApi.list();
+          if (!isMounted) return;
+          const items = response.data.map((item: SssReportUpload) => ({
+            id: item.id,
+            title: item.title,
+            fileName: item.pdf_name,
+            fileUrl: item.pdf_url,
+            isNew: false,
+          }));
+          setPayload((prev: any) => ({ ...prev, sssUploads: items }));
+          setSssOriginalIds(items.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
+        } else {
+          const response = await bestPracticeUploadsApi.list();
+          if (!isMounted) return;
+          const items = response.data.map((item: BestPracticeUpload) => ({
+            id: item.id,
+            title: item.title,
+            fileName: item.pdf_name,
+            fileUrl: item.pdf_url,
+            isNew: false,
+          }));
+          setPayload((prev: any) => ({ ...prev, bestPracticeUploads: items }));
+          setBestPracticeOriginalIds(items.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
+        }
       } catch (error) {
         if (!isMounted) return;
-        setToast({ message: error instanceof Error ? error.message : 'Failed to load SSS reports', type: 'error' });
+        setToast({
+          message: error instanceof Error
+            ? error.message
+            : slug === 'sss-report'
+              ? 'Failed to load SSS reports'
+              : 'Failed to load Best Practice uploads',
+          type: 'error',
+        });
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -248,7 +271,7 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
   }, [slug]);
 
   const handleSubmit = async () => {
-    if (slug !== 'sss-report') {
+    if (slug !== 'sss-report' && slug !== 'best-practices') {
       setSaving(true);
       setTimeout(() => {
         setSaving(false);
@@ -257,11 +280,12 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
       return;
     }
 
-    const currentItems: SSSUploadFormItem[] = payload.sssUploads || [];
+    const isSss = slug === 'sss-report';
+    const currentItems: SSSUploadFormItem[] = isSss ? (payload.sssUploads || []) : (payload.bestPracticeUploads || []);
 
     for (const item of currentItems) {
       if (!item.title?.trim()) {
-        setToast({ message: 'Each SSS item must have a title.', type: 'error' });
+        setToast({ message: `Each ${isSss ? 'SSS' : 'Best Practice'} item must have a title.`, type: 'error' });
         return;
       }
       if (!item.id && !item.file) {
@@ -273,20 +297,29 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
     setSaving(true);
     try {
       const currentIds = currentItems.map((item) => item.id).filter((id): id is number => typeof id === 'number');
-      const removedIds = sssOriginalIds.filter((id) => !currentIds.includes(id));
+      const removedIds = (isSss ? sssOriginalIds : bestPracticeOriginalIds).filter((id) => !currentIds.includes(id));
 
       for (const id of removedIds) {
-        await sssReportUploadsApi.delete(id);
+        if (isSss) {
+          await sssReportUploadsApi.delete(id);
+        } else {
+          await bestPracticeUploadsApi.delete(id);
+        }
       }
 
       const savedItems: SSSUploadFormItem[] = [];
 
       for (const item of currentItems) {
         if (item.id) {
-          const updated = await sssReportUploadsApi.update(item.id, {
-            title: item.title.trim(),
-            pdf: item.file ?? null,
-          });
+          const updated = isSss
+            ? await sssReportUploadsApi.update(item.id, {
+                title: item.title.trim(),
+                pdf: item.file ?? null,
+              })
+            : await bestPracticeUploadsApi.update(item.id, {
+                title: item.title.trim(),
+                pdf: item.file ?? null,
+              });
           savedItems.push({
             id: updated.data.id,
             title: updated.data.title,
@@ -295,10 +328,15 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
             isNew: false,
           });
         } else {
-          const created = await sssReportUploadsApi.create({
-            title: item.title.trim(),
-            pdf: item.file ?? null,
-          });
+          const created = isSss
+            ? await sssReportUploadsApi.create({
+                title: item.title.trim(),
+                pdf: item.file ?? null,
+              })
+            : await bestPracticeUploadsApi.create({
+                title: item.title.trim(),
+                pdf: item.file ?? null,
+              });
           savedItems.push({
             id: created.data.id,
             title: created.data.title,
@@ -309,11 +347,23 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
         }
       }
 
-      setPayload((prev: any) => ({ ...prev, sssUploads: savedItems }));
-      setSssOriginalIds(savedItems.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
-      setToast({ message: 'SSS report uploads saved successfully', type: 'success' });
+      if (isSss) {
+        setPayload((prev: any) => ({ ...prev, sssUploads: savedItems }));
+        setSssOriginalIds(savedItems.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
+      } else {
+        setPayload((prev: any) => ({ ...prev, bestPracticeUploads: savedItems }));
+        setBestPracticeOriginalIds(savedItems.map((item) => item.id).filter((id): id is number => typeof id === 'number'));
+      }
+      setToast({ message: `${isSss ? 'SSS report' : 'Best Practice'} uploads saved successfully`, type: 'success' });
     } catch (error) {
-      setToast({ message: error instanceof Error ? error.message : 'Failed to save SSS uploads', type: 'error' });
+      setToast({
+        message: error instanceof Error
+          ? error.message
+          : isSss
+            ? 'Failed to save SSS uploads'
+            : 'Failed to save Best Practice uploads',
+        type: 'error',
+      });
     } finally {
       setSaving(false);
     }
@@ -387,35 +437,11 @@ const NaacForm: React.FC<NaacFormProps> = ({ slug, onBack }) => {
       case 'best-practices':
         return (
           <div className="space-y-8">
-            <SectionCard title="Overview" icon="🌟">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className={labelBase}>Section Name</label>
-                  <input maxLength={100} value={payload.sectionName} onChange={e => setPayload({...payload, sectionName: e.target.value})} className={inputBase} />
-                </div>
-                <div className="md:col-span-2">
-                  <label className={labelBase}>Description</label>
-                  <textarea maxLength={150} value={payload.desc} onChange={e => setPayload({...payload, desc: e.target.value})} className={`${inputBase} h-24 resize-none`} />
-                </div>
-              </div>
-            </SectionCard>
-            <SectionCard title="Best Practices List" icon="🏆">
-              <AdvancedTableManager items={payload.practices} fields={[
-                {key: 'title', label: 'Title of Practice', placeholder: 'Max 100 chars...'},
-                {key: 'objective', label: 'Objective', placeholder: 'Max 120 chars...'},
-                {key: 'desc', label: 'Description', placeholder: 'Max 150 chars...', isTextarea: true},
-                {key: 'outcome', label: 'Outcome / Impact', placeholder: 'Max 120 chars...'},
-                {key: 'pdfLink', label: 'Linked Document URL', placeholder: 'https://...'}
-              ]} onChange={val => setPayload({...payload, practices: val})} />
-            </SectionCard>
-            <SectionCard title="Institutional Distinctiveness" icon="✨">
-               <div className="grid md:grid-cols-2 gap-6">
-                 <div className="md:col-span-2"><label className={labelBase}>Title</label><input maxLength={100} value={payload.distinct_title} onChange={e => setPayload({...payload, distinct_title: e.target.value})} className={inputBase} /></div>
-                 <div className="md:col-span-2"><label className={labelBase}>Description</label><textarea maxLength={150} value={payload.distinct_desc} onChange={e => setPayload({...payload, distinct_desc: e.target.value})} className={`${inputBase} h-24 resize-none`} /></div>
-                 <div><label className={labelBase}>Key Features</label><textarea maxLength={120} value={payload.distinct_features} onChange={e => setPayload({...payload, distinct_features: e.target.value})} className={`${inputBase} h-24 resize-none`} /></div>
-                 <div><label className={labelBase}>Impact / Outcome</label><textarea maxLength={120} value={payload.distinct_impact} onChange={e => setPayload({...payload, distinct_impact: e.target.value})} className={`${inputBase} h-24 resize-none`} /></div>
-                 <div className="md:col-span-2"><label className={labelBase}>Resource Link / PDF</label><input maxLength={150} value={payload.distinct_link} onChange={e => setPayload({...payload, distinct_link: e.target.value})} className={inputBase} /></div>
-               </div>
+            <SectionCard title="Best Practices & Institutional Distinctiveness Upload" icon="📄">
+              <SSSPdfUploadManager
+                items={payload.bestPracticeUploads || []}
+                onChange={val => setPayload({ ...payload, bestPracticeUploads: val })}
+              />
             </SectionCard>
           </div>
         );
