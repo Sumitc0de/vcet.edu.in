@@ -10,6 +10,7 @@ import ResearchForm from '../research/ResearchForm';
 import FacilitiesForm from '../facilities/FacilitiesForm';
 import AboutUsForm from '../about/AboutUsForm';
 import NaacForm from '../naac/NaacForm';
+import TrainingPlacementForm from '../training-placement/TrainingPlacementForm';
 
 const homeEditables = [
   {
@@ -166,8 +167,15 @@ const aboutEditables = [
   { slug: 'code-of-conduct', title: 'Code of Conduct', description: 'Rules and professional ethics for stakeholders.' },
 ];
 
-const studentCareerEditables = [
+const studentCareerEditables: any[] = [
   // Keeping this empty or reverting it if there was nothing originally here
+];
+
+const trainingPlacementEditables = [
+  { slug: 'placement', title: 'Placement', description: 'Manage Placement Cell profiles, statistics, gallery, and recruiters.' },
+  { slug: 'training', title: 'Training', description: 'Manage training events, career guidance seminars, and gallery.' },
+  { slug: 'e-cell', title: 'E-Cell', description: 'Manage Entrepreneurship Cell events, coordinators, and gallery.' },
+  { slug: 'iiic', title: 'IIIC', description: 'Manage Industry Institute Interaction Cell guidelines.' },
 ];
 
 const mmsEditables = [
@@ -322,6 +330,10 @@ const SitePages: React.FC = () => {
 
   if (activeTab.key === 'about-us' && activeSection) {
     return <AboutUsForm slug={activeSection} onBack={() => setActiveSection(null)} />;
+  }
+
+  if (activeTab.key === 'training-placement' && activeSection) {
+    return <TrainingPlacementForm slug={activeSection} onBack={() => setActiveSection(null)} />;
   }
 
   // Handle Hub/Direct Views
@@ -532,6 +544,33 @@ const SitePages: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {aboutEditables.map((item) => (
+            <div key={item.slug} className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all">
+              <h2 className="text-lg font-bold text-slate-900 tracking-tight">{item.title}</h2>
+              <p className="text-xs text-slate-500 mt-2 font-medium leading-relaxed">{item.description}</p>
+              <div className="flex flex-wrap gap-2 mt-5">
+                <button
+                  onClick={() => setActiveSection(item.slug)}
+                  className="inline-flex items-center px-4 py-2.5 rounded-xl bg-[#2563EB] text-white text-[11px] uppercase tracking-wider font-extrabold hover:bg-blue-700 transition-all shadow-sm"
+                >
+                  Edit Section
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (activeTab.key === 'training-placement') {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Training & Placement</h1>
+          <p className="text-sm text-slate-500 mt-1 font-medium">Manage placements, training events, E-Cell activities, and IIIC content.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {trainingPlacementEditables.map((item) => (
             <div key={item.slug} className="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all">
               <h2 className="text-lg font-bold text-slate-900 tracking-tight">{item.title}</h2>
               <p className="text-xs text-slate-500 mt-2 font-medium leading-relaxed">{item.description}</p>
