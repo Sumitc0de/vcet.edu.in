@@ -488,8 +488,7 @@ const DeptIT: React.FC = () => {
 
           {/* ════ ACTIVITIES ═══════════════════════════════════════ */}
           {activeId === 'activities' && (() => {
-            const links = [
-              { label: 'Hackathon', url: 'https://vcet.edu.in/hackathon/' },
+            const externalLinks = [
               { label: 'Code Craze', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/Code-Craze.pdf' },
               { label: 'Student Development Program', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/student-development-program-1.pdf' },
               { label: 'Faculty Development Program', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/faculty-development-program-1.pdf' },
@@ -502,7 +501,11 @@ const DeptIT: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-brand-navy mb-5 relative inline-block">Activities<span className="absolute -bottom-2 left-0 w-12 h-1 bg-brand-gold rounded-full" /></h3>
                 <div className="space-y-3">
-                  {links.map((item) => (
+                  <Link to="/hackathon" className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-brand-navy hover:border-brand-gold hover:bg-brand-navylight transition-colors">
+                    <span>Hackathon</span>
+                    <i className="ph ph-arrow-up-right text-brand-gold" />
+                  </Link>
+                  {externalLinks.map((item) => (
                     <a key={item.label} href={item.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-brand-navy hover:border-brand-gold hover:bg-brand-navylight transition-colors">
                       <span>{item.label}</span>
                       <i className="ph ph-arrow-up-right text-brand-gold" />
@@ -713,6 +716,13 @@ const DeptIT: React.FC = () => {
                   <div className="px-4 py-3 border-b border-slate-100 bg-brand-navylight/40">
                     <h4 className="text-lg font-bold text-brand-navy">Committee Details</h4>
                     <p className="text-sm text-slate-600 mt-1">Staff Incharge: Prof. Bharati Gondhalekar | bharati.gondhalekar@vcet.edu.in | 9423365470</p>
+                  </div>
+                  <div className="px-4 pt-5 pb-2 flex justify-center">
+                    <div className="w-full max-w-[340px] rounded-2xl border-2 border-dashed border-slate-300 bg-white px-4 py-12 text-center">
+                      <i className="ph ph-image text-4xl text-slate-400" />
+                      <p className="mt-3 text-sm font-semibold text-slate-500">Staff Image Placeholder</p>
+                      <p className="mt-1 text-xs text-slate-400">Add image later in this area</p>
+                    </div>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">

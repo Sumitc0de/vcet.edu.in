@@ -92,6 +92,9 @@ const NSS = lazy(() => import('./pages/student-life/NSS'));
 const EBSB = lazy(() => import('./pages/student-life/EBSB'));
 const StudentsClub = lazy(() => import('./pages/student-life/StudentsClub'));
 const Hackathon = lazy(() => import('./pages/student-life/Hackathon'));
+const CENTURION = lazy(() => import('./pages/student-life/CENTURION'));
+const AIRNOVA = lazy(() => import('./pages/student-life/AIRNOVA'));
+const EMECHTO = lazy(() => import('./pages/student-life/EMECHTO'));
 const NSDC = lazy(() => import('./pages/student-life/NSDC'));
 const Training = lazy(() => import('./pages/student-life/Training'));
 const Placement = lazy(() => import('./pages/student-life/Placement'));
@@ -334,13 +337,13 @@ const HomePage: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-    <BrowserRouter>
-      <ScrollToTop />
-      <PageTitleUpdater />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* Homepage */}
-          <Route path="/" element={<HomePage />} />
+      <BrowserRouter>
+        <ScrollToTop />
+        <PageTitleUpdater />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<HomePage />} />
 
             {/* About Us */}
             <Route path="/about-us" element={<AboutVCET />} />
@@ -379,26 +382,26 @@ function App() {
             <Route path="/first-year-engineering/faculty/:slug" element={<CSDSFacultyProfile />} />
             <Route path="/faculty/:id" element={<FacultyProfile />} />
 
-          {/* Academics */}
-          <Route path="/dean-academics" element={<DeanAcademics />} />
-          <Route path="/academic-calendar" element={<AcademicCalendar />} />
-          <Route path="/teaching-learning" element={<TeachingLearning />} />
-          <Route path="/honours-minor" element={<HonoursMinor />} />
+            {/* Academics */}
+            <Route path="/dean-academics" element={<DeanAcademics />} />
+            <Route path="/academic-calendar" element={<AcademicCalendar />} />
+            <Route path="/teaching-learning" element={<TeachingLearning />} />
+            <Route path="/honours-minor" element={<HonoursMinor />} />
 
-          {/* Research */}
-          <Route path="/research" element={<ResearchIntro />} />
-          <Route path="/funded-research" element={<FundedResearch />} />
-          <Route path="/publications" element={<Publications />} />
-          <Route path="/patents" element={<ResearchPatents />} />
-          <Route path="/parents" element={<Parents />} />
-          <Route path="/consultancy-projects" element={<ConsultancyProjects />} />
-          <Route path="/research-facility" element={<ResearchFacility />} />
+            {/* Research */}
+            <Route path="/research" element={<ResearchIntro />} />
+            <Route path="/funded-research" element={<FundedResearch />} />
+            <Route path="/publications" element={<Publications />} />
+            <Route path="/patents" element={<ResearchPatents />} />
+            <Route path="/parents" element={<Parents />} />
+            <Route path="/consultancy-projects" element={<ConsultancyProjects />} />
+            <Route path="/research-facility" element={<ResearchFacility />} />
 
 
-          <Route path="/iic" element={<ResearchIIC />} />
-          <Route path="/nirf" element={<NIRF />} />
-          <Route path="/research-downloads" element={<ResearchDownloads />} />
-          <Route path="/downloads" element={<ResearchDownloads />} />
+            <Route path="/iic" element={<ResearchIIC />} />
+            <Route path="/nirf" element={<NIRF />} />
+            <Route path="/research-downloads" element={<ResearchDownloads />} />
+            <Route path="/downloads" element={<ResearchDownloads />} />
 
             {/* Facilities */}
             <Route path="/central-computing" element={<CentralComputing />} />
@@ -419,7 +422,10 @@ function App() {
             <Route path="/ebsb" element={<EBSB />} />
             <Route path="/ieee" element={<IEEE />} />
             <Route path="/students-club" element={<StudentsClub />} />
-            <Route path="/csi" element={<CSI />} />
+            <Route path="/centurion" element={<CENTURION />} />
+            <Route path="/airnova" element={<AIRNOVA />} />
+            <Route path="/emechto" element={<EMECHTO />} />
+            <Route path="/iiic" element={<IIIC />} />
             <Route path="/iete" element={<IETE />} />
             <Route path="/ishrae" element={<ISHRAE />} />
             <Route path="/vmea" element={<VMEA />} />
@@ -439,14 +445,14 @@ function App() {
             <Route path="/sedg-cell" element={<SEDGCell />} />
             <Route path="/developers" element={<Developers />} />
 
-          {/* NAAC */}
-          {/* <Route path="/naac-ssr-cycle-1" element={<NaacPage />} /> */}
-          <Route path="/sss" element={<SSS />} />
-          <Route path="/sss-report" element={<SSSReport />} />
-          <Route path="/ssr-cycle-1" element={<NaacPage initialCycle="cycle1" />} />
-          <Route path="/ssr-cycle-2" element={<NaacPage initialCycle="cycle2" />} />
-          <Route path="/best-practices" element={<BestPractices />} />
-          <Route path="/naac-score" element={<NAACScore />} />
+            {/* NAAC */}
+            {/* <Route path="/naac-ssr-cycle-1" element={<NaacPage />} /> */}
+            <Route path="/sss" element={<SSS />} />
+            <Route path="/sss-report" element={<SSSReport />} />
+            <Route path="/ssr-cycle-1" element={<NaacPage initialCycle="cycle1" />} />
+            <Route path="/ssr-cycle-2" element={<NaacPage initialCycle="cycle2" />} />
+            <Route path="/best-practices" element={<BestPractices />} />
+            <Route path="/naac-score" element={<NAACScore />} />
 
             {/* Contact & Others */}
             <Route path="/contact-us" element={<ContactUs />} />
@@ -615,6 +621,119 @@ function App() {
         </Routes>
       </Suspense>
     </BrowserRouter>
+            {/* MMS mini-site */}
+            <Route path="/mms" element={<MMSHome />} />
+            <Route path="/mms/about" element={<MMSAbout />} />
+            <Route path="/mms/about/principals-desk" element={<MMSPrincipalsDesk />} />
+            <Route path="/mms/about/hods-desk" element={<MMSHODsDesk />} />
+            <Route path="/mms/about/faculty" element={<MMSFaculty />} />
+            <Route path="/mms/about/vision-mission" element={<MMSVisionMission />} />
+            <Route path="/mms/about/dab" element={<MMSDAB />} />
+            <Route path="/mms/about/program-outcomes" element={<MMSProgramOutcomes />} />
+            <Route path="/mms/admission" element={<MMSAdmission />} />
+            <Route path="/mms/admission/scholarship" element={<MMSScholarship />} />
+            <Route path="/mms/admission/documents-required" element={<MMSDocumentsRequired />} />
+            <Route path="/mms/admission/fees-structure" element={<MMSFeesStructure />} />
+            <Route path="/mms/admission-details" element={<MMSAdmission />} />
+            <Route path="/mms/admission-details/scholarship" element={<MMSScholarship />} />
+            <Route path="/mms/admission-details/documents-required" element={<MMSDocumentsRequired />} />
+            <Route path="/mms/admission-details/fees-structure" element={<MMSFeesStructure />} />
+            <Route path="/mms/experiential-learning" element={<MMSExperientialLearning />} />
+            <Route path="/mms/experiential-learning/role-play" element={<MMSExperientialRolePlay />} />
+            <Route path="/mms/experiential-learning/group-discussion" element={<MMSExperientialGroupDiscussion />} />
+            <Route path="/mms/experiential-learning/entrepreneurial-drive" element={<MMSExperientialEntrepreneurialDrive />} />
+            <Route path="/mms/experiential-learning/financial-literacy-program" element={<MMSExperientialFinancialLiteracy />} />
+            <Route path="/mms/experiential-learning/nesco-bombay-exhibition-centre" element={<MMSExperientialNesco />} />
+            <Route path="/mms/experiential-learning/3d-model-making-presentation" element={<MMSExperientialModelMaking />} />
+            <Route path="/mms/training-placement/training" element={<MMSTraining />} />
+            <Route path="/mms/training-placement/training/events" element={<MMSTrainingEvents />} />
+            <Route path="/mms/training-placement/training/career-guidance" element={<MMSTrainingCareerGuidance />} />
+            <Route path="/mms/training-placement/training/internship" element={<MMSTrainingInternship />} />
+            <Route path="/mms/training-placement/training/gallery" element={<MMSTrainingGallery />} />
+            <Route path="/mms/training-placement/placement" element={<MMSPlacement />} />
+            <Route path="/mms/training-placement/placement/soft-skill-training" element={<MMSPlacementSoftSkillTraining />} />
+            <Route path="/mms/training-placement/placement/psycometric-test" element={<MMSPlacementPsycometricTest />} />
+            <Route path="/mms/training-placement/placement/psychometric-test" element={<MMSPlacementPsycometricTest />} />
+            <Route path="/mms/training-placement/placement/placement-cell" element={<MMSPlacementCell />} />
+            <Route path="/mms/training-placement/placement/gallery" element={<MMSPlacementGallery />} />
+            <Route path="/mms/training-placement/placement/our-recruiters" element={<MMSPlacementRecruiters />} />
+            <Route path="/mms/training-placement/placement/students-placements" element={<MMSPlacementStudentsPlacements />} />
+            <Route path="/mms/training-placement/placement/internships" element={<MMSPlacementInternships />} />
+            <Route path="/mms/students-life" element={<MMSStudentsLife />} />
+            <Route path="/mms/students-life/v-ecstatic" element={<MMSStudentsLifeVEcstatic />} />
+            <Route path="/mms/students-life/dlle" element={<MMSStudentsLifeDLLE />} />
+            <Route path="/mms/students-life/book-review" element={<MMSStudentsLifeBookReview />} />
+            <Route path="/mms/students-life/about-add-on-courses" element={<MMSStudentsLifeAboutAddOnCourses />} />
+            <Route path="/mms/students-life/add-on-courses-powerbi" element={<MMSStudentsLifePowerBi />} />
+            <Route path="/mms/students-life/add-on-courses-advance-excel" element={<MMSStudentsLifeAdavanceExcel />} />
+            <Route path="/mms/students-life/add-on-courses-adavance-excel" element={<MMSStudentsLifeAdavanceExcel />} />
+            <Route path="/mms/students-life/industry-expert-sessions" element={<MMSStudentsLifeIndustryExpertSessions />} />
+            <Route path="/mms/students-life/nsim-training" element={<MMSStudentsLifeNSIMTraining />} />
+            <Route path="/mms/students-life/oscillations" element={<MMSStudentsLifeOscillations />} />
+            <Route path="/mms/students-life/ideathon-1-0" element={<MMSStudentsLifeIdeathon />} />
+            <Route path="/mms/students-life/rankers" element={<MMSStudentsLifeRankers />} />
+            <Route path="/mms/facilities" element={<MMSFacilities />} />
+            <Route path="/mms/facilities/library" element={<MMSFacilitiesLibrary />} />
+            <Route path="/mms/facilities/seminar-hall" element={<MMSFacilitiesSeminarHall />} />
+            <Route path="/mms/facilities/classroom" element={<MMSFacilitiesClassroom />} />
+            <Route path="/mms/facilities/gymkhana" element={<MMSFacilitiesGymkhana />} />
+            <Route path="/mms/faqs" element={<MMSFAQs />} />
+
+            {/* ─── Admin Panel ─── */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="notices" element={<NoticesList />} />
+              <Route path="notices/new" element={<NoticeForm />} />
+              <Route path="notices/:id/edit" element={<NoticeForm />} />
+              <Route path="events" element={<EventsList />} />
+              <Route path="events/new" element={<EventForm />} />
+              <Route path="events/:id/edit" element={<EventForm />} />
+              <Route path="placements" element={<PlacementsList />} />
+              <Route path="placements/new" element={<PlacementForm />} />
+              <Route path="placements/:id/edit" element={<PlacementForm />} />
+              <Route path="home/placement-stats" element={<PlacementStats />} />
+              <Route path="hero-slides" element={<HeroSlidesList />} />
+              <Route path="hero-slides/new" element={<HeroSlideForm />} />
+              <Route path="hero-slides/:id/edit" element={<HeroSlideForm />} />
+              <Route path="galleries" element={<GalleryList />} />
+              <Route path="galleries/new" element={<GalleryForm />} />
+              <Route path="galleries/:id/edit" element={<GalleryForm />} />
+              <Route path="news-ticker" element={<NewsTickerList />} />
+              <Route path="news-ticker/new" element={<NewsTickerForm />} />
+              <Route path="news-ticker/:id/edit" element={<NewsTickerForm />} />
+              <Route path="achievements" element={<AchievementsList />} />
+              <Route path="achievements/new" element={<AchievementsForm />} />
+              <Route path="achievements/:id/edit" element={<AchievementsForm />} />
+              <Route path="testimonials" element={<TestimonialsList />} />
+              <Route path="testimonials/new" element={<TestimonialsForm />} />
+              <Route path="testimonials/:id/edit" element={<TestimonialsForm />} />
+              <Route path="gallery" element={<GalleryPage />} />
+              <Route path="placement-partners" element={<PlacementPartnersList />} />
+              <Route path="placement-partners/new" element={<PlacementPartnersForm />} />
+              <Route path="placement-partners/:id/edit" element={<PlacementPartnersForm />} />
+              <Route path="enquiries" element={<EnquiriesList />} />
+              <Route path="pages" element={<Navigate to="home" replace />} />
+              <Route path="pages/departments" element={<DepartmentLanding />} />
+              <Route path="pages/departments/list" element={<DepartmentList />} />
+              <Route path="pages/departments/list/create" element={<DepartmentForm />} />
+              <Route path="pages/departments/list/:slug/edit" element={<DepartmentForm />} />
+              <Route path="pages/faculty" element={<FacultyList />} />
+              <Route path="pages/faculty/create" element={<FacultyForm />} />
+              <Route path="pages/faculty/:id/edit" element={<FacultyForm />} />
+              <Route path="pages/:pageKey" element={<SitePages />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
     </AuthProvider>
   );
 }
