@@ -1023,7 +1023,8 @@ export interface MMSStudentsLifeData {
     rank: string;
     semester: string;
   }[];
-  pdfs: {
+  customEvents: { id: string; name: string; slug: string; description: string; images: GalleryItem[]; }[];
+    pdfs: {
     title: string;
     url: string;
   }[];

@@ -210,6 +210,7 @@ const MMSStudentsLifeIndustryExpertSessions = lazy(() => import('./pages/mms/stu
 const MMSStudentsLifeNSIMTraining = lazy(() => import('./pages/mms/students-life/MMSStudentsLifeNSIMTraining'));
 const MMSStudentsLifeOscillations = lazy(() => import('./pages/mms/students-life/MMSStudentsLifeOscillations'));
 const MMSStudentsLifeIdeathon = lazy(() => import('./pages/mms/students-life/MMSStudentsLifeIdeathon'));
+const MMSStudentsLifeCustomEvent = lazy(() => import('./pages/mms/students-life/MMSStudentsLifeCustomEvent'));
 const MMSStudentsLifeRankers = lazy(() => import('./pages/mms/students-life/MMSStudentsLifeRankers'));
 const MMSFacilities = lazy(() => import('./pages/mms/facilities/MMSFacilities'));
 const MMSFacilitiesLibrary = lazy(() => import('./pages/mms/facilities/MMSFacilitiesLibrary'));

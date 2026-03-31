@@ -247,6 +247,7 @@ const mmsEditables = [
       { label: 'NSIM Training', to: '/admin/pages/mms/students-life/nsimTraining/edit' },
       { label: 'Rankers & Achievements', to: '/admin/pages/mms/students-life/rankers/edit' },
       { label: 'PDF Resources', to: '/admin/pages/mms/students-life/pdfs/edit' },
+      { label: 'Custom Events Builder', to: '/admin/pages/mms/students-life/custom-events/edit' },
     ],
   },
   {
