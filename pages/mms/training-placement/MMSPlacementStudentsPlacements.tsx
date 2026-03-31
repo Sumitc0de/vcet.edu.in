@@ -53,6 +53,8 @@ const defaultPlacementsRows = [
 export default function MMSPlacementStudentsPlacements() {
   const [data, setData] = useState<TrainingPlacementData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 30;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,6 +90,12 @@ export default function MMSPlacementStudentsPlacements() {
       }))
     : defaultPlacementsRows;
 
+  const totalPages = Math.ceil(placementsRows.length / rowsPerPage);
+  const paginatedRows = placementsRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
   return (
     <MMSLayout title="Student Placements">
       <PlacementDataTableCard title="Student Placements">
@@ -102,7 +110,7 @@ export default function MMSPlacementStudentsPlacements() {
               </tr>
             </thead>
             <tbody>
-              {placementsRows.map((row) => (
+              {paginatedRows.map((row) => (
                 <tr key={`${row.srNo}-${row.student}`} className="bg-[#e6e6e6] align-middle">
                   <td className="border border-slate-700/85 px-2 py-2 text-center text-sm text-slate-900 sm:text-base">{row.srNo}</td>
                   <td className="border border-slate-700/85 px-2 py-2 text-slate-900">
@@ -117,7 +125,7 @@ export default function MMSPlacementStudentsPlacements() {
                       <p className="overflow-hidden whitespace-nowrap text-ellipsis text-sm leading-tight sm:text-base">{row.student}</p>
                     </div>
                   </td>
-                  <td className="border border-slate-700/85 px-2 py-2 text-center text-xs leading-tight text-slate-900 sm:text-sm"> 
+                  <td className="border border-slate-700/85 px-2 py-2 text-center text-xs leading-tight text-slate-900 sm:text-sm">
                     <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{row.specialization}</span>
                   </td>
                   <td className="border border-slate-700/85 px-2 py-2 text-xs leading-tight text-slate-900 sm:text-sm">
@@ -128,6 +136,60 @@ export default function MMSPlacementStudentsPlacements() {
             </tbody>
           </table>
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-[#2d4f78] rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0a325f] transition-colors"
+            >
+              Previous
+            </button>
+            
+            <div className="flex gap-1.5 px-2 text-sm max-w-full overflow-x-auto py-1">
+              {[...Array(totalPages)].map((_, i) => {
+                const pageNum = i + 1;
+                if (
+                  pageNum === 1 || 
+                  pageNum === totalPages || 
+                  (pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
+                ) {
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-8 h-8 flex items-center justify-center rounded text-sm font-medium transition-colors ${
+                        currentPage === pageNum 
+                          ? 'bg-brand-gold text-[#0a325f] shadow-sm' 
+                          : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
+                
+                if (
+                  (pageNum === 2 && currentPage > 4) ||
+                  (pageNum === totalPages - 1 && currentPage < totalPages - 3)
+                ) {
+                  return <span key={i} className="flex items-end text-slate-400">...</span>;
+                }
+                
+                return null;
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-[#2d4f78] rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0a325f] transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </PlacementDataTableCard>
     </MMSLayout>
   );
