@@ -40,7 +40,7 @@ export default function MMSStudentsLifeIndustryExpertSessions() {
         subtitle="Connecting classroom concepts with current business practices and leadership perspectives"
       >
         <p className="text-[17px] leading-8 text-slate-700">
-          As part of our commitment to providing practical insights and real-world knowledge, a series of industry
+          {data?.industrySessions?.description || `As part of our commitment to providing practical insights and real-world knowledge, a series of industry
           expert sessions were organized for MMS students, covering key subjects such as Financial Management, Human
           Resources (HR), and Business Research Methods. These sessions aimed to bridge the gap between academic
           learning and industry practices. The industry expert sessions provided MMS students with valuable exposure to
@@ -49,10 +49,24 @@ export default function MMSStudentsLifeIndustryExpertSessions() {
           for successful careers. These expert-led sessions have significantly contributed to the professional growth of
           our MMS students, offering them a unique opportunity to learn from and interact with industry leaders. The
           insights gained from these sessions will undoubtedly aid them in navigating their future careers with
-          confidence and competence.
+          confidence and competence.`}
         </p>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        {data?.industrySessions?.learningPoints && data.industrySessions.learningPoints.length > 0 && (
+          <div className="mt-6 border-l-4 border-brand-gold bg-slate-50 p-5">
+            <h4 className="text-sm font-bold uppercase text-brand-navy mb-4">Key Learning Points</h4>
+            <ul className="space-y-3">
+              {data.industrySessions.learningPoints.map((point, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <span className="inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-brand-navy text-[10px] font-bold text-white">{index + 1}</span>
+                  <span className="text-[15px] leading-6 text-slate-700">{point.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           {allSessions.map(({ id, text, src }, index) => (
             <article key={id} className="space-y-3">
               <StudentsLifeImageHolder label={`Industry Session ${index + 1}`} src={src} />

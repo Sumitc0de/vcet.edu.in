@@ -48,15 +48,34 @@ export default function MMSStudentsLifeDLLE() {
         subtitle="University-linked extension initiatives for social responsibility and practical learning"
       >
         <p className="text-[17px] leading-8 text-slate-700">
-          Extension activities conducted in association with the University of Mumbai under the Department of Lifelong
+          {data?.dlle?.description || `Extension activities conducted in association with the University of Mumbai under the Department of Lifelong
           Learning and Extension (DLLE) are crucial for holistic student development. These activities bridge academic
           learning with community engagement, fostering social responsibility and practical skills. Students gain
           real-world experience, enhance their problem-solving abilities, and contribute positively to society. Students
           opted for the three projects in a group, namely Environment Education Program, Career Program and Skill
-          Development Program.
+          Development Program.`}
         </p>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {data?.dlle?.projects && data.dlle.projects.length > 0 && (
+            <div className="bg-slate-50 border border-slate-100 p-5 rounded-none">
+              <h4 className="text-sm font-bold uppercase text-brand-navy mb-3 border-b border-brand-gold/30 pb-2">Projects</h4>
+              <ul className="list-disc pl-5 space-y-2 text-slate-700">
+                {data.dlle.projects.map((p, i) => <li key={i}>{p.text}</li>)}
+              </ul>
+            </div>
+          )}
+          {data?.dlle?.outcomes && data.dlle.outcomes.length > 0 && (
+            <div className="bg-slate-50 border border-slate-100 p-5 rounded-none">
+              <h4 className="text-sm font-bold uppercase text-brand-navy mb-3 border-b border-brand-gold/30 pb-2">Outcomes</h4>
+              <ul className="list-disc pl-5 space-y-2 text-slate-700">
+                {data.dlle.outcomes.map((o, i) => <li key={i}>{o.text}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
           {allImages.map(({ id, src, label }) => (
             <StudentsLifeImageHolder key={id} label={label} size="large" src={src} />
           ))}

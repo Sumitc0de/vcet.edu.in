@@ -38,15 +38,26 @@ export default function MMSStudentsLifeVEcstatic() {
     <MMSLayout title="V-ECSTATIC">
       <StudentsLifeSectionCard title="V-ECSTATIC" subtitle="Annual college fest celebrating talent, unity, and student expression">
         <p className="text-[17px] leading-8 text-slate-700">
-          The annual College Fest "V-Ecstatic" is a highly anticipated event, bringing together students, faculty, and
+          {data?.vEcstatic?.description || `The annual College Fest "V-Ecstatic" is a highly anticipated event, bringing together students, faculty, and
           the community for a celebration of talent, creativity, and camaraderie. This vibrant festival serves as a
           platform for MMS students to showcase their diverse skills and foster a spirit of unity and enthusiasm. The
           Fest provided a holistic experience, blending fun, learning, and social responsibility. It fostered a sense
           of community, allowing students to bond, collaborate, and celebrate their collective achievements. The event
-          also offered a break from academic routines, giving students a chance to unwind and rejuvenate.
+          also offered a break from academic routines, giving students a chance to unwind and rejuvenate.`}
         </p>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {data?.vEcstatic?.activities && data.vEcstatic.activities.length > 0 && (
+          <div className="mt-6 border-l-4 border-brand-gold bg-slate-50 p-4">
+            <h4 className="text-sm font-bold uppercase text-brand-navy mb-3">Activities Highlights</h4>
+            <ul className="list-disc pl-5 space-y-1 text-slate-700">
+              {data.vEcstatic.activities.map((act, i) => (
+                <li key={i}>{act.text}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
           {allImages.map(({ id, src, label }) => (
             <StudentsLifeImageHolder key={id} label={label} size="large" src={src} />
           ))}
