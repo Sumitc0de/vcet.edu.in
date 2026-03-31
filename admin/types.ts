@@ -707,13 +707,42 @@ export interface ExamPayload {
 export interface AcademicsData {
   programBooklets: AdmissionDocument[];
   academicCalendars: AdmissionDocument[];
+  dean?: {
+    name: string;
+    qualification: string;
+    designation: string;
+    institution: string;
+    message: string;
+    imageUrl: string | null;
+  };
+  obe?: {
+    title: string;
+    description: string;
+    imageUrl: string | null;
+  };
   updatedAt: string;
 }
 
 export interface AcademicsPayload {
   programBooklets?: (AdmissionDocument & { file?: File | null })[];
   academicCalendars?: (AdmissionDocument & { file?: File | null })[];
+  dean?: {
+    name: string;
+    qualification: string;
+    designation: string;
+    institution: string;
+    message: string;
+    imageUrl: string | null;
+    image?: File | null;
+  };
+  obe?: {
+    title: string;
+    description: string;
+    imageUrl: string | null;
+    image?: File | null;
+  };
 }
+
 
 /* ── SSS Report Uploads ─────────────────────────────────────────────────────── */
 
@@ -806,19 +835,19 @@ export interface AboutData {
   description: string;
   paragraphs?: string[];
   accreditation?: string[];
-  facts?: { label: string; value: string }[];
-  intro?: { name: string; role: string; highlightQuote: string; closingQuote: string; image: string | null };
+  facts?: { label: string; value: string; displayOrder?: number; isActive?: boolean }[];
+  intro?: { name: string; role: string; highlightQuote: string; closingQuote: string; image: string | File | null; isActive?: boolean };
   messageParagraphs?: string[];
-  profileDetails?: { qualification: string; experience: string; affiliation: string }[];
-  highlightsCards?: { value: string; label: string }[];
-  chairman?: { role: string; name: string; description: string };
-  councilMembers?: { role: string; name: string; description: string }[];
+  profileDetails?: { qualification: string; experience: string; affiliation: string; displayOrder?: number; isActive?: boolean }[];
+  highlightsCards?: { value: string; label: string; displayOrder?: number; isActive?: boolean }[];
+  chairman?: { role: string; name: string; description: string; displayOrder?: number; isActive?: boolean };
+  councilMembers?: { role: string; name: string; description: string; displayOrder?: number; isActive?: boolean }[];
   orgIntro?: string;
-  orgChartImage?: string | null;
-  orgNodes?: { name: string; title: string; parent: string; order: number }[];
-  adminCards?: { name: string; role: string; email: string; image: string | null }[];
-  documents?: { label: string; year: string; fileUrl: string | null; fileName: string | null }[];
-  conductSections?: { title: string; description: string; rules: { title: string; description: string }[] }[];
+  orgChartImage?: string | File | null;
+  orgNodes?: { name: string; title: string; parent: string | null; displayOrder?: number; isActive?: boolean }[];
+  adminCards?: { name: string; role: string; email: string; image: string | File | null; displayOrder?: number; isActive?: boolean }[];
+  documents?: { label: string; year: string; fileUrl: string | File | null; fileName: string | null; displayOrder?: number; isActive?: boolean }[];
+  conductSections?: { title: string; description: string; displayOrder?: number; isActive?: boolean; rules: { title: string; description: string; displayOrder?: number; isActive?: boolean }[] }[];
   updatedAt: string;
 }
 
@@ -877,7 +906,7 @@ export interface MMSAboutData {
   aboutMMS: { description: string; image: string | File | null; };
   principalDesk: { message: string; photo: string | File | null; };
   hodDesk: { message: string; photo: string | File | null; };
-  faculty: { name: string; designation: string; photo: string | File | null; }[];
+  faculty: { name: string; designation: string; email: string; photo: string | File | null; }[];
   dabMembers: { srNo: number; name: string; designation: string; organization: string; role: string; }[];
   updatedAt?: string;
 }

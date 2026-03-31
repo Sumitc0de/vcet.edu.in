@@ -1,15 +1,75 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import PageBanner from '../../components/PageBanner';
 import { Target, Eye, BookOpen, Award, MapPin, Calendar, Users, GraduationCap, Sparkles, Building2 } from 'lucide-react';
+import { getAboutSection } from '../../services/about';
+
+interface OverviewData {
+  paragraphs?: string[];
+  accreditation?: string[];
+  facts?: { label: string; value: string; displayOrder?: number; isActive?: boolean }[];
+}
 
 const AboutVCET: React.FC = () => {
-  const quickFacts = [
-    { icon: Calendar, value: '1994', label: 'Established' },
-    { icon: MapPin, value: '12.27', label: 'Acres Campus' },
-    { icon: GraduationCap, value: '5000+', label: 'Students' },
-    { icon: Users, value: '200+', label: 'Faculty' },
+  const [data, setData] = useState<OverviewData | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getAboutSection<OverviewData>('overview')
+      .then((res) => {
+        if (mounted) setData(res);
+      })
+      .catch(() => {
+        if (mounted) setData(null);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const quickFacts = useMemo(() => {
+    const facts = (data?.facts ?? [])
+      .filter((fact) => fact.isActive !== false)
+      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+
+    if (facts.length === 0) {
+      return [
+        { icon: Calendar, value: '1994', label: 'Established' },
+        { icon: MapPin, value: '12.27', label: 'Acres Campus' },
+        { icon: GraduationCap, value: '5000+', label: 'Students' },
+        { icon: Users, value: '200+', label: 'Faculty' },
+      ];
+    }
+
+    return facts.map((fact) => {
+      const label = fact.label?.toLowerCase() ?? '';
+      let icon = GraduationCap;
+      if (label.includes('established')) icon = Calendar;
+      else if (label.includes('acre') || label.includes('campus')) icon = MapPin;
+      else if (label.includes('faculty')) icon = Users;
+
+      return { icon, value: fact.value, label: fact.label };
+    });
+  }, [data]);
+
+  const paragraphs = data?.paragraphs?.length === 3 ? data.paragraphs : [
+    "Vidyavardhini means a Body committed to enhancement of Knowledge. Vidyavardhini was established as a registered society in 1970 by late Padmashri H. G. alias Bhausaheb Vartak for the noble cause of education in rural areas.",
+    "Vidyavardhini's College of Engineering and Technology, Vasai is located on the sprawling campus of Vidyavardhini, spread over an area of 12.27 acres. It is a short, two minutes walk from Vasai Road (W) Railway Station. The college is also accessible by road from Mumbai.",
+    'Vidyavardhini Society received approval from AICTE to start the new college of Engineering & Technology with effect from July, 1994. The college is affiliated to the University of Mumbai for the four year degree program leading to the degree of Bachelor of Engineering.',
   ];
+
+  const accreditationPoints = (data?.accreditation ?? [])
+    .filter(Boolean)
+    .length > 0
+    ? (data?.accreditation ?? [])
+    : [
+      'Approved by AICTE',
+      'DTE Maharashtra',
+      'Affiliated to University of Mumbai',
+      'NBA Accredited',
+      'NAAC Accredited (B++)',
+    ];
 
   const missionPoints = [
     'To provide technologically inspiring environment for learning.',
@@ -18,12 +78,20 @@ const AboutVCET: React.FC = () => {
     'To cater personal, professional and societal needs through quality education.',
   ];
 
-  const accreditationPoints = [
-    'Approved by AICTE',
-    'DTE Maharashtra',
-    'Affiliated to University of Mumbai',
-    'NBA Accredited',
-    'NAAC Accredited (B++)',
+  const sectionTitles = [
+    'Legacy Rooted in Knowledge',
+    'Campus and Connectivity',
+    'Academic Journey Since 1994',
+  ];
+
+  const sectionIcons = [Sparkles, Building2, BookOpen];
+  const sectionEyebrows = ['Foundation & Heritage', 'Campus & Location', 'Academics & Affiliation'];
+
+  const quickFactsResolved = quickFacts.length > 0 ? quickFacts : [
+    { icon: Calendar, value: '1994', label: 'Established' },
+    { icon: MapPin, value: '12.27', label: 'Acres Campus' },
+    { icon: GraduationCap, value: '5000+', label: 'Students' },
+    { icon: Users, value: '200+', label: 'Faculty' },
   ];
 
   return (
@@ -40,61 +108,23 @@ const AboutVCET: React.FC = () => {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start lg:gap-16">
 
             <div className="space-y-8 lg:col-span-2">
-              <div id="history" className="info-card reveal">
-                <div className="info-card-top">
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-brand-blue" />
-                    <span className="text-xs font-bold uppercase tracking-[0.15em] text-brand-blue">Foundation &amp; Heritage</span>
-                  </span>
-
-                </div>
-                <div className="info-card-body">
-                  <h2 className="mb-3 text-xl sm:text-2xl font-display font-bold leading-tight text-brand-navy md:text-3xl">Legacy Rooted in Knowledge</h2>
-                  <p className="text-base leading-relaxed text-slate-700 md:text-xl">
-                    Vidyavardhini means a Body committed to enhancement of Knowledge. Vidyavardhini
-                    was established as a registered society in 1970 by late <span className="font-semibold text-brand-blue">Padmashri H. G. alias
-                    Bhausaheb Vartak</span> for the noble cause of education in rural areas.
-                  </p>
-                </div>
-              </div>
-
-              <div id="campus" className="info-card reveal" style={{ transitionDelay: '0.08s' }}>
-                <div className="info-card-top">
-                  <span className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-brand-blue" />
-                    <span className="text-xs font-bold uppercase tracking-[0.15em] text-brand-blue">Campus &amp; Location</span>
-                  </span>
-
-                </div>
-                <div className="info-card-body">
-                  <h2 className="mb-3 text-2xl font-display font-bold leading-tight text-brand-navy md:text-3xl">Campus and Connectivity</h2>
-                  <p className="text-lg leading-relaxed text-slate-700 md:text-xl">
-                    Vidyavardhini's College of Engineering and Technology, Vasai is located on the
-                    sprawling campus of Vidyavardhini, spread over an area of <strong className="text-brand-blue">12.27 acres</strong>. It is a
-                    short, two minutes walk from Vasai Road (W) Railway Station. The college is also
-                    accessible by road from Mumbai.
-                  </p>
-                </div>
-              </div>
-
-              <div className="info-card reveal" style={{ transitionDelay: '0.12s' }}>
-                <div className="info-card-top">
-                  <span className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-brand-blue" />
-                    <span className="text-xs font-bold uppercase tracking-[0.15em] text-brand-blue">Academics &amp; Affiliation</span>
-                  </span>
-
-                </div>
-                <div className="info-card-body">
-                  <h2 className="mb-3 text-2xl font-display font-bold leading-tight text-brand-navy md:text-3xl">Academic Journey Since 1994</h2>
-                  <p className="text-lg leading-relaxed text-slate-700 md:text-xl">
-                    Vidyavardhini Society received approval from AICTE to start the new college of
-                    Engineering &amp; Technology with effect from July, 1994. The college is affiliated
-                    to the University of Mumbai for the four year degree program leading to the
-                    degree of Bachelor of Engineering.
-                  </p>
-                </div>
-              </div>
+              {paragraphs.map((paragraph, index) => {
+                const Icon = sectionIcons[index] ?? BookOpen;
+                return (
+                  <div key={index} className="info-card reveal" style={{ transitionDelay: `${index * 0.08}s` }}>
+                    <div className="info-card-top">
+                      <span className="flex items-center gap-2">
+                        <Icon className="h-4 w-4 text-brand-blue" />
+                        <span className="text-xs font-bold uppercase tracking-[0.15em] text-brand-blue">{sectionEyebrows[index] ?? 'Overview'}</span>
+                      </span>
+                    </div>
+                    <div className="info-card-body">
+                      <h2 className="mb-3 text-2xl font-display font-bold leading-tight text-brand-navy md:text-3xl">{sectionTitles[index] ?? 'Institute Overview'}</h2>
+                      <p className="text-lg leading-relaxed text-slate-700 md:text-xl">{paragraph}</p>
+                    </div>
+                  </div>
+                );
+              })}
 
               <div className="reveal flex h-[300px] items-center justify-center overflow-hidden rounded-2xl border border-brand-blue/10 bg-brand-light shadow-sm md:h-[430px] lg:h-[430px]" style={{ transitionDelay: '0.16s' }}>
                 <img src="/images/Main Page/Home background/VCET-Home-1-scaled.jpg" alt="VCET Campus" className="w-full h-full object-cover" />
@@ -152,7 +182,7 @@ const AboutVCET: React.FC = () => {
               </div>
 
               <div className="reveal grid grid-cols-2 gap-4" style={{ transitionDelay: '0.26s' }}>
-                {quickFacts.map((stat, idx) => (
+                 {quickFactsResolved.map((stat, idx) => (
                   <div key={idx} className="rounded-xl border border-brand-blue/10 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-md">
                     <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-brand-blue/8">
                       <stat.icon className="h-4 w-4 text-brand-blue" />

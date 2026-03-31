@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { pagesApi } from '../../api/pagesApi';
 import type { AboutData, AboutPayload } from '../../types';
+import { resolveUploadedAssetUrl } from '../../../utils/uploadedAssets';
 
 /* ── Toast Component ────────────────────────────────────────────────────────── */
 const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -30,6 +31,49 @@ const SectionCard: React.FC<{ title: string; icon: React.ReactNode; children: Re
 
 const inputBase = 'w-full bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-[#2563EB] rounded-2xl px-5 py-3/4 text-sm font-bold transition-all outline-none';
 const labelBase = 'block text-xs font-black text-slate-400 uppercase tracking-widest mb-2.5 ml-1';
+
+const FileUploadField: React.FC<{
+  label: string;
+  accept: string;
+  value?: string | File | null;
+  onChange: (value: string | File | null) => void;
+}> = ({ label, accept, value, onChange }) => {
+  const currentUrl = typeof value === 'string' ? resolveUploadedAssetUrl(value) : null;
+  const fileName = value instanceof File ? value.name : null;
+
+  return (
+    <div className="space-y-2">
+      <label className={labelBase}>{label}</label>
+      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <input
+          type="file"
+          accept={accept}
+          className="text-sm font-semibold text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-bold file:text-white hover:file:bg-blue-700"
+          onChange={(event) => {
+            const selectedFile = event.target.files?.[0] ?? null;
+            if (selectedFile) {
+              onChange(selectedFile);
+            }
+          }}
+        />
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs font-semibold text-slate-500 break-all">
+            {fileName ? `Selected: ${fileName}` : currentUrl ? `Current: ${currentUrl}` : 'No file uploaded'}
+          </p>
+          {(value instanceof File || (typeof value === 'string' && value.trim() !== '')) && (
+            <button
+              type="button"
+              onClick={() => onChange(null)}
+              className="rounded-xl border border-red-200 bg-red-50 px-3 py-1 text-xs font-bold text-red-600 hover:bg-red-100"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ── Reusable Managers ──────────────────────────────────────────────────────── */
 
@@ -127,6 +171,39 @@ const StringListManager: React.FC<{ items: string[]; minItems?: number; maxItems
   );
 };
 
+const ConductRulesManager: React.FC<{
+  sections: any[];
+  onChange: (sections: any[]) => void;
+}> = ({ sections = [], onChange }) => {
+  const updateSectionRules = (sectionIndex: number, rules: any[]) => {
+    const next = [...sections];
+    next[sectionIndex] = { ...next[sectionIndex], rules };
+    onChange(next);
+  };
+
+  return (
+    <div className="space-y-6">
+      {sections.map((section, sectionIndex) => (
+        <div key={sectionIndex} className="rounded-2xl border border-slate-200 p-5 bg-slate-50">
+          <h4 className="text-sm font-extrabold text-slate-700 uppercase tracking-wider mb-4">
+            {section.title || `Section ${sectionIndex + 1}`} Rules
+          </h4>
+          <DynamicListManager
+            items={section.rules || []}
+            minItems={2}
+            maxItems={6}
+            onChange={(rules) => updateSectionRules(sectionIndex, rules)}
+            fields={[
+              { key: 'title', label: 'Rule Title', max: 35 },
+              { key: 'description', label: 'Rule Description', max: 360, min: 140, type: 'textarea' },
+            ]}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 /* ── Main Form ─────────────────────────────────────────────────────────────── */
 interface AboutUsFormProps {
   slug: string;
@@ -149,11 +226,31 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
 
   const handleSubmit = async () => {
     setSaving(true);
-    // Trim empty strings from payload
-    const processedPayload = JSON.parse(JSON.stringify(payload), (key, value) => {
-      if (typeof value === 'string') return value.trim();
+    const trimPayloadStrings = (value: unknown): unknown => {
+      if (value instanceof File) {
+        return value;
+      }
+
+      if (Array.isArray(value)) {
+        return value.map((item) => trimPayloadStrings(item));
+      }
+
+      if (value && typeof value === 'object') {
+        const output: Record<string, unknown> = {};
+        Object.entries(value as Record<string, unknown>).forEach(([key, nestedValue]) => {
+          output[key] = trimPayloadStrings(nestedValue);
+        });
+        return output;
+      }
+
+      if (typeof value === 'string') {
+        return value.trim();
+      }
+
       return value;
-    });
+    };
+
+    const processedPayload = trimPayloadStrings(payload) as AboutPayload;
 
     try {
       await pagesApi.about.update(slug, processedPayload);
@@ -198,7 +295,7 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
                 <LimitedInput label="Full Name" max={50} value={payload.intro?.name} onChange={v => updateIntro('name', v)} />
                 <LimitedInput label={isPrincipal ? "Role Headline" : "Designation & Org"} max={isPrincipal ? 80 : 90} value={payload.intro?.role} onChange={v => updateIntro('role', v)} />
                 <div className="col-span-2">
-                  <LimitedInput label="Profile Image URL" max={220} value={payload.intro?.image} onChange={v => updateIntro('image', v)} />
+                  <FileUploadField label="Profile Image Upload" accept="image/*" value={payload.intro?.image} onChange={v => updateIntro('image', v)} />
                 </div>
               </div>
             </SectionCard>
@@ -255,18 +352,18 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
             <SectionCard title="Structure Intro" icon="🏢">
               <LimitedInput label="Introduction Text" max={220} min={80} type="textarea" value={payload.orgIntro} onChange={v => updateProp('orgIntro', v)} />
               <div className="mt-6">
-                <LimitedInput label="Org Chart Image URL" max={220} value={payload.orgChartImage} onChange={v => updateProp('orgChartImage', v)} />
+                <FileUploadField label="Org Chart Image Upload" accept="image/*" value={payload.orgChartImage} onChange={v => updateProp('orgChartImage', v)} />
               </div>
             </SectionCard>
             <SectionCard title="Hierarchy Nodes" icon="🌳">
               <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
                 Define hierarchy nodes. Support for 4-6 levels, max 8 nodes per level.
               </div>
-              <DynamicListManager items={payload.orgNodes} maxItems={48} onChange={v => updateProp('orgNodes', v)} fields={[
+              <DynamicListManager items={payload.orgNodes} minItems={4} maxItems={48} onChange={v => updateProp('orgNodes', v)} fields={[
                 { key: 'name', label: 'Individual Name', max: 50 },
                 { key: 'title', label: 'Institutional Title', max: 60 },
                 { key: 'parent', label: 'Parent Node ID/Reference', max: 50 },
-                { key: 'order', label: 'Level (1-6)', max: 1 }
+                { key: 'displayOrder', label: 'Display Order', max: 2 }
               ]} />
             </SectionCard>
           </div>
@@ -278,9 +375,23 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
             <DynamicListManager items={payload.adminCards} minItems={2} maxItems={4} onChange={v => updateProp('adminCards', v)} fields={[
               { key: 'name', label: 'Name', max: 50 },
               { key: 'role', label: 'Designation', max: 40 },
-              { key: 'email', label: 'Official Email', max: 80 },
-              { key: 'image', label: 'Profile Image URL', max: 220 }
+              { key: 'email', label: 'Official Email', max: 80 }
             ]} />
+            <div className="space-y-4 pt-2">
+              {(payload.adminCards ?? []).map((card: any, index: number) => (
+                <FileUploadField
+                  key={`admin-image-${index}`}
+                  label={`Admin Card ${index + 1} Image`}
+                  accept="image/*"
+                  value={card?.image}
+                  onChange={(v) => {
+                    const nextCards = [...(payload.adminCards ?? [])];
+                    nextCards[index] = { ...(nextCards[index] ?? {}), image: v };
+                    updateProp('adminCards', nextCards);
+                  }}
+                />
+              ))}
+            </div>
           </SectionCard>
         );
 
@@ -289,9 +400,23 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
           <SectionCard title="Strategic Documents (PDF)" icon="📄">
             <DynamicListManager items={payload.documents} minItems={5} maxItems={8} onChange={v => updateProp('documents', v)} fields={[
               { key: 'label', label: 'Doc Label', max: 60 },
-              { key: 'year', label: 'Academic Year', max: 20 },
-              { key: 'fileUrl', label: 'PDF Link / URL', max: 220 }
+              { key: 'year', label: 'Academic Year', max: 20 }
             ]} />
+            <div className="space-y-4 pt-2">
+              {(payload.documents ?? []).map((doc: any, index: number) => (
+                <FileUploadField
+                  key={`strategic-doc-${index}`}
+                  label={`Document ${index + 1} PDF`}
+                  accept="application/pdf"
+                  value={doc?.fileUrl}
+                  onChange={(v) => {
+                    const nextDocs = [...(payload.documents ?? [])];
+                    nextDocs[index] = { ...(nextDocs[index] ?? {}), fileUrl: v };
+                    updateProp('documents', nextDocs);
+                  }}
+                />
+              ))}
+            </div>
           </SectionCard>
         );
 
@@ -305,7 +430,7 @@ const AboutUsForm: React.FC<AboutUsFormProps> = ({ slug, onBack }) => {
               { key: 'title', label: 'Section Title', max: 45 },
               { key: 'description', label: 'Headline Description', max: 180, min: 80, type: 'textarea' }
             ]} />
-            {/* Rule Manager would go here or nested. For now, assuming internal rules managed via JSON or separate view */}
+            <ConductRulesManager sections={payload.conductSections || []} onChange={v => updateProp('conductSections', v)} />
           </SectionCard>
         );
 

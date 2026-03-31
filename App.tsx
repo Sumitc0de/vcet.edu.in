@@ -420,6 +420,7 @@ function App() {
             <Route path="/nss" element={<NSS />} />
             <Route path="/ebsb" element={<EBSB />} />
             <Route path="/ieee" element={<IEEE />} />
+            <Route path="/csi" element={<CSI />} />
             <Route path="/students-club" element={<StudentsClub />} />
             <Route path="/centurion" element={<CENTURION />} />
             <Route path="/airnova" element={<AIRNOVA />} />

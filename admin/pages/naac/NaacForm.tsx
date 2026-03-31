@@ -425,6 +425,14 @@ const SSSPdfUploadManager: React.FC<{ items: SSSUploadFormItem[]; onChange: (val
 };
 
 /* ── Main Form ── */
+const SLUG_NAMES: Record<string, string> = {
+  'sss-report': 'SSS Report Upload',
+  'ssr-cycle-1': 'SSR Cycle 1 — Documents & Photos',
+  'ssr-cycle-2': 'SSR Cycle 2 — Extended Profile, QIF & DVV',
+  'best-practices': 'Best Practices & Institutional Distinctiveness',
+  'naac-score': 'NAAC Accreditation Score',
+};
+
 interface NaacFormProps {
   slug: string;
   onBack: () => void;

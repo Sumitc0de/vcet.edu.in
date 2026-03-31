@@ -7,21 +7,21 @@ import PageBanner from '../../components/PageBanner';
 const professors = [
   {
     name: 'Dr. Yogesh Pingle',
-    title: 'PhD, Senior Professor of Computation',
+    title: 'Deputy HOD & Assistant Professor, CSE(DS)',
     description:
-      'Spearheading the intersection of classical rhetoric and digital systems architecture.',
+      'Website In-Charge, VCET',
   },
   {
-    name: 'Ashish Gosavi',
-    title: 'PhD, Head of Digital Humanities',
+    name: 'Mr. Nitin Shingane',
+    title: 'System Programmer, VCET',
     description:
-      'Expert in algorithmic ethics and the preservation of global digital heritage.',
+      '',
   },
   {
-    name: 'Nitin',
-    title: 'M.Phil, Director of Systems Design',
+    name: 'Mr. Ashish Gosavi',
+    title: 'Technical Expert',
     description:
-      'Leading our proprietary framework development for academic data modeling.',
+      '',
   },
 ];
 
