@@ -11,6 +11,7 @@ import FacilitiesForm from '../facilities/FacilitiesForm';
 import AboutUsForm from '../about/AboutUsForm';
 import NaacForm from '../naac/NaacForm';
 import TrainingPlacementForm from '../training-placement/TrainingPlacementForm';
+import StudentCareerForm from '../student-career/StudentCareerForm';
 
 const homeEditables = [
   {
@@ -80,16 +81,7 @@ const academicsEditables = [
     description: 'Update institutional booklets for various degree programs and syllabus.',
     links: [{ label: 'Edit Booklets', section: 'booklets' }],
   },
-  {
-    title: 'Dean Academics',
-    description: "Manage the Dean's profile, qualifications, and welcome message.",
-    links: [{ label: 'Edit Dean Profile', section: 'dean' }],
-  },
-  {
-    title: 'Outcome Based Education',
-    description: 'Update the OBE framework title, description, and diagram.',
-    links: [{ label: 'Edit OBE Framework', section: 'obe' }],
-  },
+  
 ];
 
 
@@ -177,10 +169,43 @@ const aboutEditables = [
   { slug: 'code-of-conduct', title: 'Code of Conduct', description: 'Rules and professional ethics for stakeholders.' },
 ];
 
-const studentCareerEditables: any[] = [
-  // Keeping this empty or reverting it if there was nothing originally here
+const studentCareerEditables = [
+  {
+    title: "Extracurricular Activities (Student Council)",
+    description: "Manage cultural, sports, and other committees.",
+    links: [
+      { label: "Cultural Committee", section: "cultural-committee" },
+      { label: "Sports Committee", section: "sports-committee" },
+      { label: "Literati", section: "literati" },
+      { label: "NSS", section: "nss" },
+      { label: "EBSB", section: "ebsb" }
+    ]
+  },
+  {
+    title: "Co-Curricular Activities",
+    description: "Manage IEEE, CSI, IETE, ISHRAE, VMEA, Hackathon, NSDC, and IGBC.",
+    links: [
+      { label: "IEEE", section: "ieee" },
+      { label: "CSI", section: "csi" },
+      { label: "IETE", section: "iete" },
+      { label: "ISHRAE", section: "ishrae" },
+      { label: "VMEA", section: "vmea" },
+      { label: "Hackathon", section: "hackathon-events" },
+      { label: "NSDC", section: "nsdc" },
+      { label: "IGBC", section: "igbc" }
+    ]
+  },
+  {
+    title: "Student Clubs",
+    description: "Manage specialized projects like Ethan, Solecthon, Centurion, Airnova, and Emechto.",
+    links: [
+      { label: "Ethan / Solecthon", section: "external-projects" },
+      { label: "Centurion", section: "centurion" },
+      { label: "Airnova", section: "airnova" },
+      { label: "Emechto", section: "emechto" }
+    ]
+  }
 ];
-
 const trainingPlacementEditables = [
   { slug: 'placement', title: 'Placement', description: 'Manage Placement Cell profiles, statistics, gallery, and recruiters.' },
   { slug: 'training', title: 'Training', description: 'Manage training events, career guidance seminars, and gallery.' },
@@ -340,6 +365,10 @@ const SitePages: React.FC = () => {
 
   if (activeTab.key === 'training-placement' && activeSection) {
     return <TrainingPlacementForm slug={activeSection} onBack={() => setActiveSection(null)} />;
+  }
+
+  if (activeTab.key === 'student-career' && activeSection) {
+    return <StudentCareerForm slug={activeSection} onBack={() => setActiveSection(null)} />;
   }
 
   // Handle Hub/Direct Views
@@ -600,7 +629,7 @@ const SitePages: React.FC = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Student & Career Module</h1>
-          <p className="text-sm text-slate-500 mt-1 font-medium">Manage student career services, training programs, and placement statistics.</p>
+          <p className="text-sm text-slate-500 mt-1 font-medium">Manage student life clubs, technical bodies, events, gallery, metrics, and team records.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {studentCareerEditables.map((item) => (
@@ -608,14 +637,14 @@ const SitePages: React.FC = () => {
               <h2 className="text-lg font-bold text-slate-900 tracking-tight">{item.title}</h2>
               <p className="text-xs text-slate-500 mt-2 font-medium leading-relaxed">{item.description}</p>
               <div className="flex flex-wrap gap-2 mt-5">
-                {item.links?.map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
+                {item.links.map((link) => (
+                  <button
+                    key={link.section}
+                    onClick={() => setActiveSection(link.section)}
                     className="inline-flex items-center px-4 py-2.5 rounded-xl bg-[#2563EB] text-white text-[11px] uppercase tracking-wider font-extrabold hover:bg-blue-700 transition-all shadow-sm"
                   >
                     {link.label}
-                  </Link>
+                  </button>
                 ))}
               </div>
             </div>
@@ -706,5 +735,4 @@ const SitePages: React.FC = () => {
 };
 
 export default SitePages;
-
 

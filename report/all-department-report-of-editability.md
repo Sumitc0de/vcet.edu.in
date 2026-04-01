@@ -1,4 +1,4 @@
-Here is your **Department-wise Structured Editable Information Report** (separate for each department, clean & exam-ready):
+﻿Here is your **Department-wise Structured Editable Information Report** (separate for each department, clean & exam-ready):
 
 ---
 
