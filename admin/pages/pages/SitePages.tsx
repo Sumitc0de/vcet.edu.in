@@ -81,8 +81,18 @@ const academicsEditables = [
     description: 'Update institutional booklets for various degree programs and syllabus.',
     links: [{ label: 'Edit Booklets', section: 'booklets' }],
   },
-  
+  {
+    title: 'Dean Academics',
+    description: "Manage the Dean's profile, qualifications, and welcome message.",
+    links: [{ label: 'Edit Dean Profile', section: 'dean' }],
+  },
+  {
+    title: 'Outcome Based Education',
+    description: 'Update the OBE framework title, description, and diagram.',
+    links: [{ label: 'Edit OBE Framework', section: 'obe' }],
+  },
 ];
+
 
 
 const examEditables = [
