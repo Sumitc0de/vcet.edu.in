@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Image as ImageIcon, Plus, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { MMSFacilitiesPayload, GalleryItem } from '../../types';
 import { mmsFacilitiesApi } from '../../api/mmsFacilitiesApi';
+import { resolveApiUrl } from '../../api/client';
 
 const emptyForm: MMSFacilitiesPayload = {
   computerLabs: [],
