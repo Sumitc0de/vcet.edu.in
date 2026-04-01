@@ -28,13 +28,36 @@ const coreTeam: DevProfile[] = [
     linkedinUrl: '#',
     portfolioUrl: '#',
     role: 'Backend Developer'
+  },
+  {
+    name: 'CyberCodezilla',
+    githubUser: 'CyberCodezilla',
+    githubUrl: 'https://github.com/CyberCodezilla',
+    linkedinUrl: '#',
+    portfolioUrl: '#',
+    role: 'Frontend Developer'
+   
+  },
+  {
+    name: 'yashhh-23',
+    githubUser: 'yashhh-23',
+    githubUrl: 'https://github.com/yashhh-23',
+    linkedinUrl: '#',
+    portfolioUrl: '#',
+    role: 'Frontend Developer'
+  },
+  {
+    name: 'RedRex101',
+    githubUser: 'RedRex101',
+    githubUrl: 'https://github.com/RedRex101',
+    linkedinUrl: '#',
+    portfolioUrl: '#',
+    role: 'Frontend Developer'
   }
 ];
 
 const fellowship: DevProfile[] = [
   { name: 'Sahil2802-coder', githubUser: 'Sahil2802-coder', githubUrl: 'https://github.com/Sahil2802-coder', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
-  { name: 'yashhh-23', githubUser: 'yashhh-23', githubUrl: 'https://github.com/yashhh-23', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
-  { name: 'RedRex101', githubUser: 'RedRex101', githubUrl: 'https://github.com/RedRex101', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
   { name: 'sawantshreya008', githubUser: 'sawantshreya008', githubUrl: 'https://github.com/sawantshreya008', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
   { name: 'sumritasawant101-droid', githubUser: 'sumritasawant101-droid', githubUrl: 'https://github.com/sumritasawant101-droid', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
   { name: 'dakshata2405956201-svg', githubUser: 'dakshata2405956201-svg', githubUrl: 'https://github.com/dakshata2405956201-svg', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
@@ -45,6 +68,24 @@ const fellowship: DevProfile[] = [
   { name: 'Pranish Harish Shetty', githubUser: 'pranishshetty', githubUrl: 'https://share.google/b5ZkgP5lON5wfUw4y', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
   { name: 'Rehan Pinjari', githubUser: 'rehanw1', githubUrl: 'https://github.com/rehanw1', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
   { name: 'Pritiyadav', githubUser: 'Pritiyadav6', githubUrl: 'https://github.com/Pritiyadav6', linkedinUrl: '#', portfolioUrl: '#', role: 'Student Fellowship' },
+];
+
+const mentors = [
+  {
+    name: 'Dr. Yogesh Pingle',
+    roles: ['Deputy HOD & Assistant Professor, CSE(DS)', 'Website In-Charge, VCET'],
+    imageUrl: 'https://ui-avatars.com/api/?name=Dr+Yogesh+Pingle&background=0D8ABC&color=fff&size=150'
+  },
+  {
+    name: 'Mr. Nitin Shingane',
+    roles: ['System Administrator, VCET'],
+    imageUrl: 'https://ui-avatars.com/api/?name=Mr+Nitin+Shingane&background=0D8ABC&color=fff&size=150'
+  },
+  {
+    name: 'Mr. Ashish Gosavi',
+    roles: ['Technical Expert'],
+    imageUrl: 'https://ui-avatars.com/api/?name=Mr+Ashish+Gosavi&background=0D8ABC&color=fff&size=150'
+  }
 ];
 
 const DevCard: React.FC<{ profile: DevProfile }> = ({ profile }) => (
@@ -79,6 +120,25 @@ const DevCard: React.FC<{ profile: DevProfile }> = ({ profile }) => (
   </div>
 );
 
+const MentorCard: React.FC<{ profile: typeof mentors[0] }> = ({ profile }) => (
+  <div className="group relative flex flex-col items-center bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:border-[#2563EB]/20 transition-all duration-300 h-full">
+    <div className="relative w-24 h-24 mb-4">
+      <div className="absolute inset-0 bg-[#2563EB]/10 rounded-full blur group-hover:bg-[#2563EB]/20 transition-all" />
+      <img
+        src={profile.imageUrl}
+        alt={profile.name}
+        className="relative w-full h-full object-cover rounded-full border-2 border-white shadow-md relative z-10 bg-white"
+        loading="lazy"
+      />
+    </div>
+
+    <h3 className="text-lg font-bold text-slate-800 text-center mb-2">{profile.name}</h3>
+    {profile.roles.map((role, idx) => (
+      <p key={idx} className="text-sm text-[#2563EB] font-medium text-center">{role}</p>
+    ))}
+  </div>
+);
+
 const Developers: React.FC = () => {
   return (
     <PageLayout>
@@ -93,6 +153,25 @@ const Developers: React.FC = () => {
       <section className="py-16 md:py-24 bg-slate-50/50">
         <div className="container mx-auto px-4 max-w-7xl animate-fade-in">
           
+          <div className="text-center mb-16">
+            <h2 className="text-sm font-bold text-amber-500 tracking-[0.2em] uppercase mb-2">Guidance & Support</h2>
+            <h3 className="text-3xl md:text-5xl font-display font-bold text-[#111827] flex items-center justify-center gap-4">
+              <Users className="w-8 h-8 md:w-10 md:h-10 text-[#2563EB]" />
+              Mentors
+            </h3>
+            <p className="mt-4 max-w-2xl mx-auto text-slate-600">
+              The project was guided and supported by our faculty, ensuring alignment with institutional goals.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-6 mb-24 justify-center">
+             {mentors.map((mentor, i) => (
+               <div key={i} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                 <MentorCard profile={mentor} />
+               </div>
+             ))}
+          </div>
+
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold text-amber-500 tracking-[0.2em] uppercase mb-2">The architects</h2>
             <h3 className="text-3xl md:text-5xl font-display font-bold text-[#111827] flex items-center justify-center gap-4">
@@ -116,7 +195,7 @@ const Developers: React.FC = () => {
             <h2 className="text-sm font-bold text-amber-500 tracking-[0.2em] uppercase mb-2">Contributors</h2>
             <h3 className="text-3xl md:text-5xl font-display font-bold text-[#111827] flex items-center justify-center gap-4">
               <Users className="w-8 h-8 md:w-10 md:h-10 text-[#2563EB]" />
-              Student Fellowship
+               These are Devlophers how collaborated with the lead team
             </h3>
             <p className="mt-4 max-w-2xl mx-auto text-slate-600">
               A dedicated team of students who collaborated to build features, manage data, and bring the platform to life.
