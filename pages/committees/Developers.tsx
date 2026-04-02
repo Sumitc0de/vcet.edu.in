@@ -150,7 +150,7 @@ const Developers: React.FC = () => {
         ]}
       />
 
-      <section className="py-16 md:py-24 bg-slate-50/50">
+      <section className="py-16 md:py-24 bg-slate-50/50 relative overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl animate-fade-in">
           
           <div className="text-center mb-16">
@@ -183,11 +183,9 @@ const Developers: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-6 mb-24 justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-24 justify-center max-w-7xl mx-auto">
              {coreTeam.map((dev, i) => (
-               <div key={i} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]">
-                 <DevCard profile={dev} />
-               </div>
+               <DevCard key={i} profile={dev} />
              ))}
           </div>
 

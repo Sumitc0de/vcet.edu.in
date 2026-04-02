@@ -1155,3 +1155,29 @@ export interface NewsletterPayload {
 
 
 
+
+
+// -- MMS Homepage Types --
+export interface MMSHomeSlider { title: string; subtitle: string; image: File | string | null; }
+export interface MMSHomeAdmission { heading: string; description: string; banner: File | string | null; }
+export interface MMSHomeNotice { title: string; label: string; text: string; }
+export interface MMSHomeNotification { title: string; text: string; }
+export interface MMSHomeInternship { title: string; altText: string; logo: File | string | null; }
+export interface MMSHomeEvent { title: string; eventTitle: string; altText: string; image: File | string | null; }
+export interface MMSHomeTestimonial { sectionTitle: string; name: string; role: string; quote: string; }
+export interface MMSHomeVideo { sectionTitle: string; videoTitle: string; posterAlt: string; videoFile: File | null; videoUrl: string; poster: File | string | null; }
+export interface MMSHomeDocument { label: string; url: string; pdfFile: File | null; }
+
+export interface MMSHomeData {
+  sliders: MMSHomeSlider[];
+  admission: MMSHomeAdmission;
+  notices: MMSHomeNotice[];
+  notifications: MMSHomeNotification[];
+  internships: MMSHomeInternship[];
+  events: MMSHomeEvent[];
+  testimonials: MMSHomeTestimonial[];
+  videos: MMSHomeVideo[];
+  documents: MMSHomeDocument[];
+}
+export type MMSHomePayload = MMSHomeData;
+

@@ -222,6 +222,13 @@ const trainingPlacementEditables = [
 ];
 
 const mmsEditables = [
+    {
+      title: 'Homepage',
+      description: 'Manage the MMS sub-website landing page including hero sliders, admission highlight, notices, event feed, videos, and fast links.',
+      links: [
+        { label: 'Edit Homepage', to: '/admin/pages/mms/home/edit' },
+      ],
+    },
   {
     title: 'About',
     description: 'Manage the MMS department overview, vision, mission, program highlights, and general information.',
@@ -743,4 +750,5 @@ const SitePages: React.FC = () => {
 };
 
 export default SitePages;
+
 

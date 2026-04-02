@@ -270,6 +270,7 @@ const MMSStudentPlacementsForm = lazy(() => import('./admin/pages/mms/MMSStudent
 const MMSExperientialLearningForm = lazy(() => import('./admin/pages/mms/MMSExperientialLearningForm'));
 const MMSAboutForm = lazy(() => import('./admin/pages/mms/MMSAboutForm'));
 const MMSStudentsLifeForm = lazy(() => import('./admin/pages/mms/MMSStudentsLifeForm'));
+const MMSHomepageForm = lazy(() => import('./admin/pages/mms/MMSHomepageForm'));
 const MMSSyllabusForm = lazy(() => import('./admin/pages/mms/MMSSyllabusForm'));
 const MMSFacilitiesForm = lazy(() => import('./admin/pages/mms/MMSFacilitiesForm'));
 const MMSFaqsForm = lazy(() => import('./admin/pages/mms/MMSFaqsForm'));
@@ -611,7 +612,8 @@ element={<MMSStudentsLifeCustomEvent />} />
             <Route path="pages/mms/documents/edit" element={<MMSDocumentsForm />} />
             <Route path="pages/mms/fees/edit" element={<MMSFeesForm />} />
             <Route path="pages/mms/experiential-learning/:section/edit" element={<MMSExperientialLearningForm />} />
-            <Route path="pages/mms/about/:section/edit" element={<MMSAboutForm />} />
+            <Route path="pages/mms/home/edit" element={<MMSHomepageForm />} />
+              <Route path="pages/mms/about/:section/edit" element={<MMSAboutForm />} />
             <Route path="pages/mms/students-life/:section/edit" element={<MMSStudentsLifeForm />} />
             <Route path="pages/mms/syllabus/:section/edit" element={<MMSSyllabusForm />} />
             <Route path="pages/mms/facilities/:section/edit" element={<MMSFacilitiesForm />} />
@@ -626,4 +628,6 @@ element={<MMSStudentsLifeCustomEvent />} />
 }
 
 export default App;
+
+
 
