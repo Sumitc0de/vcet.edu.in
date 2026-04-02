@@ -48,6 +48,132 @@ const resolveImage = (value: any): string | null => {
   return null;
 };
 
+const normalizeStringList = (value: unknown): string[] =>
+  Array.isArray(value)
+    ? value.map((item) => String(item ?? '').trim()).filter(Boolean)
+    : [];
+
+const normalizeLibraryMemberships = (value: unknown) =>
+  Array.isArray(value)
+    ? value
+        .map((item) => {
+          if (item && typeof item === 'object' && !Array.isArray(item)) {
+            return {
+              title: String((item as Record<string, unknown>).title ?? '').trim(),
+              desc: String((item as Record<string, unknown>).desc ?? '').trim(),
+              loc: String((item as Record<string, unknown>).loc ?? '').trim(),
+            };
+          }
+
+          const title = String(item ?? '').trim();
+          return { title, desc: '', loc: '' };
+        })
+        .filter((item) => item.title.length > 0)
+    : [];
+
+const normalizeLibraryDelnetFacilities = (value: unknown, legacyValue: unknown) => {
+  if (Array.isArray(value) && value.length > 0) {
+    return value
+      .map((item) => ({
+        label: String((item as Record<string, unknown>)?.label ?? '').trim(),
+        value: String((item as Record<string, unknown>)?.value ?? '').trim(),
+      }))
+      .filter((item) => item.label.length > 0);
+  }
+
+  return normalizeStringList(legacyValue).map((label) => ({ label, value: '' }));
+};
+
+const isLibraryConvenerRole = (value: unknown): boolean => {
+  const role = String(value ?? '').trim().toLowerCase();
+  return role === 'convener' || role === 'convenor';
+};
+
+const normalizeLibraryFacilityPayload = (value: FacilityData | null | undefined): FacilityPayload => {
+  const source = value && typeof value === 'object' ? value : ({} as FacilityData);
+  const legacyRules = normalizeStringList(source.rules);
+  const staffRules = normalizeStringList(source.staffRules);
+  const studentRules = normalizeStringList(source.studentRules);
+  const delnetFacilities = normalizeLibraryDelnetFacilities(source.delnetFacilities, source.facilitiesList);
+  const memberships = normalizeLibraryMemberships(source.memberships);
+  const committeeRows = Array.isArray(source.committee) ? source.committee : [];
+  const convenerFromCommittee = committeeRows.find((item) => isLibraryConvenerRole((item as Record<string, unknown>)?.role));
+  const convener =
+    source.convener && typeof source.convener === 'object'
+      ? source.convener
+      : source.convenor && typeof source.convenor === 'object'
+        ? source.convenor
+        : convenerFromCommittee && typeof convenerFromCommittee === 'object'
+          ? {
+              name: String((convenerFromCommittee as Record<string, unknown>).name ?? '').trim(),
+              role: 'Convener',
+              sub: String((convenerFromCommittee as Record<string, unknown>).sub ?? '').trim(),
+            }
+        : undefined;
+
+  return {
+    ...source,
+    librarySections: Array.isArray(source.librarySections) ? source.librarySections : [],
+    stats: Array.isArray(source.stats) ? source.stats : [],
+    eResources: Array.isArray(source.eResources) ? source.eResources : [],
+    delnetFacilities,
+    facilitiesList: delnetFacilities.map((item) => item.label).filter(Boolean),
+    memberships,
+    staffRules: staffRules.length > 0 ? staffRules : legacyRules,
+    studentRules: studentRules.length > 0 ? studentRules : legacyRules,
+    fines: Array.isArray(source.fines) ? source.fines : [],
+    tabs: Array.isArray(source.tabs) ? source.tabs : [],
+    committee: committeeRows.filter((item) => !isLibraryConvenerRole((item as Record<string, unknown>)?.role)),
+    gallery: Array.isArray(source.gallery) ? source.gallery : [],
+    contact: {
+      phone: String(source.contact?.phone ?? '').trim(),
+      email: String(source.contact?.email ?? '').trim(),
+      address: String(source.contact?.address ?? '').trim(),
+    },
+    convener,
+    convenor: convener,
+  };
+};
+
+const buildFacilitiesSubmitPayload = (slug: string, value: FacilityPayload): FacilityPayload => {
+  if (slug !== 'library') {
+    return value;
+  }
+
+  const normalized = normalizeLibraryFacilityPayload(value as FacilityData);
+  const mergedRules = Array.from(
+    new Set([
+      ...normalizeStringList(normalized.staffRules),
+      ...normalizeStringList(normalized.studentRules),
+      ...normalizeStringList((value as FacilityData).rules),
+    ]),
+  );
+  const convenerName = String(normalized.convener?.name ?? '').trim();
+  const convenerSub = String(normalized.convener?.sub ?? '').trim();
+  const convenerRow = convenerName
+    ? [{ name: convenerName, role: 'Convener', sub: convenerSub }]
+    : [];
+  const committeeRows = Array.isArray(normalized.committee) ? normalized.committee : [];
+  const combinedCommittee = [...convenerRow, ...committeeRows.map((item) => ({
+    name: String(item?.name ?? '').trim(),
+    role: String(item?.role ?? '').trim(),
+    sub: String(item?.sub ?? '').trim(),
+  }))];
+  const normalizedConvener = convenerName
+    ? { name: convenerName, role: 'Convener', sub: convenerSub }
+    : undefined;
+
+  return {
+    ...value,
+    ...normalized,
+    facilitiesList: (normalized.delnetFacilities ?? []).map((item) => item.label).filter(Boolean),
+    rules: mergedRules,
+    committee: combinedCommittee,
+    convener: normalizedConvener,
+    convenor: normalizedConvener,
+  };
+};
+
 /* ── Reusable Managers ──────────────────────────────────────────────────────── */
 
 // Text Input with Character Counter
@@ -188,15 +314,18 @@ const FacilitiesForm: React.FC<FacilitiesFormProps> = ({ slug, onBack }) => {
 
   useEffect(() => {
     pagesApi.facilities.get(slug).then(res => {
-      setData(res.data);
-      setPayload(res.data || {});
+      const nextData = slug === 'library'
+        ? normalizeLibraryFacilityPayload(res.data)
+        : (res.data || {});
+      setData(nextData as FacilityData);
+      setPayload(nextData);
     }).finally(() => setLoading(false));
   }, [slug]);
 
   const handleSubmit = async () => {
     setSaving(true);
     try {
-      await pagesApi.facilities.update(slug, payload);
+      await pagesApi.facilities.update(slug, buildFacilitiesSubmitPayload(slug, payload));
       setToast({ message: 'Saved successfully', type: 'success' });
     } catch {
       setToast({ message: 'Error saving data', type: 'error' });
@@ -354,75 +483,162 @@ const FacilitiesForm: React.FC<FacilitiesFormProps> = ({ slug, onBack }) => {
       case 'library':
          return (
             <div className="space-y-8">
-               <SectionCard title="Library Structure & Content" icon="📚">
-                  <DynamicListManager items={payload.librarySections} maxItems={5} onChange={v=>updateProp('librarySections', v)} fields={[
+               <SectionCard title="Library Timing Sections" icon="🕐">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     First two items appear in the Overview tab (Reading Room & Circulation Desk timings).
+                  </div>
+                  <DynamicListManager items={payload.librarySections || []} maxItems={5} onChange={v=>updateProp('librarySections', v)} fields={[
                      { key: 'heading', label: 'Heading', max: 80 },
                      { key: 'paragraph', label: 'Content Body', max: 1000, type: 'textarea' }
                   ]} />
                </SectionCard>
-               <SectionCard title="Library Quick Stats" icon="📊">
-                  <DynamicListManager items={payload.stats} maxItems={8} onChange={v=>updateProp('stats', v)} fields={[
-                     { key: 'label', label: 'Metric Name (e.g. Total Books)', max: 30 },
-                     { key: 'value', label: 'Numerical Value (1-6 digits)', max: 6 }
+
+               <SectionCard title="Library Stats (Resources Tab)" icon="📊">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     These stats appear as cards and in the table on the Resources tab.
+                  </div>
+                  <DynamicListManager items={payload.stats || []} maxItems={10} onChange={v=>updateProp('stats', v)} fields={[
+                     { key: 'label', label: 'Resource Name', max: 50 },
+                     { key: 'value', label: 'Numerical Value', max: 10 },
+                     { key: 'vendor', label: 'Service Vendor', max: 40 }
                   ]} />
                </SectionCard>
-                <SectionCard title="Rules & Arrays" icon="📜">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="p-6 border border-slate-200 rounded-3xl">
-                     <h4 className="text-sm font-black mb-4 uppercase">Facilities List</h4>
-                     <StringListManager items={payload.facilitiesList} maxItems={15} maxLength={100} onChange={v=>updateProp('facilitiesList', v)} />
-                   </div>
-                   <div className="p-6 border border-slate-200 rounded-3xl">
-                     <h4 className="text-sm font-black mb-4 uppercase">Membership Types</h4>
-                     <StringListManager items={payload.memberships} maxItems={10} maxLength={80} onChange={v=>updateProp('memberships', v)} />
-                   </div>
-                    <div className="p-6 border border-slate-200 rounded-3xl md:col-span-2">
-                      <h4 className="text-sm font-black mb-4 uppercase">Rules & Regulations</h4>
-                      <StringListManager items={payload.rules} maxItems={25} maxLength={120} onChange={v=>updateProp('rules', v)} label="Rule" />
-                    </div>
+
+               <SectionCard title="E-Resources (E-Resources Tab)" icon="💻">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     Digital resource providers shown on the E-Resources tab.
                   </div>
-                </SectionCard>
-                <SectionCard title="Library Navigation Tabs" icon="🧭">
-                  <DynamicListManager items={payload.tabs || []} maxItems={10} onChange={v=>updateProp('tabs', v)} fields={[
-                    { key: 'label', label: 'Tab Label', max: 25 },
-                    { key: 'content', label: 'Short Description', max: 120, type: 'textarea' }
+                  <DynamicListManager items={payload.eResources || []} maxItems={10} onChange={v=>updateProp('eResources', v)} fields={[
+                     { key: 'title', label: 'Provider Name', max: 60 },
+                     { key: 'desc', label: 'Description', max: 150, type: 'textarea' },
+                     { key: 'value', label: 'Value (e.g. "97 E-Books")', max: 30 }
                   ]} />
-                </SectionCard>
+               </SectionCard>
+
+               <SectionCard title="DELNET Facilities (Facilities Tab)" icon="🌐">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     DELNET resource ecosystem items with numeric counts.
+                  </div>
+                  <DynamicListManager items={payload.delnetFacilities || []} maxItems={12} onChange={v=>updateProp('delnetFacilities', v)} fields={[
+                     { key: 'label', label: 'Resource Label', max: 60 },
+                     { key: 'value', label: 'Numeric Value', max: 15 }
+                  ]} />
+               </SectionCard>
+
+               <SectionCard title="Memberships (Membership Tab)" icon="🤝">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     Institutional membership partnerships.
+                  </div>
+                  <DynamicListManager items={payload.memberships || []} maxItems={10} onChange={v=>updateProp('memberships', v)} fields={[
+                     { key: 'title', label: 'Institution Name', max: 60 },
+                     { key: 'desc', label: 'Description', max: 150, type: 'textarea' },
+                     { key: 'loc', label: 'Location', max: 30 }
+                  ]} />
+               </SectionCard>
+
+               <SectionCard title="Rules & Regulations (Rules Tab)" icon="📜">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div className="p-6 border border-slate-200 rounded-3xl">
+                        <h4 className="text-sm font-black mb-4 uppercase">Staff Rules</h4>
+                        <StringListManager items={payload.staffRules || []} maxItems={15} maxLength={150} onChange={v=>updateProp('staffRules', v)} label="Staff Rule" />
+                     </div>
+                     <div className="p-6 border border-slate-200 rounded-3xl">
+                        <h4 className="text-sm font-black mb-4 uppercase">Student Rules</h4>
+                        <StringListManager items={payload.studentRules || []} maxItems={15} maxLength={150} onChange={v=>updateProp('studentRules', v)} label="Student Rule" />
+                     </div>
+                  </div>
+               </SectionCard>
+
+               <SectionCard title="Fine System (Rules Tab)" icon="💰">
+                  <DynamicListManager items={payload.fines || []} maxItems={6} onChange={v=>updateProp('fines', v)} fields={[
+                     { key: 'period', label: 'Delay Period', max: 30 },
+                     { key: 'amount', label: 'Fine / Penalty', max: 50 }
+                  ]} />
+               </SectionCard>
+
+               <SectionCard title="Convenor (Committee Tab)" icon="⭐">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     This entry is saved as the first committee member with role set to Convener.
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <LimitedInput
+                        label="Convenor Name"
+                        max={50}
+                        value={payload.convener?.name || payload.convenor?.name || ''}
+                        onChange={v=>updateProp('convener', {
+                           name: v,
+                           role: 'Convener',
+                           sub: payload.convener?.sub || payload.convenor?.sub || '',
+                        })}
+                     />
+                     <LimitedInput
+                        label="Role"
+                        max={60}
+                        value="Convener"
+                        onChange={() => {}}
+                     />
+                     <div className="md:col-span-2">
+                        <LimitedInput
+                           label="Department/Details"
+                           max={80}
+                           value={payload.convener?.sub || payload.convenor?.sub || ''}
+                           onChange={v=>updateProp('convener', {
+                              name: payload.convener?.name || payload.convenor?.name || '',
+                              role: 'Convener',
+                              sub: v,
+                           })}
+                        />
+                     </div>
+                  </div>
+               </SectionCard>
+
+               <SectionCard title="Committee Members (Committee Tab)" icon="👥">
+                  <div className="p-4 mb-4 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200">
+                     Add the remaining committee members here. The convenor above will be inserted first automatically.
+                  </div>
+                  <DynamicListManager items={payload.committee || []} maxItems={14} onChange={v=>updateProp('committee', v)} fields={[
+                     { key: 'name', label: 'Member Name', max: 50 },
+                     { key: 'role', label: 'Role', max: 60 },
+                     { key: 'sub', label: 'Department/Details', max: 80 }
+                  ]} />
+               </SectionCard>
+
                <SectionCard title="Library Contact" icon="📞">
                   <div className="grid grid-cols-2 gap-4">
                      <LimitedInput label="Phone Number" max={15} value={payload.contact?.phone} onChange={v=>updateProp('contact', {...payload.contact, phone: v})} />
                      <LimitedInput label="Email" max={40} value={payload.contact?.email} onChange={v=>updateProp('contact', {...payload.contact, email: v})} />
                      <div className="col-span-2"><LimitedInput label="Address Block" type="textarea" max={250} value={payload.contact?.address} onChange={v=>updateProp('contact', {...payload.contact, address: v})} /></div>
                   </div>
-                </SectionCard>
-                <SectionCard title="Library Governance" icon="👥">
-                  <DynamicListManager items={payload.committee || []} maxItems={15} onChange={v=>updateProp('committee', v)} fields={[
-                    { key: 'name', label: 'Member Name', max: 50 },
-                    { key: 'role', label: 'Role', max: 60 },
-                    { key: 'sub', label: 'Department/Details', max: 80 }
+               </SectionCard>
+
+               <SectionCard title="Navigation Tabs" icon="🧭">
+                  <DynamicListManager items={payload.tabs || []} maxItems={10} onChange={v=>updateProp('tabs', v)} fields={[
+                     { key: 'label', label: 'Tab Label', max: 25 },
+                     { key: 'content', label: 'Short Description', max: 120, type: 'textarea' }
                   ]} />
-                </SectionCard>
-                <SectionCard title="Library Gallery" icon="🖼️">
+               </SectionCard>
+
+               <SectionCard title="Library Gallery" icon="🖼️">
                   <DynamicListManager items={payload.gallery || []} maxItems={20} onChange={v=>updateProp('gallery', v)} fields={[
-                    { key: 'label', label: 'Image Label', max: 120 }
+                     { key: 'label', label: 'Image Label', max: 120 }
                   ]} />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {(payload.gallery || []).map((item: any, idx: number) => (
-                      <ImageUploadInput
-                        key={`library-gallery-${idx}`}
-                        label={`Gallery ${idx + 1} Image`}
-                        value={item?.imageUrl ?? null}
-                        onChange={(next) => {
-                          const rows = [...(payload.gallery || [])];
-                          rows[idx] = { ...rows[idx], imageUrl: next };
-                          updateProp('gallery', rows);
-                        }}
-                      />
-                    ))}
+                     {(payload.gallery || []).map((item: any, idx: number) => (
+                        <ImageUploadInput
+                           key={`library-gallery-${idx}`}
+                           label={`Gallery ${idx + 1} Image`}
+                           value={item?.imageUrl ?? null}
+                           onChange={(next) => {
+                              const rows = [...(payload.gallery || [])];
+                              rows[idx] = { ...rows[idx], imageUrl: next };
+                              updateProp('gallery', rows);
+                           }}
+                        />
+                     ))}
                   </div>
-                </SectionCard>
-             </div>
-          );
+               </SectionCard>
+            </div>
+         );
 
       case 'sports-gymkhana':
          return (

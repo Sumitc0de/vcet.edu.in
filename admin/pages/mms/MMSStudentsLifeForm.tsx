@@ -5,6 +5,15 @@ import type { MMSStudentsLifePayload, GalleryItem } from '../../types';
 import { mmsStudentsLifeApi } from '../../api/mmsStudentsLifeApi';
 import { resolveApiUrl } from '../../../services/api';
 
+const resolvePreviewImage = (image: unknown): string => {
+  if (typeof image === 'string') return image;
+  if (image instanceof Blob) return URL.createObjectURL(image);
+  if (image && typeof image === 'object' && 'url' in image && typeof (image as { url?: unknown }).url === 'string') {
+    return resolveApiUrl((image as { url: string }).url) || '';
+  }
+  return '';
+};
+
 const emptyForm: MMSStudentsLifePayload = {
   overview: { description: '', highlights: [] },
   vEcstatic: { description: '', activities: [], images: [] },
@@ -162,7 +171,7 @@ const MMSStudentsLifeForm: React.FC = () => {
                  if (file) { const newItems = [...items]; newItems[i].image = file; onChange(newItems); }
                }}/>
                {item.image ? (
-                 <img src={typeof item.image === 'string' ? item.image : (item.image instanceof File || item.image instanceof Blob ? URL.createObjectURL(item.image) : ((item.image as any)?.url ? (resolveApiUrl((item.image as any).url) || '') : ''))} className="w-full h-full object-cover" alt="" />
+                 <img src={resolvePreviewImage(item.image)} className="w-full h-full object-cover" alt="" />
                ) : (
                 <ImageIcon className="w-6 h-6 text-slate-300" />
                )}

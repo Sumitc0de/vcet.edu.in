@@ -5,6 +5,15 @@ import type { MMSExperientialLearningPayload, GalleryItem } from '../../types';
 import { mmsExperientialLearningApi } from '../../api/mmsExperientialLearning';
 import { resolveApiUrl } from '../../../services/api';
 
+const resolvePreviewImage = (image: unknown): string => {
+  if (typeof image === 'string') return image;
+  if (image instanceof Blob) return URL.createObjectURL(image);
+  if (image && typeof image === 'object' && 'url' in image && typeof (image as { url?: unknown }).url === 'string') {
+    return resolveApiUrl((image as { url: string }).url) || '';
+  }
+  return '';
+};
+
 const emptyForm: MMSExperientialLearningPayload = {
   rolePlay: [],
   groupDiscussion: [],
@@ -156,7 +165,7 @@ const MMSExperientialLearningForm: React.FC = () => {
                     }}
                   />
                   {item.image ? (
-                    <img src={typeof item.image === 'string' ? item.image : (item.image instanceof File || item.image instanceof Blob ? URL.createObjectURL(item.image) : ((item.image as any)?.url ? (resolveApiUrl((item.image as any).url) || '') : ''))} alt="" className="w-full h-full object-cover" />
+                    <img src={resolvePreviewImage(item.image)} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2">
                        <ImageIcon className="w-8 h-8 text-slate-300 group-hover:text-blue-500 transition-colors" />

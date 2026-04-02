@@ -837,7 +837,7 @@ export interface FacilityData {
   slug: string;
   name: string;
   description: string;
-  stats?: { label: string; value: string }[];
+  stats?: { label: string; value: string; vendor?: string }[];
   staff?: { name: string; role: string; desc?: string; imageUrl?: string | File | null }[];
   labs?: { name: string; pcCount: string; specs: string; image: string | File | null; imageUrl?: string | File | null; specLine: string }[];
   general?: { title: string; description: string; imageUrl?: string | File | null };
@@ -845,10 +845,17 @@ export interface FacilityData {
   items?: { name: string; description: string; icon?: string; imageUrl?: string | File | null }[];
   activities?: { name: string; description: string; imageUrl?: string | File | null }[];
   librarySections?: { heading: string; paragraph: string }[];
+  eResources?: { title: string; desc?: string; value?: string }[];
+  delnetFacilities?: { label: string; value?: string }[];
   facilitiesList?: string[];
   rules?: string[];
-  memberships?: string[];
+  memberships?: ({ title: string; desc?: string; loc?: string } | string)[];
+  staffRules?: string[];
+  studentRules?: string[];
+  fines?: { period: string; amount: string }[];
   tabs?: { label: string; content?: string }[];
+  convenor?: { name: string; role?: string; sub?: string };
+  convener?: { name: string; role?: string; sub?: string };
   committee?: { name: string; role: string; sub?: string }[];
   contact?: { phone: string; email: string; address: string };
   gallery?: { label?: string; imageUrl?: string | File | null }[];
