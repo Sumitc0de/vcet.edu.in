@@ -34,6 +34,23 @@ const T = {
   fade: { duration: 0.4, ease: [0.25, 1, 0.5, 1] } as const
 };
 
+const normalizeStringList = (value: unknown): string[] =>
+  Array.isArray(value)
+    ? value.map((item) => String(item ?? '').trim()).filter(Boolean)
+    : [];
+
+const isNumericDisplayValue = (value: string): boolean => /^[\d,]+$/.test(value.trim());
+
+type LibrarySectionRow = { heading: string; paragraph: string };
+type StatRow = { label: string; val: string; vendor: string };
+type ResourceTableRow = { sr: string; name: string; vendor: string; no: string };
+type EResourceRow = { sr: number; title: string; desc: string; val: string };
+type FacilityCardRow = { label: string; val: string };
+type MembershipRow = { title: string; desc: string; loc: string };
+type CommitteeRow = { name: string; role: string; sub: string };
+type FineRow = { period: string; amount: string };
+type GalleryRow = { label: string; imageUrl: string | null };
+
 /* ═══════════════════════════════════════════════════════════════ */
 /* ─── Shared Components ──────────────────────────────────────── */
 /* ═══════════════════════════════════════════════════════════════ */
@@ -111,20 +128,60 @@ const Library: React.FC = () => {
         .map((item: any) => ({
           label: String(item?.label ?? '').trim(),
           val: String(item?.value ?? '').trim(),
+          vendor: String(item?.vendor ?? 'Library').trim(),
         }))
         .filter((item: any) => item.label.length > 0 && item.val.length > 0)
     : [];
 
-  const facilitiesRows = Array.isArray(apiData?.facilitiesList)
-    ? apiData.facilitiesList.map((item: any) => String(item ?? '').trim()).filter(Boolean)
+  const eResourcesRows = Array.isArray(apiData?.eResources)
+    ? apiData.eResources
+        .map((item: any, idx: number) => ({
+          sr: idx + 1,
+          title: String(item?.title ?? '').trim(),
+          desc: String(item?.desc ?? '').trim(),
+          val: String(item?.value ?? '').trim(),
+        }))
+        .filter((item: any) => item.title.length > 0)
     : [];
+
+  const delnetFacilitiesRows = Array.isArray(apiData?.delnetFacilities)
+    ? apiData.delnetFacilities
+        .map((item: any) => ({
+          label: String(item?.label ?? '').trim(),
+          val: String(item?.value ?? '').trim(),
+        }))
+        .filter((item: any) => item.label.length > 0 && item.val.length > 0)
+    : [];
+
+  const legacyFacilitiesRows = normalizeStringList(apiData?.facilitiesList);
 
   const membershipsRows = Array.isArray(apiData?.memberships)
-    ? apiData.memberships.map((item: any) => String(item ?? '').trim()).filter(Boolean)
+    ? apiData.memberships
+        .map((item: any) => ({
+          title: String(item?.title ?? item ?? '').trim(),
+          desc: String(item?.desc ?? 'Institutional membership').trim(),
+          loc: String(item?.loc ?? 'Academic Network').trim(),
+        }))
+        .filter((item: any) => item.title.length > 0)
     : [];
 
-  const rulesRows = Array.isArray(apiData?.rules)
-    ? apiData.rules.map((item: any) => String(item ?? '').trim()).filter(Boolean)
+  const staffRulesRows = Array.isArray(apiData?.staffRules)
+    ? apiData.staffRules.map((item: any) => String(item ?? '').trim()).filter(Boolean)
+    : [];
+
+  const legacyRulesRows = normalizeStringList(apiData?.rules);
+
+  const studentRulesRows = Array.isArray(apiData?.studentRules)
+    ? apiData.studentRules.map((item: any) => String(item ?? '').trim()).filter(Boolean)
+    : [];
+
+  const finesRows = Array.isArray(apiData?.fines)
+    ? apiData.fines
+        .map((item: any) => ({
+          period: String(item?.period ?? '').trim(),
+          amount: String(item?.amount ?? '').trim(),
+        }))
+        .filter((item: any) => item.period.length > 0)
     : [];
 
   const contact = {
@@ -154,6 +211,50 @@ const Library: React.FC = () => {
         }))
         .filter((item: any) => item.name.length > 0 && item.role.length > 0)
     : [];
+
+  // Extract convener from committee (first member with "Convener" role) or from legacy convener field
+  const convener = (() => {
+    // First try to find convener from committee list
+    const convenerFromList = committeeRows.find((m: any) => {
+      const role = m.role.toLowerCase();
+      return role === 'convener' || role === 'convenor';
+    });
+    if (convenerFromList) {
+      return convenerFromList;
+    }
+    // Fall back to legacy separate convener field
+    const legacyConvener = apiData?.convener ?? apiData?.convenor;
+    if (legacyConvener) {
+      return {
+        name: String(legacyConvener?.name ?? '').trim(),
+        role: String(legacyConvener?.role ?? 'Convener').trim(),
+        sub: String(legacyConvener?.sub ?? '').trim(),
+      };
+    }
+    return null;
+  })();
+
+  // Filter out convener from committee list for member display (don't duplicate)
+  const membersOnly = committeeRows.filter((m: any) => {
+    const role = m.role.toLowerCase();
+    return role !== 'convener' && role !== 'convenor';
+  });
+
+  const facilityCards: FacilityCardRow[] = delnetFacilitiesRows.length > 0
+    ? delnetFacilitiesRows
+    : legacyFacilitiesRows.length > 0
+      ? legacyFacilitiesRows.map((label) => ({ label, val: 'Available' }))
+      : [
+          { label: "Union Catalogue of books", val: "26661564" },
+          { label: "Union list of current periodicals", val: "37847" },
+          { label: "Union catalogue of Periodicals", val: "20235" },
+          { label: "Databases of Periodicals Articles", val: "984809" },
+          { label: "CD ROM databases", val: "61750" },
+          { label: "Union list of Video Recording", val: "6000" },
+          { label: "Union list of Sound Recording", val: "1025" },
+          { label: "Database of Theses and Dissertations", val: "1025" },
+          { label: "Data base of E-books", val: "1613" },
+        ];
 
   const galleryRows = Array.isArray(apiData?.gallery)
     ? apiData.gallery
@@ -250,7 +351,7 @@ const Library: React.FC = () => {
                       />
                       
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
-                        {librarySections.slice(0, 2).map((section, idx) => (
+                        {librarySections.slice(0, 2).map((section: LibrarySectionRow, idx: number) => (
                           <motion.div 
                             key={idx}
                             initial={{ opacity: 0, y: 20 }}
@@ -314,12 +415,12 @@ const Library: React.FC = () => {
                       tag="Collection Summary" 
                     />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-10">
-                        {(statsRows.length > 0 ? statsRows : [
-                          { label: "Total Library Books", val: "33979" },
-                          { label: "Reference Books", val: "12348" },
-                          { label: "E-books (Pearson)", val: "97" },
-                          { label: "E-Journals Portfolio", val: "275" },
-                        ]).map((stat, i) => (
+                        {((statsRows.length > 0 ? statsRows.slice(0, 4) : [
+                          { label: "Total Library Books", val: "33979", vendor: "Internal Archive" },
+                          { label: "Reference Books", val: "12348", vendor: "Scholarly Division" },
+                          { label: "E-books (Pearson)", val: "97", vendor: "Pearson Education" },
+                          { label: "E-Journals Portfolio", val: "275", vendor: "Science Direct" },
+                        ]) as StatRow[]).map((stat: StatRow, i: number) => (
                          <motion.div 
                            key={i}
                            initial={{ opacity: 0, y: 15 }}
@@ -347,11 +448,11 @@ const Library: React.FC = () => {
                              <div className="w-[20%] text-[10px] font-extrabold uppercase tracking-[0.2em] text-right">Volume</div>
                           </div>
                           <div className="divide-y divide-brand-blue/05">
-                        {(statsRows.length > 0
-                          ? statsRows.map((item, idx) => ({
+                        {((statsRows.length > 0
+                          ? statsRows.map((item: StatRow, idx: number) => ({
                               sr: String(idx + 1).padStart(2, '0'),
                               name: item.label,
-                              vendor: 'Library',
+                              vendor: item.vendor || 'Library',
                               no: item.val,
                             }))
                           : [
@@ -362,7 +463,7 @@ const Library: React.FC = () => {
                                  { sr: "05", name: "Printed Magazines and Journals", vendor: "Global Periodicals", no: "51" },
                                  { sr: "06", name: "Popular Academic Magazines", vendor: "Newsstand", no: "12" },
                                  { sr: "07", name: "Leading News Papers", vendor: "Multi-lingual", no: "12" },
-                              ]).map((row, idx) => (
+                              ]) as ResourceTableRow[]).map((row: ResourceTableRow, idx: number) => (
                                <motion.div 
                                  key={idx}
                                  initial={{ opacity: 0, x: -20 }}
@@ -400,14 +501,14 @@ const Library: React.FC = () => {
                   <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-[2.5rem] shadow-sm relative overflow-hidden">
                                         <SectionTitle title="Digital Resource Repository" subtitle="Access global knowledge portals, academic journals, and technical archives" />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-                       {[
+                       {((eResourcesRows.length > 0 ? eResourcesRows : [
                          { sr: 1, title: "Person India Education Pvt. Ltd.", desc: "Comprehensive E-Books access for curriculum-mapped academic titles.", val: "97 E-Books" },
                          { sr: 2, title: "Elsevier and Science Direct", desc: "Global premium technical journals and peer-reviewed research papers.", val: "275 E-journals" },
                          { sr: 3, title: "IETL Magazines and Journals", desc: "Specialized engineering publications and industrial periodicals.", val: "03 E-journals" },
                          { sr: 4, title: "DELNET Institutional Hub", desc: "Inter-Library loan and massive shared e-resources network.", val: "IIL Access" },
                          { sr: 5, title: "Library WEBOPAC Portal", desc: "Real-time college book catalogue accessible on the Intranet.", val: "33979 Catalogue" },
                          { sr: 6, title: "The Institute of Engineers (IEI)", desc: "Direct portal to IEI library and technical engineering databases.", val: "05 E-Journals" },
-                       ].map((item, i) => (
+                       ]) as EResourceRow[]).map((item: EResourceRow, i: number) => (
                          <motion.div 
                            key={i}
                            initial={{ opacity: 0, y: 30 }}
@@ -462,19 +563,7 @@ const Library: React.FC = () => {
                   <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-[2.5rem] shadow-sm relative overflow-hidden">
                                         <SectionTitle title="DELNET Resource Ecosystem" subtitle="Comprehensive access to global union catalogues, periodicals, and academic sound archives" />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
-                       {(facilitiesRows.length > 0
-                         ? facilitiesRows.map((label, idx) => ({ label, val: String(idx + 1) }))
-                         : [
-                          { label: "Union Catalogue of books", val: "26661564" },
-                          { label: "Union list of current periodicals", val: "37847" },
-                          { label: "Union catalogue of Periodicals", val: "20235" },
-                          { label: "Databases of Periodicals Articles", val: "984809" },
-                          { label: "CD ROM databases", val: "61750" },
-                          { label: "Union list of Video Recording", val: "6000" },
-                          { label: "Union list of Sound Recording", val: "1025" },
-                          { label: "Database of Theses and Dissertations", val: "1025" },
-                          { label: "Data base of E-books", val: "1613" },
-                        ]).map((item, i) => (
+                       {facilityCards.map((item: FacilityCardRow, i: number) => (
                          <motion.div 
                            key={i} 
                            initial={{ opacity: 0, y: 20 }}
@@ -487,7 +576,7 @@ const Library: React.FC = () => {
                             <div className="relative z-10 w-full">
                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 group-hover:text-brand-gold transition-colors">{item.label}</p>
                                <h4 className="text-2xl font-bold text-brand-navy tracking-tight" style={{ fontFamily: C.serif }}>
-                                  <CountUp end={item.val} />
+                                  {isNumericDisplayValue(item.val) ? <CountUp end={item.val} /> : item.val}
                                </h4>
                                <div className="w-6 h-1 bg-brand-navy/10 mx-auto mt-4 group-hover:bg-brand-gold transition-colors duration-500" />
                             </div>
@@ -510,14 +599,14 @@ const Library: React.FC = () => {
                    <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-[2.5rem] shadow-sm relative overflow-hidden">
                                             <SectionTitle title="Library Institutional Memberships" subtitle="Official academic partnerships and knowledge networks" />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                          {(membershipsRows.length > 0
-                            ? membershipsRows.map((title) => ({ title, desc: 'Institutional membership', loc: 'Academic Network' }))
+                          {((membershipsRows.length > 0
+                            ? membershipsRows
                             : [
                             { title: "The Institute of Engineers (India), Kolkata", desc: "Lifetime Membership providing access to world-class engineering journals.", loc: "Kolkata" },
                             { title: "DELNET (Developing Library Network)", desc: "Comprehensive Inter-Library loan and massive shared e-resources network.", loc: "New Delhi" },
                             { title: "IIT Bombay, Mumbai", desc: "Direct resource sharing and knowledge exchange membership.", loc: "Mumbai" },
                             { title: "National Digital Library", desc: "Massive open-source warehouse of digital resources and books.", loc: "National" },
-                          ]).map((item, i) => (
+                          ]) as MembershipRow[]).map((item: MembershipRow, i: number) => (
                            <motion.div 
                              key={i} 
                              initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
@@ -547,6 +636,7 @@ const Library: React.FC = () => {
                                             <SectionTitle title="Library Oversight Committee" subtitle="Scholarly governance and institutional quality assurance" />
                       
                       <div className="relative z-10">
+                        {convener && (
                         <motion.div 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -555,14 +645,15 @@ const Library: React.FC = () => {
                         >
                            <div className="bg-brand-navy text-white p-8 shadow-xl border-l-8 border-brand-gold relative group overflow-hidden">
                               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -rotate-45 translate-x-12 -translate-y-12" />
-                              <h3 className="text-xl font-bold mb-1" style={{ fontFamily: C.serif }}>Ms. Shahista Khan</h3>
-                              <p className="text-brand-gold font-bold text-[10px] uppercase tracking-widest mb-4">Convener</p>
-                              <p className="text-white/60 text-sm leading-relaxed" style={{ fontFamily: C.body }}>AP. Electronics and Telecommunication Engineering</p>
+                              <h3 className="text-xl font-bold mb-1" style={{ fontFamily: C.serif }}>{convener.name}</h3>
+                              <p className="text-brand-gold font-bold text-[10px] uppercase tracking-widest mb-4">{convener.role}</p>
+                              <p className="text-white/60 text-sm leading-relaxed" style={{ fontFamily: C.body }}>{convener.sub}</p>
                            </div>
                         </motion.div>
+                        )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                           {(committeeRows.length > 0 ? committeeRows : [
+                           {((membersOnly.length > 0 ? membersOnly : [
                              { name: "Ms. Anagha Patil", role: "Member", sub: "AP. Information Technology" },
                              { name: "Ms. Priti Vairagi", role: "Member", sub: "AP. Mechanical Engineering" },
                              { name: "Mr. Arbaz Kazi", role: "Member", sub: "AP. Civil Engineering" },
@@ -570,7 +661,7 @@ const Library: React.FC = () => {
                              { name: "Ms. Krunali Vartak", role: "Member", sub: "AP. CSE DS" },
                              { name: "Ms. Akshaya Prabhu", role: "Member", sub: "AP. Computer Engineering" },
                              { name: "Mr. Dinesh M. Jadhav", role: "Librarian", sub: "Library Department" },
-                           ]).map((item, i) => (
+                           ]) as CommitteeRow[]).map((item: CommitteeRow, i: number) => (
                               <motion.div 
                                key={i} 
                                initial={{ opacity: 0, scale: 0.95 }}
@@ -619,7 +710,7 @@ const Library: React.FC = () => {
                                      <h3 className="text-2xl font-bold text-brand-navy uppercase tracking-tight" style={{ fontFamily: C.serif }}>For Staff Members</h3>
                                  </div>
                                  <div className="space-y-4">
-                                    {(rulesRows.length > 0 ? rulesRows : [
+                                    {((staffRulesRows.length > 0 ? staffRulesRows : legacyRulesRows.length > 0 ? legacyRulesRows : [
                                       "Maintain absolute silence in the premises.",
                                       "Mobiles must be kept on silent mode.",
                                       "Privileged access to books, magazines, and archives.",
@@ -631,7 +722,7 @@ const Library: React.FC = () => {
                                       "Handle all academic assets with extreme care.",
                                       "Standard return period is 4 working days.",
                                       "Mandatory entry in visitor register."
-                                    ]).map((rule, idx) => (
+                                    ]) as string[]).map((rule: string, idx: number) => (
                                       <motion.div 
                                         key={idx} 
                                         initial={{ opacity: 0, x: -10 }}
@@ -662,7 +753,7 @@ const Library: React.FC = () => {
                                      <h3 className="text-2xl font-bold text-white uppercase tracking-tight" style={{ fontFamily: C.serif }}>For Students</h3>
                                  </div>
                                  <div className="space-y-4">
-                                     {(rulesRows.length > 0 ? rulesRows : [
+                                    {((studentRulesRows.length > 0 ? studentRulesRows : legacyRulesRows.length > 0 ? legacyRulesRows : [
                                         "Absolute silence in library premises",
                                         "Mobiles must be kept on silent mode",
                                         "Use of home-issue facility for books",
@@ -676,7 +767,7 @@ const Library: React.FC = () => {
                                         "Digital activity and research logging",
                                         "No personal laptops in digital zones",
                                         "Report damaged pages immediately"
-                                    ]).map((rule, idx) => (
+                                    ]) as string[]).map((rule: string, idx: number) => (
                                       <motion.div 
                                         key={idx} 
                                         initial={{ opacity: 0, x: 10 }}
@@ -709,28 +800,36 @@ const Library: React.FC = () => {
                            </div>
                            
                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                              <motion.div 
-                                whileHover={{ scale: 1.05, y: -5 }}
-                                className="bg-slate-50 p-6 border border-brand-gold/20 hover:bg-brand-navy hover:text-white transition-all duration-500 group/item shadow-sm hover:shadow-xl"
-                              >
-                                 <p className="text-[10px] font-bold uppercase tracking-widest mb-2 opacity-60">i. 1–7 Days Delay</p>
-                                 <p className="text-2xl font-bold" style={{ fontFamily: C.serif }}>Rs. 2 / Day</p>
-                              </motion.div>
-                              <motion.div 
-                                whileHover={{ scale: 1.05, y: -5 }}
-                                className="bg-slate-50 p-6 border border-brand-gold/20 hover:bg-brand-navy hover:text-white transition-all duration-500 group/item shadow-sm hover:shadow-xl"
-                              >
-                                 <p className="text-[10px] font-bold uppercase tracking-widest mb-2 opacity-60">ii. Above 7 Days</p>
-                                 <p className="text-2xl font-bold" style={{ fontFamily: C.serif }}>Rs. 10 / Day</p>
-                              </motion.div>
-                              <div className="bg-brand-navy/5 p-6 border-l-4 border-brand-navy flex flex-col justify-center shadow-sm">
-                                 <p className="text-[10px] font-bold uppercase tracking-widest mb-2 text-brand-navy/60">iii. 1–14 Days Delay</p>
-                                 <p className="text-xs font-bold text-brand-navy uppercase tracking-tight">Suspension for <span className="text-brand-gold">One Month</span></p>
-                              </div>
-                              <div className="bg-red-50 p-6 border-l-4 border-red-600 flex flex-col justify-center shadow-sm">
-                                 <p className="text-[10px] font-bold uppercase tracking-widest mb-2 text-red-600/60">iv. 14+ Days Delay</p>
-                                 <p className="text-xs font-bold text-red-600 uppercase tracking-tight">Suspension for <span className="uppercase">Entire Semester</span></p>
-                              </div>
+                              {((finesRows.length > 0 ? finesRows : [
+                                { period: '1–7 Days Delay', amount: 'Rs. 2 / Day' },
+                                { period: 'Above 7 Days', amount: 'Rs. 10 / Day' },
+                                { period: '1–14 Days Delay', amount: 'Suspension for One Month' },
+                                { period: '14+ Days Delay', amount: 'Suspension for Entire Semester' }
+                              ]) as FineRow[]).map((fine: FineRow, idx: number) => {
+                                const isSuspension = fine.amount.toLowerCase().includes('suspension');
+                                const isSevere = fine.period.includes('14+') || fine.amount.toLowerCase().includes('entire');
+                                return (
+                                  <motion.div 
+                                    key={idx}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className={`p-6 border shadow-sm hover:shadow-xl transition-all duration-500 ${
+                                      isSevere ? 'bg-red-50 border-l-4 border-red-600' :
+                                      isSuspension ? 'bg-brand-navy/5 border-l-4 border-brand-navy flex flex-col justify-center' :
+                                      'bg-slate-50 border-brand-gold/20 hover:bg-brand-navy hover:text-white'
+                                    }`}
+                                  >
+                                    <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${
+                                      isSevere ? 'text-red-600/60' : 
+                                      isSuspension ? 'text-brand-navy/60' : 'opacity-60'
+                                    }`}>{`${['i', 'ii', 'iii', 'iv'][idx] || (idx + 1)}. ${fine.period}`}</p>
+                                    <p className={`font-bold ${
+                                      isSevere ? 'text-xs text-red-600 uppercase tracking-tight' :
+                                      isSuspension ? 'text-xs text-brand-navy uppercase tracking-tight' :
+                                      'text-2xl'
+                                    }`} style={{ fontFamily: C.serif }}>{fine.amount}</p>
+                                  </motion.div>
+                                );
+                              })}
                            </div>
 
                            <div className="bg-slate-50 p-4 border border-slate-200/60 flex items-center gap-4">
@@ -763,10 +862,10 @@ const Library: React.FC = () => {
                       <SectionTitle title="Library Photo Gallery" subtitle="Visual archives of our scholarly environment and academic infrastructure" />
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                         {(galleryRows.length > 0 ? galleryRows : Array.from({ length: 8 }).map((_, idx) => ({
+                         {((galleryRows.length > 0 ? galleryRows : Array.from({ length: 8 }).map((_, idx) => ({
                             label: `Library Gallery ${idx + 1}`,
                             imageUrl: null as string | null,
-                         }))).map((item, idx) => (
+                         }))) as GalleryRow[]).map((item: GalleryRow, idx: number) => (
                             <motion.div 
                               key={idx} 
                               initial={{ opacity: 0, y: 30 }}

@@ -6,6 +6,15 @@ import { mmsFacilitiesApi } from '../../api/mmsFacilitiesApi';
 import { resolveApiUrl } from '../../api/client';
 import PageEditorHeader from '../../../components/admin/PageEditorHeader';
 
+const resolvePreviewImage = (image: unknown): string => {
+  if (typeof image === 'string') return image;
+  if (image instanceof Blob) return URL.createObjectURL(image);
+  if (image && typeof image === 'object' && 'url' in image && typeof (image as { url?: unknown }).url === 'string') {
+    return resolveApiUrl((image as { url: string }).url) || '';
+  }
+  return '';
+};
+
 const emptyForm: MMSFacilitiesPayload = {
   computerLabs: [],
   library: [],
