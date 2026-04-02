@@ -110,7 +110,20 @@ const MMSHomepageForm: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Banner Image</label>
-              <input type="file" accept="image/*" onChange={e => updateField('admission', { ...form.admission, banner: e.target.files?.[0] || null })} className="w-full p-2 border rounded-lg" />
+              <div className="relative inline-flex flex-col items-start gap-2">
+                <input
+                  id="mms-home-banner-image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={e => updateField('admission', { ...form.admission, banner: e.target.files?.[0] || null })}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <span className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+                  <ImageIcon className="w-4 h-4 text-blue-600" />
+                  Upload Banner Image
+                </span>
+                <span className="text-xs text-slate-500">PNG, JPG, JPEG supported</span>
+              </div>
             </div>
           </div>
         </section>
@@ -187,7 +200,21 @@ const MMSHomepageForm: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Video File Upload</label>
-                  <input type="file" accept="video/*" onChange={e => handleArrayChange('videos', i, 'videoFile', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
+                  <div className="relative inline-flex flex-col items-start gap-2">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={e => handleArrayChange('videos', i, 'videoFile', e.target.files?.[0] || null)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <span className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+                      <Video className="w-4 h-4 text-blue-600" />
+                      Upload Video
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {item.videoFile instanceof File ? item.videoFile.name : 'MP4, WebM supported'}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -197,7 +224,21 @@ const MMSHomepageForm: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Poster Image</label>
-                  <input type="file" accept="image/*" onChange={e => handleArrayChange('videos', i, 'poster', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
+                  <div className="relative inline-flex flex-col items-start gap-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={e => handleArrayChange('videos', i, 'poster', e.target.files?.[0] || null)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <span className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors">
+                      <ImageIcon className="w-4 h-4 text-blue-600" />
+                      Upload Poster Image
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {item.poster instanceof File ? item.poster.name : 'PNG, JPG, JPEG supported'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
