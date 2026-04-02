@@ -18,5 +18,15 @@
     "createdAt": "2026-03-31T08:04:01.387Z",
     "image": "/uploads/images/1774944241391_Screenshot 2026-03-28 175034.png",
     "pdf": "/uploads/pdfs/1774944241398__NEWSLETTER 2025 (1).pdf"
+  },
+  {
+    "title": "TEST",
+    "description": "TEST",
+    "departmentId": "2",
+    "updatedAt": "2026-04-02T19:34:05.194Z",
+    "id": 1775158445195,
+    "createdAt": "2026-04-02T19:34:05.195Z",
+    "image": "/uploads/images/1775158445196_QUIL BOT PAPER .jpeg",
+    "pdf": "/uploads/pdfs/1775158445201_6.27-N-B.E.-Computer-Science-Engineering-Data-Science-Sem-III-IV (1).pdf"
   }
 ]
