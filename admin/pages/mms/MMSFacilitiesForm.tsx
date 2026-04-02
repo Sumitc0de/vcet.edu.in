@@ -136,7 +136,7 @@ const MMSFacilitiesForm: React.FC = () => {
                 </button>
 
                 <div className="relative aspect-video rounded-2xl overflow-hidden bg-white border border-slate-200 mb-4 group-hover:border-blue-200 transition-colors shadow-sm">
-                  <input 
+                  <input id="mmsfacilitiesform-1" name="mmsfacilitiesform-1" aria-label="mmsfacilitiesform field" 
                     type="file" 
                     accept="image/*" 
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
@@ -166,7 +166,7 @@ const MMSFacilitiesForm: React.FC = () => {
                       {item.label?.length || 0} / {config.limit}
                     </span>
                   </div>
-                  <input 
+                  <input id="mmsfacilitiesform-2" name="mmsfacilitiesform-2" aria-label="mmsfacilitiesform field" 
                     className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 outline-none focus:border-[#2563EB] focus:ring-4 focus:ring-blue-100 transition-all placeholder:text-slate-300"
                     placeholder="e.g. Modern Lab..."
                     value={item.label || ''}

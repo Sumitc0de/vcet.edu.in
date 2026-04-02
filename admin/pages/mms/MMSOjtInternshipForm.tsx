@@ -101,22 +101,22 @@ const MMSOjtInternshipForm: React.FC = () => {
                 {form.internshipList?.map((item, i) => (
                   <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                     <td className="p-2">
-                      <input className="admin-input-small w-14 text-center" value={item.srNo} onChange={e => {
+                      <input id="mmsojtinternshipform-1" name="mmsojtinternshipform-1" aria-label="mmsojtinternshipform field" className="admin-input-small w-14 text-center" value={item.srNo} onChange={e => {
                         const c = [...form.internshipList!]; c[i] = { ...c[i], srNo: e.target.value }; setForm({ ...form, internshipList: c });
                       }} />
                     </td>
                     <td className="p-2">
-                      <input className="admin-input-small w-full" value={item.studentName} placeholder="Student name" onChange={e => handleTextChange(e.target.value, 50, val => {
+                      <input id="mmsojtinternshipform-2" name="mmsojtinternshipform-2" aria-label="mmsojtinternshipform field" className="admin-input-small w-full" value={item.studentName} placeholder="Student name" onChange={e => handleTextChange(e.target.value, 50, val => {
                         const c = [...form.internshipList!]; c[i] = { ...c[i], studentName: val }; setForm({ ...form, internshipList: c });
                       })} />
                     </td>
                     <td className="p-2">
-                      <input className="admin-input-small w-full" value={item.specialization} placeholder="Spec" onChange={e => handleTextChange(e.target.value, 15, val => {
+                      <input id="mmsojtinternshipform-3" name="mmsojtinternshipform-3" aria-label="mmsojtinternshipform field" className="admin-input-small w-full" value={item.specialization} placeholder="Spec" onChange={e => handleTextChange(e.target.value, 15, val => {
                         const c = [...form.internshipList!]; c[i] = { ...c[i], specialization: val }; setForm({ ...form, internshipList: c });
                       })} />
                     </td>
                     <td className="p-2">
-                      <input className="admin-input-small w-full" value={item.company} placeholder="Company name" onChange={e => handleTextChange(e.target.value, 45, val => {
+                      <input id="mmsojtinternshipform-4" name="mmsojtinternshipform-4" aria-label="mmsojtinternshipform field" className="admin-input-small w-full" value={item.company} placeholder="Company name" onChange={e => handleTextChange(e.target.value, 45, val => {
                         const c = [...form.internshipList!]; c[i] = { ...c[i], company: val }; setForm({ ...form, internshipList: c });
                       })} />
                     </td>

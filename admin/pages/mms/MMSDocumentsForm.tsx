@@ -85,7 +85,7 @@ const MMSDocumentsForm: React.FC = () => {
         {list.map((item, i) => (
           <div key={i} className="flex gap-2 items-start">
             <div className="flex-1 relative">
-              <input className="admin-input-small w-full" value={item || ''} placeholder={placeholder} onChange={e => handleTextChange(e.target.value, charLimit, val => {
+              <input id="mmsdocumentsform-1" name="mmsdocumentsform-1" aria-label="mmsdocumentsform field" className="admin-input-small w-full" value={item || ''} placeholder={placeholder} onChange={e => handleTextChange(e.target.value, charLimit, val => {
                 const c = [...list]; c[i] = val; setForm({...form, [key]: c});
               })}/>
               <span className="absolute right-2 top-2 text-[10px] text-slate-400">{item?.length || 0}/{charLimit}</span>
@@ -140,13 +140,13 @@ const MMSDocumentsForm: React.FC = () => {
               <div key={i} className="flex gap-2 items-start bg-slate-50 p-3 rounded-lg border border-slate-200">
                 <div className="flex-1 relative">
                   <label className="admin-label">Requirement (Max 100)</label>
-                  <input className="admin-input-small w-full" value={item.requirement} placeholder="e.g. Original Documents" onChange={e => handleTextChange(e.target.value, 100, val => {
+                  <input id="mmsdocumentsform-2" name="mmsdocumentsform-2" aria-label="mmsdocumentsform field" className="admin-input-small w-full" value={item.requirement} placeholder="e.g. Original Documents" onChange={e => handleTextChange(e.target.value, 100, val => {
                     const c = [...form.overview!]; c[i].requirement = val; setForm({...form, overview: c});
                   })}/>
                 </div>
                 <div className="w-32 relative text-center">
                   <label className="admin-label">Copies (20)</label>
-                  <input className="admin-input-small w-full text-center" value={item.copies} placeholder="e.g. 3 copies" onChange={e => handleTextChange(e.target.value, 20, val => {
+                  <input id="mmsdocumentsform-3" name="mmsdocumentsform-3" aria-label="mmsdocumentsform field" className="admin-input-small w-full text-center" value={item.copies} placeholder="e.g. 3 copies" onChange={e => handleTextChange(e.target.value, 20, val => {
                     const c = [...form.overview!]; c[i].copies = val; setForm({...form, overview: c});
                   })}/>
                 </div>
@@ -188,7 +188,7 @@ const MMSDocumentsForm: React.FC = () => {
         <SectionCard title="Additional Requirements" icon="📌">
           <div className="relative">
              <label className="admin-label">Requirement Detail (Max 50) <span className="text-[10px] font-normal normal-case text-slate-400">e.g. Passport Size Photographs</span></label>
-             <input className="admin-input-small" value={form.additionalDocs || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+             <input id="mmsdocumentsform-4" name="mmsdocumentsform-4" aria-label="mmsdocumentsform field" className="admin-input-small" value={form.additionalDocs || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                setForm({...form, additionalDocs: val});
              })}/>
           </div>
@@ -205,7 +205,7 @@ const MMSDocumentsForm: React.FC = () => {
                 }} className="absolute top-2 right-2 text-red-500 z-10 hover:bg-red-50 p-1 rounded"><Trash2 className="w-4 h-4"/></button>
                 
                 <div className="relative group rounded-lg border border-dashed border-slate-300 bg-white h-24 flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer">
-                  <input type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
+                  <input id="mmsdocumentsform-5" name="mmsdocumentsform-5" aria-label="mmsdocumentsform field" type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
                     if (e.target.files && e.target.files[0]) {
                        const c = [...form.checklistPdf!]; c[i].fileUrl = e.target.files[0]; setForm({...form, checklistPdf: c});
                     }
@@ -216,7 +216,7 @@ const MMSDocumentsForm: React.FC = () => {
                 
                 <div className="relative">
                   <label className="admin-label text-[10px]">PDF Label / Name</label>
-                  <input className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
+                  <input id="mmsdocumentsform-6" name="mmsdocumentsform-6" aria-label="mmsdocumentsform field" className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
                       const c = [...form.checklistPdf!]; c[i].label = e.target.value; setForm({...form, checklistPdf: c});
                   }} />
                 </div>

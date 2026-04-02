@@ -104,19 +104,19 @@ const MMSFeesForm: React.FC = () => {
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full border-r-[30px] border-transparent">
                    <div className="relative">
                      <label className="admin-label">Category Name (Max 100)</label>
-                     <input className="admin-input-small" value={item.categoryName} placeholder="e.g. Open Category" onChange={e => handleTextChange(e.target.value, 100, val => {
+                     <input id="mmsfeesform-1" name="mmsfeesform-1" aria-label="mmsfeesform field" className="admin-input-small" value={item.categoryName} placeholder="e.g. Open Category" onChange={e => handleTextChange(e.target.value, 100, val => {
                        const c = [...form.overview!]; c[i].categoryName = val; setForm({...form, overview: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Student Type (Max 20)</label>
-                     <input className="admin-input-small" value={item.studentType} placeholder="e.g. All" onChange={e => handleTextChange(e.target.value, 20, val => {
+                     <input id="mmsfeesform-2" name="mmsfeesform-2" aria-label="mmsfeesform field" className="admin-input-small" value={item.studentType} placeholder="e.g. All" onChange={e => handleTextChange(e.target.value, 20, val => {
                        const c = [...form.overview!]; c[i].studentType = val; setForm({...form, overview: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Fees Amount (Max 20)</label>
-                     <input className="admin-input-small" value={item.amount} placeholder="e.g. ₹ 1,00,000" onChange={e => handleTextChange(e.target.value, 20, val => {
+                     <input id="mmsfeesform-3" name="mmsfeesform-3" aria-label="mmsfeesform field" className="admin-input-small" value={item.amount} placeholder="e.g. ₹ 1,00,000" onChange={e => handleTextChange(e.target.value, 20, val => {
                        const c = [...form.overview!]; c[i].amount = val; setForm({...form, overview: c});
                      })}/>
                    </div>
@@ -136,31 +136,31 @@ const MMSFeesForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
                <label className="admin-label">Open Category Fees (Max 50)</label>
-               <input className="admin-input-small" value={form.categoryDetails?.openFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+               <input id="mmsfeesform-4" name="mmsfeesform-4" aria-label="mmsfeesform field" className="admin-input-small" value={form.categoryDetails?.openFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                  setForm({...form, categoryDetails: {...form.categoryDetails!, openFees: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">OBC/SEBC/EBC/EWS (Male) (Max 50)</label>
-               <input className="admin-input-small" value={form.categoryDetails?.obcFeesMale || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+               <input id="mmsfeesform-5" name="mmsfeesform-5" aria-label="mmsfeesform field" className="admin-input-small" value={form.categoryDetails?.obcFeesMale || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                  setForm({...form, categoryDetails: {...form.categoryDetails!, obcFeesMale: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">OBC/SEBC/EBC/EWS (Female) (Max 50)</label>
-               <input className="admin-input-small" value={form.categoryDetails?.obcFeesFemale || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+               <input id="mmsfeesform-6" name="mmsfeesform-6" aria-label="mmsfeesform field" className="admin-input-small" value={form.categoryDetails?.obcFeesFemale || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                  setForm({...form, categoryDetails: {...form.categoryDetails!, obcFeesFemale: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">SBC/NT/DT/VJ/TFWS (Max 50)</label>
-               <input className="admin-input-small" value={form.categoryDetails?.sbcFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+               <input id="mmsfeesform-7" name="mmsfeesform-7" aria-label="mmsfeesform field" className="admin-input-small" value={form.categoryDetails?.sbcFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                  setForm({...form, categoryDetails: {...form.categoryDetails!, sbcFees: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">SC/ST Fees (Max 50)</label>
-               <input className="admin-input-small" value={form.categoryDetails?.scstFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+               <input id="mmsfeesform-8" name="mmsfeesform-8" aria-label="mmsfeesform field" className="admin-input-small" value={form.categoryDetails?.scstFees || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                  setForm({...form, categoryDetails: {...form.categoryDetails!, scstFees: val}});
                })}/>
             </div>
@@ -172,19 +172,19 @@ const MMSFeesForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
                <label className="admin-label">Required Documents (Max 150)</label>
-               <textarea rows={3} className="admin-input-small resize-none" value={form.concessionReq?.documents || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+               <textarea id="mmsfeesform-textarea-2" name="mmsfeesform-textarea-2" aria-label="mmsfeesform textarea field" rows={3} className="admin-input-small resize-none" value={form.concessionReq?.documents || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                  setForm({...form, concessionReq: {...form.concessionReq!, documents: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">Scholarship Form (Max 150)</label>
-               <textarea rows={3} className="admin-input-small resize-none" value={form.concessionReq?.formReq || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+               <textarea id="mmsfeesform-textarea-3" name="mmsfeesform-textarea-3" aria-label="mmsfeesform textarea field" rows={3} className="admin-input-small resize-none" value={form.concessionReq?.formReq || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                  setForm({...form, concessionReq: {...form.concessionReq!, formReq: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">Portal Link (Max 150)</label>
-               <textarea rows={3} className="admin-input-small resize-none" value={form.concessionReq?.portalLink || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+               <textarea id="mmsfeesform-textarea-4" name="mmsfeesform-textarea-4" aria-label="mmsfeesform textarea field" rows={3} className="admin-input-small resize-none" value={form.concessionReq?.portalLink || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                  setForm({...form, concessionReq: {...form.concessionReq!, portalLink: val}});
                })}/>
             </div>
@@ -203,19 +203,19 @@ const MMSFeesForm: React.FC = () => {
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full border-r-[30px] border-transparent">
                    <div className="relative">
                      <label className="admin-label">Mode (Max 50)</label>
-                     <input className="admin-input-small" value={item.mode} placeholder="DD / Pay Order" onChange={e => handleTextChange(e.target.value, 50, val => {
+                     <input id="mmsfeesform-9" name="mmsfeesform-9" aria-label="mmsfeesform field" className="admin-input-small" value={item.mode} placeholder="DD / Pay Order" onChange={e => handleTextChange(e.target.value, 50, val => {
                        const c = [...form.offlinePayment!]; c[i].mode = val; setForm({...form, offlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Payee Name (Max 120)</label>
-                     <input className="admin-input-small" value={item.payeeName} placeholder="Favoring Name" onChange={e => handleTextChange(e.target.value, 120, val => {
+                     <input id="mmsfeesform-10" name="mmsfeesform-10" aria-label="mmsfeesform field" className="admin-input-small" value={item.payeeName} placeholder="Favoring Name" onChange={e => handleTextChange(e.target.value, 120, val => {
                        const c = [...form.offlinePayment!]; c[i].payeeName = val; setForm({...form, offlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Payable Location (Max 50)</label>
-                     <input className="admin-input-small" value={item.location} placeholder="e.g. Mumbai" onChange={e => handleTextChange(e.target.value, 50, val => {
+                     <input id="mmsfeesform-11" name="mmsfeesform-11" aria-label="mmsfeesform field" className="admin-input-small" value={item.location} placeholder="e.g. Mumbai" onChange={e => handleTextChange(e.target.value, 50, val => {
                        const c = [...form.offlinePayment!]; c[i].location = val; setForm({...form, offlinePayment: c});
                      })}/>
                    </div>
@@ -242,31 +242,31 @@ const MMSFeesForm: React.FC = () => {
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                    <div className="relative md:col-span-2">
                      <label className="admin-label">Bank Account Name (Max 120)</label>
-                     <input className="admin-input-small" value={item.accountName} onChange={e => handleTextChange(e.target.value, 120, val => {
+                     <input id="mmsfeesform-12" name="mmsfeesform-12" aria-label="mmsfeesform field" className="admin-input-small" value={item.accountName} onChange={e => handleTextChange(e.target.value, 120, val => {
                        const c = [...form.onlinePayment!]; c[i].accountName = val; setForm({...form, onlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Bank Name (Max 100)</label>
-                     <input className="admin-input-small" value={item.bankName} onChange={e => handleTextChange(e.target.value, 100, val => {
+                     <input id="mmsfeesform-13" name="mmsfeesform-13" aria-label="mmsfeesform field" className="admin-input-small" value={item.bankName} onChange={e => handleTextChange(e.target.value, 100, val => {
                        const c = [...form.onlinePayment!]; c[i].bankName = val; setForm({...form, onlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Account Number (Max 30)</label>
-                     <input className="admin-input-small" value={item.accountNumber} onChange={e => handleTextChange(e.target.value, 30, val => {
+                     <input id="mmsfeesform-14" name="mmsfeesform-14" aria-label="mmsfeesform field" className="admin-input-small" value={item.accountNumber} onChange={e => handleTextChange(e.target.value, 30, val => {
                        const c = [...form.onlinePayment!]; c[i].accountNumber = val; setForm({...form, onlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">Account Type (Max 20)</label>
-                     <input className="admin-input-small" value={item.accountType} onChange={e => handleTextChange(e.target.value, 20, val => {
+                     <input id="mmsfeesform-15" name="mmsfeesform-15" aria-label="mmsfeesform field" className="admin-input-small" value={item.accountType} onChange={e => handleTextChange(e.target.value, 20, val => {
                        const c = [...form.onlinePayment!]; c[i].accountType = val; setForm({...form, onlinePayment: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">IFSC Code (Max 20)</label>
-                     <input className="admin-input-small" value={item.ifsc} onChange={e => handleTextChange(e.target.value, 20, val => {
+                     <input id="mmsfeesform-16" name="mmsfeesform-16" aria-label="mmsfeesform field" className="admin-input-small" value={item.ifsc} onChange={e => handleTextChange(e.target.value, 20, val => {
                        const c = [...form.onlinePayment!]; c[i].ifsc = val; setForm({...form, onlinePayment: c});
                      })}/>
                    </div>
@@ -286,13 +286,13 @@ const MMSFeesForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
                <label className="admin-label">UTR Requirement (Max 100)</label>
-               <input className="admin-input-small" value={form.transactionReq?.utrReq || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
+               <input id="mmsfeesform-17" name="mmsfeesform-17" aria-label="mmsfeesform field" className="admin-input-small" value={form.transactionReq?.utrReq || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
                  setForm({...form, transactionReq: {...form.transactionReq!, utrReq: val}});
                })}/>
             </div>
             <div className="relative">
                <label className="admin-label">Mention on Admission Form</label>
-               <select className="admin-input-small py-[0.55rem]" value={form.transactionReq?.mentionOnForm || 'No'} onChange={e => {
+               <select id="mmsfeesform-select-1" name="mmsfeesform-select-1" aria-label="mmsfeesform select field" className="admin-input-small py-[0.55rem]" value={form.transactionReq?.mentionOnForm || 'No'} onChange={e => {
                  setForm({...form, transactionReq: {...form.transactionReq!, mentionOnForm: e.target.value}});
                }}>
                  <option value="Yes">Yes</option>
@@ -313,7 +313,7 @@ const MMSFeesForm: React.FC = () => {
                 }} className="absolute top-2 right-2 text-red-500 z-10 hover:bg-red-50 p-1 rounded"><Trash2 className="w-4 h-4"/></button>
                 
                 <div className="relative group rounded-lg border border-dashed border-slate-300 bg-white h-24 flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer">
-                  <input type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
+                  <input id="mmsfeesform-18" name="mmsfeesform-18" aria-label="mmsfeesform field" type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
                     if (e.target.files && e.target.files[0]) {
                        const c = [...form.feePdf!]; c[i].fileUrl = e.target.files[0]; setForm({...form, feePdf: c});
                     }
@@ -324,7 +324,7 @@ const MMSFeesForm: React.FC = () => {
                 
                 <div className="relative">
                   <label className="admin-label text-[10px]">PDF Label / Name</label>
-                  <input className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
+                  <input id="mmsfeesform-19" name="mmsfeesform-19" aria-label="mmsfeesform field" className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
                       const c = [...form.feePdf!]; c[i].label = e.target.value; setForm({...form, feePdf: c});
                   }} />
                 </div>

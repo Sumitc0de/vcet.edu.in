@@ -110,25 +110,25 @@ const MMSStudentPlacementsForm: React.FC = () => {
 
                 <div className="relative">
                   <label className="admin-label">Sr. No</label>
-                  <input className="admin-input-small" placeholder="Sr No" value={item.srNo} onChange={e => {
+                  <input id="mmsstudentplacementsform-1" name="mmsstudentplacementsform-1" aria-label="mmsstudentplacementsform field" className="admin-input-small" placeholder="Sr No" value={item.srNo} onChange={e => {
                     const c = [...form.studentPlacements!]; c[i] = { ...c[i], srNo: e.target.value }; setForm({ ...form, studentPlacements: c });
                   }} />
                 </div>
                 <div className="relative">
                   <label className="admin-label">Student Name <span className="text-slate-400 normal-case">({item.studentName.length}/25)</span></label>
-                  <input className="admin-input-small" placeholder="Full name" value={item.studentName} onChange={e => handleTextChange(e.target.value, 25, val => {
+                  <input id="mmsstudentplacementsform-2" name="mmsstudentplacementsform-2" aria-label="mmsstudentplacementsform field" className="admin-input-small" placeholder="Full name" value={item.studentName} onChange={e => handleTextChange(e.target.value, 25, val => {
                     const c = [...form.studentPlacements!]; c[i] = { ...c[i], studentName: val }; setForm({ ...form, studentPlacements: c });
                   })} />
                 </div>
                 <div className="relative">
                   <label className="admin-label">Specialization <span className="text-slate-400 normal-case">({item.specialization.length}/15)</span></label>
-                  <input className="admin-input-small" placeholder="e.g. Finance" value={item.specialization} onChange={e => handleTextChange(e.target.value, 15, val => {
+                  <input id="mmsstudentplacementsform-3" name="mmsstudentplacementsform-3" aria-label="mmsstudentplacementsform field" className="admin-input-small" placeholder="e.g. Finance" value={item.specialization} onChange={e => handleTextChange(e.target.value, 15, val => {
                     const c = [...form.studentPlacements!]; c[i] = { ...c[i], specialization: val }; setForm({ ...form, studentPlacements: c });
                   })} />
                 </div>
                 <div className="relative">
                   <label className="admin-label">Company <span className="text-slate-400 normal-case">({item.company.length}/40)</span></label>
-                  <input className="admin-input-small" placeholder="Company name" value={item.company} onChange={e => handleTextChange(e.target.value, 40, val => {
+                  <input id="mmsstudentplacementsform-4" name="mmsstudentplacementsform-4" aria-label="mmsstudentplacementsform field" className="admin-input-small" placeholder="Company name" value={item.company} onChange={e => handleTextChange(e.target.value, 40, val => {
                     const c = [...form.studentPlacements!]; c[i] = { ...c[i], company: val }; setForm({ ...form, studentPlacements: c });
                   })} />
                 </div>
@@ -149,7 +149,7 @@ const MMSStudentPlacementsForm: React.FC = () => {
           <div className="max-w-lg space-y-4">
             <div className="relative">
               <label className="admin-label">Banner Label (Optional)</label>
-              <input className="admin-input-small" placeholder="e.g. Our Top Recruiters" value={form.recruitersBanner?.label || ''} onChange={e => {
+              <input id="mmsstudentplacementsform-5" name="mmsstudentplacementsform-5" aria-label="mmsstudentplacementsform field" className="admin-input-small" placeholder="e.g. Our Top Recruiters" value={form.recruitersBanner?.label || ''} onChange={e => {
                 setForm({ ...form, recruitersBanner: { ...form.recruitersBanner, label: e.target.value } });
               }} />
             </div>
@@ -202,7 +202,7 @@ const ImageUploader = ({ value, onFileSelect }: { value?: any; onFileSelect: (f:
   const imageUrl = value instanceof File ? URL.createObjectURL(value) : (value && typeof value === 'object' && 'url' in value ? resolveApiUrl((value as any).url) : resolveApiUrl(value as string));
   return (
     <div className="relative group rounded-xl border-2 border-dashed border-slate-200 p-4 bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center min-h-[80px] text-center cursor-pointer overflow-hidden">
-      <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => { if (e.target.files?.[0]) onFileSelect(e.target.files[0]); }} />
+      <input id="mmsstudentplacementsform-6" name="mmsstudentplacementsform-6" aria-label="mmsstudentplacementsform field" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => { if (e.target.files?.[0]) onFileSelect(e.target.files[0]); }} />
       {imageUrl ? (
         <img src={imageUrl} alt="preview" className="absolute inset-0 w-full h-full object-cover" />
       ) : (
@@ -223,7 +223,7 @@ const GalleryEditor = ({ items, max, labelLimit, onChange }: { items: any[]; max
       <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-lg relative space-y-2">
         <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="absolute top-1 right-1 bg-white border border-red-100 rounded text-red-500 z-10 p-0.5"><Trash2 className="w-3 h-3" /></button>
         <div className="relative group rounded-lg border border-dashed border-slate-300 bg-white h-20 flex items-center justify-center cursor-pointer overflow-hidden">
-          <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => {
+          <input id="mmsstudentplacementsform-7" name="mmsstudentplacementsform-7" aria-label="mmsstudentplacementsform field" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => {
             if (e.target.files?.[0]) {
               const c = [...items]; c[i] = { ...c[i], image: e.target.files[0] }; onChange(c);
             }
@@ -234,7 +234,7 @@ const GalleryEditor = ({ items, max, labelLimit, onChange }: { items: any[]; max
             <ImageIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
           )}
         </div>
-        <input className="admin-input-small text-center relative z-20" placeholder={`Label (Max ${labelLimit})`} value={item.label} onChange={e => {
+        <input id="mmsstudentplacementsform-8" name="mmsstudentplacementsform-8" aria-label="mmsstudentplacementsform field" className="admin-input-small text-center relative z-20" placeholder={`Label (Max ${labelLimit})`} value={item.label} onChange={e => {
           if (e.target.value.length <= labelLimit) {
             const c = [...items]; c[i] = { ...c[i], label: e.target.value }; onChange(c);
           }

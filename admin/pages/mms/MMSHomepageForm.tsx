@@ -123,15 +123,15 @@ const MMSHomepageForm: React.FC = () => {
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Heading (Max 60)</label>
-              <input maxLength={60} value={form.admission.heading || ''} onChange={e => updateField('admission', { ...form.admission, heading: e.target.value })} className="w-full p-2 border rounded-lg" />
+              <input id="mmshomepageform-1" name="mmshomepageform-1" aria-label="mmshomepageform field" maxLength={60} value={form.admission.heading || ''} onChange={e => updateField('admission', { ...form.admission, heading: e.target.value })} className="w-full p-2 border rounded-lg" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Description (Max 220)</label>
-              <textarea maxLength={220} value={form.admission.description || ''} onChange={e => updateField('admission', { ...form.admission, description: e.target.value })} className="w-full p-2 border rounded-lg" rows={3} />
+              <textarea id="mmshomepageform-textarea-1" name="mmshomepageform-textarea-1" aria-label="mmshomepageform textarea field" maxLength={220} value={form.admission.description || ''} onChange={e => updateField('admission', { ...form.admission, description: e.target.value })} className="w-full p-2 border rounded-lg" rows={3} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Banner Image</label>
-        <input type="file" accept="image/*" onChange={e => updateField('admission', { ...form.admission, banner: e.target.files?.[0] || null })} className="w-full p-2 border rounded-lg" />
+        <input id="mmshomepageform-2" name="mmshomepageform-2" aria-label="mmshomepageform field" type="file" accept="image/*" onChange={e => updateField('admission', { ...form.admission, banner: e.target.files?.[0] || null })} className="w-full p-2 border rounded-lg" />
         <FilePreview file={form.admission.banner} type="image" onRemove={() => updateField('admission', { ...form.admission, banner: null })} />
 
             </div>
@@ -155,16 +155,16 @@ const MMSHomepageForm: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4 pr-10">
                   <div>
                     <label className="block text-sm font-medium mb-1">Title (Max 35)</label>
-                    <input maxLength={35} value={item.title || ''} onChange={e => handleArrayChange('notices', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                    <input id="mmshomepageform-3" name="mmshomepageform-3" aria-label="mmshomepageform field" maxLength={35} value={item.title || ''} onChange={e => handleArrayChange('notices', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Label (Max 20)</label>
-                    <input maxLength={20} value={item.label || ''} onChange={e => handleArrayChange('notices', i, 'label', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                    <input id="mmshomepageform-4" name="mmshomepageform-4" aria-label="mmshomepageform field" maxLength={20} value={item.label || ''} onChange={e => handleArrayChange('notices', i, 'label', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Text (Max 120)</label>
-                  <textarea maxLength={120} value={item.text || ''} onChange={e => handleArrayChange('notices', i, 'text', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" rows={2} />
+                  <textarea id="mmshomepageform-textarea-2" name="mmshomepageform-textarea-2" aria-label="mmshomepageform textarea field" maxLength={120} value={item.text || ''} onChange={e => handleArrayChange('notices', i, 'text', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" rows={2} />
                 </div>
               </div>
             ))}
@@ -187,7 +187,7 @@ const MMSHomepageForm: React.FC = () => {
                 </button>
                 <div className="pr-10">
                   <label className="block text-sm font-medium mb-1">Notification Title / Text</label>
-                  <input value={item.title || item.text || ''} onChange={e => handleArrayChange('notifications', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                  <input id="mmshomepageform-5" name="mmshomepageform-5" aria-label="mmshomepageform field" value={item.title || item.text || ''} onChange={e => handleArrayChange('notifications', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                 </div>
               </div>
             ))}
@@ -201,21 +201,21 @@ const MMSHomepageForm: React.FC = () => {
             <div key={i} className="p-4 border rounded-lg mb-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Section Title (Max 40)</label>
-                <input maxLength={40} value={item.sectionTitle || ''} onChange={e => handleArrayChange('testimonials', i, 'sectionTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
+                <input id="mmshomepageform-6" name="mmshomepageform-6" aria-label="mmshomepageform field" maxLength={40} value={item.sectionTitle || ''} onChange={e => handleArrayChange('testimonials', i, 'sectionTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Student Name (Max 35)</label>
-                  <input maxLength={35} value={item.name || ''} onChange={e => handleArrayChange('testimonials', i, 'name', e.target.value)} className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-7" name="mmshomepageform-7" aria-label="mmshomepageform field" maxLength={35} value={item.name || ''} onChange={e => handleArrayChange('testimonials', i, 'name', e.target.value)} className="w-full p-2 border rounded-lg" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Role (Max 30)</label>
-                  <input maxLength={30} value={item.role || ''} onChange={e => handleArrayChange('testimonials', i, 'role', e.target.value)} className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-8" name="mmshomepageform-8" aria-label="mmshomepageform field" maxLength={30} value={item.role || ''} onChange={e => handleArrayChange('testimonials', i, 'role', e.target.value)} className="w-full p-2 border rounded-lg" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Quote (Max 320)</label>
-                <textarea maxLength={320} value={item.quote || ''} onChange={e => handleArrayChange('testimonials', i, 'quote', e.target.value)} className="w-full p-2 border rounded-lg" rows={3} />
+                <textarea id="mmshomepageform-textarea-3" name="mmshomepageform-textarea-3" aria-label="mmshomepageform textarea field" maxLength={320} value={item.quote || ''} onChange={e => handleArrayChange('testimonials', i, 'quote', e.target.value)} className="w-full p-2 border rounded-lg" rows={3} />
               </div>
             </div>
           ))}
@@ -237,11 +237,11 @@ const MMSHomepageForm: React.FC = () => {
                 </button>
                 <div className="pr-10">
                   <label className="block text-sm font-medium mb-1">Company Name</label>
-                  <input maxLength={60} value={item.title || ''} onChange={e => handleArrayChange('internships', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                  <input id="mmshomepageform-9" name="mmshomepageform-9" aria-label="mmshomepageform field" maxLength={60} value={item.title || ''} onChange={e => handleArrayChange('internships', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Company Logo</label>
-                  <input type="file" accept="image/*" onChange={e => handleArrayChange('internships', i, 'logo', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
+                  <input id="mmshomepageform-10" name="mmshomepageform-10" aria-label="mmshomepageform field" type="file" accept="image/*" onChange={e => handleArrayChange('internships', i, 'logo', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
                   <FilePreview file={item.logo} type="image" onRemove={() => handleArrayChange('internships', i, 'logo', null)} />
                 </div>
               </div>
@@ -265,11 +265,11 @@ const MMSHomepageForm: React.FC = () => {
                 </button>
                 <div className="pr-10">
                   <label className="block text-sm font-medium mb-1">Event Title (Max 60)</label>
-                  <input maxLength={60} value={item.title || item.eventTitle || ''} onChange={e => handleArrayChange('events', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                  <input id="mmshomepageform-11" name="mmshomepageform-11" aria-label="mmshomepageform field" maxLength={60} value={item.title || item.eventTitle || ''} onChange={e => handleArrayChange('events', i, 'title', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Event Flyer / Image</label>
-                  <input type="file" accept="image/*" onChange={e => handleArrayChange('events', i, 'image', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
+                  <input id="mmshomepageform-12" name="mmshomepageform-12" aria-label="mmshomepageform field" type="file" accept="image/*" onChange={e => handleArrayChange('events', i, 'image', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
                   <FilePreview file={item.image} type="image" onRemove={() => handleArrayChange('events', i, 'image', null)} />
                 </div>
               </div>
@@ -285,21 +285,21 @@ const MMSHomepageForm: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Section Title (Max 45)</label>
-                  <input maxLength={45} value={item.sectionTitle || ''} onChange={e => handleArrayChange('videos', i, 'sectionTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-13" name="mmshomepageform-13" aria-label="mmshomepageform field" maxLength={45} value={item.sectionTitle || ''} onChange={e => handleArrayChange('videos', i, 'sectionTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Video Title (Max 55)</label>
-                  <input maxLength={55} value={item.videoTitle || ''} onChange={e => handleArrayChange('videos', i, 'videoTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-14" name="mmshomepageform-14" aria-label="mmshomepageform field" maxLength={55} value={item.videoTitle || ''} onChange={e => handleArrayChange('videos', i, 'videoTitle', e.target.value)} className="w-full p-2 border rounded-lg" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Video URL (Max 250)</label>
-                  <input maxLength={250} value={item.videoUrl || ''} onChange={e => handleArrayChange('videos', i, 'videoUrl', e.target.value)} placeholder="Or upload below" className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-15" name="mmshomepageform-15" aria-label="mmshomepageform field" maxLength={250} value={item.videoUrl || ''} onChange={e => handleArrayChange('videos', i, 'videoUrl', e.target.value)} placeholder="Or upload below" className="w-full p-2 border rounded-lg" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Video File Upload</label>
-            <input type="file" accept="video/*" onChange={e => handleArrayChange('videos', i, 'videoFile', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
+            <input id="mmshomepageform-16" name="mmshomepageform-16" aria-label="mmshomepageform field" type="file" accept="video/*" onChange={e => handleArrayChange('videos', i, 'videoFile', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
             <FilePreview file={item.videoFile} type="video" onRemove={() => handleArrayChange('videos', i, 'videoFile', null)} />
 
                 </div>
@@ -307,11 +307,11 @@ const MMSHomepageForm: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Poster Alt Text (Max 90)</label>
-                  <input maxLength={90} value={item.posterAlt || ''} onChange={e => handleArrayChange('videos', i, 'posterAlt', e.target.value)} className="w-full p-2 border rounded-lg" />
+                  <input id="mmshomepageform-17" name="mmshomepageform-17" aria-label="mmshomepageform field" maxLength={90} value={item.posterAlt || ''} onChange={e => handleArrayChange('videos', i, 'posterAlt', e.target.value)} className="w-full p-2 border rounded-lg" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Poster Image</label>
-            <input type="file" accept="image/*" onChange={e => handleArrayChange('videos', i, 'poster', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
+            <input id="mmshomepageform-18" name="mmshomepageform-18" aria-label="mmshomepageform field" type="file" accept="image/*" onChange={e => handleArrayChange('videos', i, 'poster', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg" />
             <FilePreview file={item.poster} type="image" onRemove={() => handleArrayChange('videos', i, 'poster', null)} />
 
                 </div>
@@ -336,16 +336,16 @@ const MMSHomepageForm: React.FC = () => {
                 </button>
                 <div className="pr-10">
                   <label className="block text-sm font-medium mb-1">Document Label (Max 60)</label>
-                  <input maxLength={60} value={item.label || ''} onChange={e => handleArrayChange('documents', i, 'label', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                  <input id="mmshomepageform-19" name="mmshomepageform-19" aria-label="mmshomepageform field" maxLength={60} value={item.label || ''} onChange={e => handleArrayChange('documents', i, 'label', e.target.value)} className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">External URL (Optional)</label>
-                    <input value={item.url || ''} onChange={e => handleArrayChange('documents', i, 'url', e.target.value)} placeholder="https://..." className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
+                    <input id="mmshomepageform-20" name="mmshomepageform-20" aria-label="mmshomepageform field" value={item.url || ''} onChange={e => handleArrayChange('documents', i, 'url', e.target.value)} placeholder="https://..." className="w-full p-2 border rounded-lg focus:border-brand-blue/50 outline-none" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Upload PDF File</label>
-                    <input type="file" accept="application/pdf" onChange={e => handleArrayChange('documents', i, 'pdfFile', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
+                    <input id="mmshomepageform-21" name="mmshomepageform-21" aria-label="mmshomepageform field" type="file" accept="application/pdf" onChange={e => handleArrayChange('documents', i, 'pdfFile', e.target.files?.[0] || null)} className="w-full p-2 border rounded-lg bg-white" />
                     <FilePreview file={item.pdfFile} type="pdf" onRemove={() => handleArrayChange('documents', i, 'pdfFile', null)} />
                   </div>
                 </div>

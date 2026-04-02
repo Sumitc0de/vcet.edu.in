@@ -92,7 +92,7 @@ const MMSStudentsLifeForm: React.FC = () => {
           {value.length} / {max} chars (Min {min})
         </span>
       </div>
-      <textarea 
+      <textarea id="mmsstudentslifeform-textarea-1" name="mmsstudentslifeform-textarea-1" aria-label="mmsstudentslifeform textarea field" 
         className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-[#2563EB] transition-all h-32 resize-none"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -114,7 +114,7 @@ const MMSStudentsLifeForm: React.FC = () => {
         {items.map((item, i) => (
           <div key={i} className="flex gap-2 group animate-fade-in">
              <div className="flex-1 relative">
-                <input 
+                <input id="mmsstudentslifeform-1" name="mmsstudentslifeform-1" aria-label="mmsstudentslifeform field" 
                   className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-[#2563EB] transition-all"
                   value={item.text}
                   maxLength={charLimit}
@@ -156,7 +156,7 @@ const MMSStudentsLifeForm: React.FC = () => {
           <div key={i} className="group relative bg-slate-50 rounded-2xl border border-slate-200 p-3 transition-all">
             <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 w-6 h-6 bg-white border border-red-100 rounded-full text-red-500 flex items-center justify-center shadow-lg hover:bg-red-50 transition-colors z-10"><Trash2 className="w-3" /></button>
             <div className="relative aspect-video rounded-xl bg-white border border-slate-200 mb-2 overflow-hidden flex items-center justify-center">
-               <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={async (e) => {
+               <input id="mmsstudentslifeform-2" name="mmsstudentslifeform-2" aria-label="mmsstudentslifeform field" type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={async (e) => {
                  const file = e.target.files?.[0];
                  if (file) { const newItems = [...items]; newItems[i].image = file; onChange(newItems); }
                }}/>
@@ -166,7 +166,7 @@ const MMSStudentsLifeForm: React.FC = () => {
                 <ImageIcon className="w-6 h-6 text-slate-300" />
                )}
             </div>
-            <input className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-600 outline-none focus:border-blue-300" placeholder="Label..." value={item.label || ''} maxLength={charLimit} onChange={e => {
+            <input id="mmsstudentslifeform-3" name="mmsstudentslifeform-3" aria-label="mmsstudentslifeform field" className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-600 outline-none focus:border-blue-300" placeholder="Label..." value={item.label || ''} maxLength={charLimit} onChange={e => {
                const newItems = [...items]; newItems[i].label = e.target.value; onChange(newItems);
             }}/>
           </div>
@@ -314,8 +314,8 @@ const MMSStudentsLifeForm: React.FC = () => {
                 <div key={i} className="bg-slate-50 border border-slate-200 p-6 rounded-3xl relative">
                   <button type="button" onClick={() => { const n = [...form.customEvents!]; n.splice(i, 1); setForm({...form, customEvents: n}) }} className="absolute -top-4 -right-4 w-10 h-10 bg-red-50 text-red-500 flex items-center justify-center rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-md z-10"><Trash2 className="w-5 h-5"/></button>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <input className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700" placeholder="Event Name (e.g. Activity 1)" value={ev.name} onChange={e => { const n = [...form.customEvents!]; n[i].name = e.target.value; n[i].slug = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); setForm({...form, customEvents: n}); }}/>
-                    <input className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 cursor-not-allowed" placeholder="URL Slug (auto-generated)" value={ev.slug} readOnly />
+                    <input id="mmsstudentslifeform-4" name="mmsstudentslifeform-4" aria-label="mmsstudentslifeform field" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700" placeholder="Event Name (e.g. Activity 1)" value={ev.name} onChange={e => { const n = [...form.customEvents!]; n[i].name = e.target.value; n[i].slug = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''); setForm({...form, customEvents: n}); }}/>
+                    <input id="mmsstudentslifeform-5" name="mmsstudentslifeform-5" aria-label="mmsstudentslifeform field" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 cursor-not-allowed" placeholder="URL Slug (auto-generated)" value={ev.slug} readOnly />
                   </div>
                   {renderTextArea(`Description for ${ev.name || 'Event'}`, ev.description || '', 10, 800, (v) => { const n = [...form.customEvents!]; n[i].description = v; setForm({...form, customEvents: n}); })}
                   <div className="mt-6">
@@ -341,8 +341,8 @@ const MMSStudentsLifeForm: React.FC = () => {
                 <div key={i} className="flex gap-4 items-center bg-slate-50 border border-slate-200 p-6 rounded-3xl transition-all hover:bg-white hover:shadow-lg">
                   <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-sm"><FileText className="w-6 h-6 text-red-500" /></div>
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-blue-100" placeholder="Document Title..." value={pdf.title} maxLength={80} onChange={e => { const n = [...form.pdfs!]; n[i].title = e.target.value; setForm({...form, pdfs: n}); }}/>
-                    <input className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-blue-500 focus:ring-4 focus:ring-blue-100" placeholder="Document URL..." value={pdf.url} onChange={e => { const n = [...form.pdfs!]; n[i].url = e.target.value; setForm({...form, pdfs: n}); }}/>
+                    <input id="mmsstudentslifeform-6" name="mmsstudentslifeform-6" aria-label="mmsstudentslifeform field" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-blue-100" placeholder="Document Title..." value={pdf.title} maxLength={80} onChange={e => { const n = [...form.pdfs!]; n[i].title = e.target.value; setForm({...form, pdfs: n}); }}/>
+                    <input id="mmsstudentslifeform-7" name="mmsstudentslifeform-7" aria-label="mmsstudentslifeform field" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-blue-500 focus:ring-4 focus:ring-blue-100" placeholder="Document URL..." value={pdf.url} onChange={e => { const n = [...form.pdfs!]; n[i].url = e.target.value; setForm({...form, pdfs: n}); }}/>
                   </div>
                   <button type="button" onClick={() => setForm({...form, pdfs: form.pdfs!.filter((_,idx) => idx !== i)})} className="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"><Trash2 className="w-5 h-5"/></button>
                 </div>

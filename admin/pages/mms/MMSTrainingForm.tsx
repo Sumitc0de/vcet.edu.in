@@ -100,7 +100,7 @@ const MMSTrainingForm: React.FC = () => {
             {form.trainingPoints?.map((pt, i) => (
               <div key={i} className="flex gap-2 items-start">
                 <div className="flex-1 relative">
-                  <input
+                  <input id="mmstrainingform-1" name="mmstrainingform-1" aria-label="mmstrainingform field"
                     type="text"
                     value={pt.point}
                     onChange={(e) => handleTextChange(e.target.value, 170, (val) => {
@@ -137,25 +137,25 @@ const MMSTrainingForm: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="admin-label">Sr. No (Optional)</label>
-                    <input className="admin-input-small" value={ev.srNo} onChange={e => {
+                    <input id="mmstrainingform-2" name="mmstrainingform-2" aria-label="mmstrainingform field" className="admin-input-small" value={ev.srNo} onChange={e => {
                       const c = [...form.events!]; c[i] = { ...c[i], srNo: e.target.value }; setForm({ ...form, events: c });
                     }} />
                   </div>
                   <div className="relative">
                     <label className="admin-label">Date <span className="text-slate-400 normal-case">({ev.conductionDate.length}/15)</span></label>
-                    <input className="admin-input-small" placeholder="e.g. 15 Mar 2025" value={ev.conductionDate} onChange={e => handleTextChange(e.target.value, 15, val => {
+                    <input id="mmstrainingform-3" name="mmstrainingform-3" aria-label="mmstrainingform field" className="admin-input-small" placeholder="e.g. 15 Mar 2025" value={ev.conductionDate} onChange={e => handleTextChange(e.target.value, 15, val => {
                       const c = [...form.events!]; c[i] = { ...c[i], conductionDate: val }; setForm({ ...form, events: c });
                     })} />
                   </div>
                   <div className="md:col-span-2 relative">
                     <label className="admin-label">Event Name <span className="text-slate-400 normal-case">({ev.eventName.length}/60)</span></label>
-                    <input className="admin-input-small" value={ev.eventName} onChange={e => handleTextChange(e.target.value, 60, val => {
+                    <input id="mmstrainingform-4" name="mmstrainingform-4" aria-label="mmstrainingform field" className="admin-input-small" value={ev.eventName} onChange={e => handleTextChange(e.target.value, 60, val => {
                       const c = [...form.events!]; c[i] = { ...c[i], eventName: val }; setForm({ ...form, events: c });
                     })} />
                   </div>
                   <div className="md:col-span-2 relative">
                     <label className="admin-label">Resource Person / Details <span className="text-slate-400 normal-case">({ev.resourcePerson.length}/350)</span></label>
-                    <textarea className="admin-input-small resize-none" rows={3} value={ev.resourcePerson} onChange={e => handleTextChange(e.target.value, 350, val => {
+                    <textarea id="mmstrainingform-textarea-1" name="mmstrainingform-textarea-1" aria-label="mmstrainingform textarea field" className="admin-input-small resize-none" rows={3} value={ev.resourcePerson} onChange={e => handleTextChange(e.target.value, 350, val => {
                       const c = [...form.events!]; c[i] = { ...c[i], resourcePerson: val }; setForm({ ...form, events: c });
                     })} />
                   </div>
@@ -186,7 +186,7 @@ const MMSTrainingForm: React.FC = () => {
                 {form.careerGuidance?.guidancePoints?.map((pt, i) => (
                   <div key={i} className="flex gap-2">
                     <div className="flex-1 relative">
-                      <input className="admin-input-small" value={pt.point} placeholder="Point description" onChange={e => handleTextChange(e.target.value, 100, val => {
+                      <input id="mmstrainingform-5" name="mmstrainingform-5" aria-label="mmstrainingform field" className="admin-input-small" value={pt.point} placeholder="Point description" onChange={e => handleTextChange(e.target.value, 100, val => {
                         const c = { ...form.careerGuidance! }; 
                         const pts = [...c.guidancePoints]; pts[i] = { ...pts[i], point: val }; 
                         setForm({ ...form, careerGuidance: { ...c, guidancePoints: pts } });
@@ -222,7 +222,7 @@ const MMSTrainingForm: React.FC = () => {
                     <div className="space-y-3">
                       <div className="relative">
                         <label className="admin-label">Title <span className="text-slate-400 normal-case">({sem.title.length}/50)</span></label>
-                        <input className="admin-input-small" placeholder="Seminar / Event title" value={sem.title} onChange={e => handleTextChange(e.target.value, 50, val => {
+                        <input id="mmstrainingform-6" name="mmstrainingform-6" aria-label="mmstrainingform field" className="admin-input-small" placeholder="Seminar / Event title" value={sem.title} onChange={e => handleTextChange(e.target.value, 50, val => {
                           const c = { ...form.careerGuidance! };
                           const sems = [...c.seminars]; sems[i] = { ...sems[i], title: val };
                           setForm({ ...form, careerGuidance: { ...c, seminars: sems } });
@@ -230,7 +230,7 @@ const MMSTrainingForm: React.FC = () => {
                       </div>
                       <div className="relative">
                         <label className="admin-label">Resource Details <span className="text-slate-400 normal-case">({sem.resourceDetails.length}/180)</span></label>
-                        <input className="admin-input-small" placeholder="Resource person profile" value={sem.resourceDetails} onChange={e => handleTextChange(e.target.value, 180, val => {
+                        <input id="mmstrainingform-7" name="mmstrainingform-7" aria-label="mmstrainingform field" className="admin-input-small" placeholder="Resource person profile" value={sem.resourceDetails} onChange={e => handleTextChange(e.target.value, 180, val => {
                           const c = { ...form.careerGuidance! };
                           const sems = [...c.seminars]; sems[i] = { ...sems[i], resourceDetails: val };
                           setForm({ ...form, careerGuidance: { ...c, seminars: sems } });
@@ -268,7 +268,7 @@ const MMSTrainingForm: React.FC = () => {
               <div key={i} className="flex gap-2 items-center">
                 <span className="font-extrabold text-slate-300 w-7 text-center text-sm">{i + 1}.</span>
                 <div className="flex-1 relative">
-                  <input className="admin-input-small" value={step.step} placeholder="Internship step description" onChange={e => handleTextChange(e.target.value, 120, val => {
+                  <input id="mmstrainingform-8" name="mmstrainingform-8" aria-label="mmstrainingform field" className="admin-input-small" value={step.step} placeholder="Internship step description" onChange={e => handleTextChange(e.target.value, 120, val => {
                     const c = [...form.internshipSteps!]; c[i] = { ...c[i], step: val }; setForm({ ...form, internshipSteps: c });
                   })} />
                   <span className="absolute right-2 top-2.5 text-[10px] text-slate-400">{step.step.length}/120</span>
@@ -326,7 +326,7 @@ const ImageUploader = ({ value, onFileSelect }: { value?: any; onFileSelect: (f:
   const imageUrl = value instanceof File ? URL.createObjectURL(value) : (value && typeof value === 'object' && 'url' in value ? resolveApiUrl((value as any).url) : resolveApiUrl(value as string));
   return (
     <div className="relative group rounded-xl border-2 border-dashed border-slate-200 p-4 bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center min-h-[120px] text-center cursor-pointer overflow-hidden">
-      <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => { if (e.target.files?.[0]) onFileSelect(e.target.files[0]); }} />
+      <input id="mmstrainingform-9" name="mmstrainingform-9" aria-label="mmstrainingform field" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={(e) => { if (e.target.files?.[0]) onFileSelect(e.target.files[0]); }} />
       {imageUrl ? (
         <img src={imageUrl} alt="preview" className="absolute inset-0 w-full h-full object-cover" />
       ) : (
@@ -347,7 +347,7 @@ const GalleryEditor = ({ items, max, labelLimit, onChange }: { items: any[]; max
       <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-lg relative space-y-2">
         <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="absolute top-1 right-1 bg-white border border-red-100 rounded text-red-500 z-10 p-0.5"><Trash2 className="w-3 h-3" /></button>
         <div className="relative group rounded-lg border border-dashed border-slate-300 bg-white h-24 flex items-center justify-center cursor-pointer overflow-hidden">
-          <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
+          <input id="mmstrainingform-10" name="mmstrainingform-10" aria-label="mmstrainingform field" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={e => {
             if (e.target.files?.[0]) {
                const c = [...items]; c[i] = { ...c[i], image: e.target.files[0] }; onChange(c);
             }
@@ -358,7 +358,7 @@ const GalleryEditor = ({ items, max, labelLimit, onChange }: { items: any[]; max
             <ImageIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-500 mb-1" />
           )}
         </div>
-        <input className="admin-input-small text-center" placeholder={`Label (Max ${labelLimit})`} value={item.label || ''} onChange={e => {
+        <input id="mmstrainingform-11" name="mmstrainingform-11" aria-label="mmstrainingform field" className="admin-input-small text-center" placeholder={`Label (Max ${labelLimit})`} value={item.label || ''} onChange={e => {
           if (e.target.value.length <= labelLimit) {
             const c = [...items]; c[i] = { ...c[i], label: e.target.value }; onChange(c);
           }

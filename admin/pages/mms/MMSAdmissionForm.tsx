@@ -118,19 +118,19 @@ const MMSAdmissionForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="admin-label">Min % (General Category) <span className="text-slate-400 normal-case">({form.eligibilityCriteria?.generalPercentage?.length || 0}/5)</span></label>
-                <input className="admin-input-small" placeholder="e.g. 50%" value={form.eligibilityCriteria?.generalPercentage || ''} onChange={e => handleTextChange(e.target.value, 5, val => {
+                <input id="mmsadmissionform-1" name="mmsadmissionform-1" aria-label="mmsadmissionform field" className="admin-input-small" placeholder="e.g. 50%" value={form.eligibilityCriteria?.generalPercentage || ''} onChange={e => handleTextChange(e.target.value, 5, val => {
                   setForm({...form, eligibilityCriteria: {...form.eligibilityCriteria!, generalPercentage: val}});
                 })}/>
               </div>
               <div>
                 <label className="admin-label">Min % (Reserved Category - MH) <span className="text-slate-400 normal-case">({form.eligibilityCriteria?.reservedPercentage?.length || 0}/5)</span></label>
-                <input className="admin-input-small" placeholder="e.g. 45%" value={form.eligibilityCriteria?.reservedPercentage || ''} onChange={e => handleTextChange(e.target.value, 5, val => {
+                <input id="mmsadmissionform-2" name="mmsadmissionform-2" aria-label="mmsadmissionform field" className="admin-input-small" placeholder="e.g. 45%" value={form.eligibilityCriteria?.reservedPercentage || ''} onChange={e => handleTextChange(e.target.value, 5, val => {
                   setForm({...form, eligibilityCriteria: {...form.eligibilityCriteria!, reservedPercentage: val}});
                 })}/>
               </div>
               <div className="md:col-span-2">
                 <label className="admin-label">Accepted Degree Requirement <span className="text-slate-400 normal-case">({form.eligibilityCriteria?.degreeRequirement?.length || 0}/50)</span></label>
-                <input className="admin-input-small" placeholder="e.g. Bachelor's Degree (Any Discipline) - Yes" value={form.eligibilityCriteria?.degreeRequirement || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+                <input id="mmsadmissionform-3" name="mmsadmissionform-3" aria-label="mmsadmissionform field" className="admin-input-small" placeholder="e.g. Bachelor's Degree (Any Discipline) - Yes" value={form.eligibilityCriteria?.degreeRequirement || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                   setForm({...form, eligibilityCriteria: {...form.eligibilityCriteria!, degreeRequirement: val}});
                 })}/>
               </div>
@@ -142,7 +142,7 @@ const MMSAdmissionForm: React.FC = () => {
                 {form.eligibilityCriteria?.entranceExams?.map((exam, i) => (
                    <div key={i} className="flex gap-2">
                      <div className="flex-1 relative">
-                       <input className="admin-input-small w-full" placeholder="Exam Name" value={exam.exam || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
+                       <input id="mmsadmissionform-4" name="mmsadmissionform-4" aria-label="mmsadmissionform field" className="admin-input-small w-full" placeholder="Exam Name" value={exam.exam || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
                          const c = [...form.eligibilityCriteria!.entranceExams]; c[i].exam = val;
                          setForm({...form, eligibilityCriteria: {...form.eligibilityCriteria!, entranceExams: c}});
                        })}/>
@@ -170,7 +170,7 @@ const MMSAdmissionForm: React.FC = () => {
           <div className="space-y-4">
              <div>
                 <label className="admin-label">Primary Exam (Preferred) <span className="text-slate-400 normal-case">({form.entranceExamination?.primaryExam?.length || 0}/50)</span></label>
-                <input className="admin-input-small" placeholder="e.g. MAH-MBA/MMS-CET" value={form.entranceExamination?.primaryExam || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
+                <input id="mmsadmissionform-5" name="mmsadmissionform-5" aria-label="mmsadmissionform field" className="admin-input-small" placeholder="e.g. MAH-MBA/MMS-CET" value={form.entranceExamination?.primaryExam || ''} onChange={e => handleTextChange(e.target.value, 50, val => {
                   setForm({...form, entranceExamination: {...form.entranceExamination!, primaryExam: val}});
                 })}/>
              </div>
@@ -181,7 +181,7 @@ const MMSAdmissionForm: React.FC = () => {
                 {form.entranceExamination?.alternativeExams?.map((exam, i) => (
                    <div key={i} className="flex gap-2">
                      <div className="flex-1 relative">
-                       <input className="admin-input-small w-full" placeholder="Exam Name" value={exam.exam || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
+                       <input id="mmsadmissionform-6" name="mmsadmissionform-6" aria-label="mmsadmissionform field" className="admin-input-small w-full" placeholder="Exam Name" value={exam.exam || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
                          const c = [...form.entranceExamination!.alternativeExams]; c[i].exam = val;
                          setForm({...form, entranceExamination: {...form.entranceExamination!, alternativeExams: c}});
                        })}/>
@@ -211,7 +211,7 @@ const MMSAdmissionForm: React.FC = () => {
              {form.eligibilityCertificates?.map((cert, i) => (
                <div key={i} className="flex gap-2 items-start">
                  <div className="flex-1 relative">
-                   <input className="admin-input-small w-full" value={cert.certificate || ''} placeholder="Requirement details (Max 100)" onChange={e => handleTextChange(e.target.value, 100, val => {
+                   <input id="mmsadmissionform-7" name="mmsadmissionform-7" aria-label="mmsadmissionform field" className="admin-input-small w-full" value={cert.certificate || ''} placeholder="Requirement details (Max 100)" onChange={e => handleTextChange(e.target.value, 100, val => {
                      const c = [...form.eligibilityCertificates!]; c[i].certificate = val; setForm({...form, eligibilityCertificates: c});
                    })}/>
                    <span className="absolute right-2 top-2 text-[10px] text-slate-400">{cert.certificate?.length || 0}/100</span>
@@ -237,13 +237,13 @@ const MMSAdmissionForm: React.FC = () => {
                  <div className="flex-1 space-y-2">
                    <div className="relative">
                      <label className="admin-label">Link Label / Title <span className="text-slate-400 normal-case">({item.link?.length || 0}/100)</span></label>
-                     <input className="admin-input-small w-full" placeholder="e.g. CET Cell Portal" value={item.link || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
+                     <input id="mmsadmissionform-8" name="mmsadmissionform-8" aria-label="mmsadmissionform field" className="admin-input-small w-full" placeholder="e.g. CET Cell Portal" value={item.link || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
                        const c = [...form.universityLinks!]; c[i].link = val; setForm({...form, universityLinks: c});
                      })}/>
                    </div>
                    <div className="relative">
                      <label className="admin-label">URL <span className="text-slate-400 normal-case">({item.url?.length || 0}/150)</span></label>
-                     <input className="admin-input-small w-full" placeholder="https://" value={item.url || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+                     <input id="mmsadmissionform-9" name="mmsadmissionform-9" aria-label="mmsadmissionform field" className="admin-input-small w-full" placeholder="https://" value={item.url || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                        const c = [...form.universityLinks!]; c[i].url = val; setForm({...form, universityLinks: c});
                      })}/>
                    </div>
@@ -268,7 +268,7 @@ const MMSAdmissionForm: React.FC = () => {
              {form.documentsRequired?.map((doc, i) => (
                <div key={i} className="flex gap-2 items-start">
                  <div className="flex-1 relative">
-                   <input className="admin-input-small w-full" value={doc.document || ''} placeholder="Document Item (Max 200)" onChange={e => handleTextChange(e.target.value, 200, val => {
+                   <input id="mmsadmissionform-10" name="mmsadmissionform-10" aria-label="mmsadmissionform field" className="admin-input-small w-full" value={doc.document || ''} placeholder="Document Item (Max 200)" onChange={e => handleTextChange(e.target.value, 200, val => {
                      const c = [...form.documentsRequired!]; c[i].document = val; setForm({...form, documentsRequired: c});
                    })}/>
                    <span className="absolute right-2 top-2 text-[10px] text-slate-400">{doc.document?.length || 0}/200</span>
@@ -291,13 +291,13 @@ const MMSAdmissionForm: React.FC = () => {
           <div className="space-y-4">
             <div className="relative">
               <label className="admin-label">Fee Details Description <span className="text-slate-400 normal-case">({form.feeSummary?.description?.length || 0}/150)</span></label>
-              <textarea className="admin-input-small resize-none" rows={3} placeholder="Brief summary of fees..." value={form.feeSummary?.description || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+              <textarea id="mmsadmissionform-textarea-1" name="mmsadmissionform-textarea-1" aria-label="mmsadmissionform textarea field" className="admin-input-small resize-none" rows={3} placeholder="Brief summary of fees..." value={form.feeSummary?.description || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                 setForm({...form, feeSummary: {...form.feeSummary!, description: val}});
               })}/>
             </div>
             <div className="relative">
               <label className="admin-label">Fee Circular Reference <span className="text-slate-400 normal-case">({form.feeSummary?.reference?.length || 0}/100)</span></label>
-              <input className="admin-input-small w-full" placeholder="e.g. As per FRA standard circular..." value={form.feeSummary?.reference || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
+              <input id="mmsadmissionform-11" name="mmsadmissionform-11" aria-label="mmsadmissionform field" className="admin-input-small w-full" placeholder="e.g. As per FRA standard circular..." value={form.feeSummary?.reference || ''} onChange={e => handleTextChange(e.target.value, 100, val => {
                 setForm({...form, feeSummary: {...form.feeSummary!, reference: val}});
               })}/>
             </div>
@@ -315,20 +315,20 @@ const MMSAdmissionForm: React.FC = () => {
                 }} className="absolute top-2 right-2 text-red-500 z-10 p-0.5"><Trash2 className="w-4 h-4"/></button>
                 
                 <div className="relative group rounded-lg border border-dashed border-slate-300 bg-white h-20 flex flex-col items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer">
-                  <input type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                  <input id="mmsadmissionform-12" name="mmsadmissionform-12" aria-label="mmsadmissionform field" type="file" accept="application/pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                   <FileText className="w-5 h-5 text-red-400 group-hover:text-red-500"/>
                   <span className="text-[10px] text-slate-500 font-medium mt-1">Upload PDF</span>
                 </div>
                 
                 <div>
                   <label className="admin-label text-[9px] mb-1 text-slate-400">PDF Label (Optional)</label>
-                  <input className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
+                  <input id="mmsadmissionform-13" name="mmsadmissionform-13" aria-label="mmsadmissionform field" className="admin-input-small text-xs" placeholder="Label / Name" value={pdfItem.label || ''} onChange={e => {
                       const c = [...form.admissionPdf!]; c[i].label = e.target.value; setForm({...form, admissionPdf: c});
                   }} />
                 </div>
                 <div>
                   <label className="admin-label text-[9px] mb-1 text-slate-400">PDF URL link (Max 150)</label>
-                  <input className="admin-input-small text-xs" placeholder="https://" value={pdfItem.url || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
+                  <input id="mmsadmissionform-14" name="mmsadmissionform-14" aria-label="mmsadmissionform field" className="admin-input-small text-xs" placeholder="https://" value={pdfItem.url || ''} onChange={e => handleTextChange(e.target.value, 150, val => {
                       const c = [...form.admissionPdf!]; c[i].url = val; setForm({...form, admissionPdf: c});
                   })} />
                 </div>

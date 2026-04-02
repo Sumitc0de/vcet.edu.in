@@ -98,7 +98,7 @@ const MMSSyllabusForm: React.FC = () => {
         <div className="p-10">
           <div className="max-w-2xl mx-auto space-y-8 text-center">
              <div className="relative group">
-                <input 
+                <input id="mmssyllabusform-1" name="mmssyllabusform-1" aria-label="mmssyllabusform field" 
                   type="file" 
                   accept="application/pdf" 
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
@@ -126,7 +126,7 @@ const MMSSyllabusForm: React.FC = () => {
                 <div className="flex justify-between items-center px-1">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Document Label</label>
                 </div>
-                <input 
+                <input id="mmssyllabusform-2" name="mmssyllabusform-2" aria-label="mmssyllabusform field" 
                   className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-blue-100 transition-all shadow-inner"
                   value={pdfData.label}
                   onChange={(e) => setForm({ ...form, [config.key]: { ...pdfData, label: e.target.value } })}

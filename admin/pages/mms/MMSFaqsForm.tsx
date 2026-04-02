@@ -148,7 +148,7 @@ const MMSFaqsForm: React.FC = () => {
                 {/* Question Input */}
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Question</label>
-                  <input 
+                  <input id="mmsfaqsform-1" name="mmsfaqsform-1" aria-label="mmsfaqsform field" 
                     className="w-full bg-white border border-slate-200 rounded-2xl p-4 text-sm font-bold text-slate-800 focus:bg-white focus:ring-8 focus:ring-blue-100 focus:border-[#2563EB] transition-all shadow-sm"
                     value={faq.question}
                     onChange={(e) => updateQuestion(i, e.target.value)}
@@ -159,7 +159,7 @@ const MMSFaqsForm: React.FC = () => {
                 {/* Answer Textarea */}
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Answer</label>
-                  <textarea 
+                  <textarea id="mmsfaqsform-textarea-1" name="mmsfaqsform-textarea-1" aria-label="mmsfaqsform textarea field" 
                     className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-6 text-sm font-medium focus:bg-white focus:ring-8 focus:ring-blue-100 focus:border-[#2563EB] transition-all min-h-[120px] resize-y shadow-inner"
                     value={faq.answer}
                     onChange={(e) => updateAnswer(i, e.target.value)}
