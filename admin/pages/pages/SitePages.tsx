@@ -24,7 +24,7 @@ const homeEditables = [
     description: 'Update alumni stories and partner logos for the alumni/recruiter section.',
     links: [
       { label: 'Edit Testimonials', to: '/admin/testimonials' },
-      { label: 'Edit Placement Partners', to: '/admin/placement-partners' },
+      { label: 'Edit Our Hiring Partners', to: '/admin/placement-partners' },
     ],
   },
   {

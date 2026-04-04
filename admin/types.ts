@@ -1129,6 +1129,7 @@ export interface CommitteeData {
   members?: any[];
   reports?: any[];
   documents?: any[];
+  momReports?: any[];
 }
 
 export type CommitteePayload = Partial<CommitteeData>;

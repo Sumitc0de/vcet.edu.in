@@ -54,7 +54,9 @@ const PlacementForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!form.company.trim() || !form.package_lpa || !form.student_count || !form.year) {
+    
+    // Explicit 0 values might be valid for package or student_count, but check null/undefined
+    if (!form.company.trim() || form.package_lpa === undefined || form.student_count === undefined || !form.year) {
       setError('Company, Package, Student Count, and Year are required.');
       return;
     }
@@ -97,7 +99,7 @@ const PlacementForm: React.FC = () => {
         <div className="bg-white border border-slate-200/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 p-10 md:p-14">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-3">
-              {isEdit ? 'Edit' : 'New'} <span className="text-[#1e293b]">Placement</span>
+              {isEdit ? 'Edit' : 'New'} <span className="text-[#1e293b]">Hiring Partner</span>
             </h1>
             <p className="text-slate-400 text-sm">Update campus placement statistics and company info.</p>
           </div>

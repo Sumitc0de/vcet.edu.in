@@ -605,6 +605,7 @@ const DeptComputerEngg: React.FC = () => {
               { label: 'PO PSO CO - R16', url: 'pdfs\\Department\\ComputerEngineering\\Syllabus\\NAAC-Comp_PO_PSO_CO_R-16.pdf' },
               { label: 'PO PSO CO - R19', url: 'pdfs\\Department\\ComputerEngineering\\Syllabus\\NACC-COMP_PO_PSO_CO_R-19-updated.pdf' },
             ];
+            const syllabusLinks: { label: string, url: string }[] = [];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
                 <div className="flex items-center gap-3 mb-4">
@@ -614,7 +615,7 @@ const DeptComputerEngg: React.FC = () => {
                 <h3 className="text-2xl font-bold text-brand-navy mb-5 relative inline-block">Syllabus<span className="absolute -bottom-2 left-0 w-12 h-1 bg-brand-gold rounded-full" /></h3>
                 <p className="text-slate-600 mb-5">NEP-2020 MU syllabus link is currently not available in the provided document.</p>
                 <div className="grid md:grid-cols-2 gap-3">
-                  {links.map((item) => (
+                  {syllabusLinks.map((item) => (
                     <a key={item.label} href={item.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-brand-navy hover:border-brand-gold hover:bg-brand-navylight transition-colors">
                       <span>{item.label}</span>
                       <i className="ph ph-arrow-up-right text-brand-gold" />

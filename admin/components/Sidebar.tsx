@@ -159,8 +159,8 @@ const navSections: NavSection[] = [
   {
     label: 'Corporate Relations',
     items: [
-      { label: 'Placements', path: '/admin/placements', icon: <BriefcaseIcon /> },
-      { label: 'Partners', path: '/admin/placement-partners', icon: <UsersIcon /> },
+      { label: 'Our Hiring Partners', path: '/admin/placements', icon: <BriefcaseIcon /> },
+      { label: 'Placement Partners', path: '/admin/placement-partners', icon: <UsersIcon /> },
     ],
   },
 ];
