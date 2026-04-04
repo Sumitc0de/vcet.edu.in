@@ -129,7 +129,7 @@ const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () 
 };
 
 const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
+  <div className="overflow-hidden rounded-4xl border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
     <div className="border-b border-slate-100 px-8 py-5">
       <h2 className="text-sm font-extrabold uppercase tracking-[0.22em] text-slate-700">{title}</h2>
     </div>
@@ -1151,14 +1151,7 @@ const AdmissionForm: React.FC<AdmissionFormProps> = ({ activeSection, onBack }) 
         {renderSectionContent()}
         {sectionKey === 'intake' ? renderCourseItems() : renderDocumentItems()}
 
-        <div className="flex flex-col items-center justify-between gap-4 rounded-[2rem] border border-slate-100 bg-white px-8 py-6 shadow-lg shadow-slate-200/40 sm:flex-row">
-          <p className="text-sm text-slate-500">
-            Saving updates the section record first, then syncs the individual admission items against the Laravel API.
-          </p>
-          <button type="submit" disabled={saving} className="inline-flex min-w-[180px] items-center justify-center rounded-2xl bg-[#2563EB] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-white shadow-xl transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
+
       </form>
     </div>
   );

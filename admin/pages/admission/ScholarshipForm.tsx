@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { GripVertical } from 'lucide-react';
 import { admissionsApi } from '../../api/admissions';
 import type { AdmissionItem, AdmissionItemPayload, AdmissionSection, AdmissionSectionPayload } from '../../types';
+import PageEditorHeader from '../../../components/admin/PageEditorHeader';
 
 interface ScholarshipFormProps {
   onBack?: () => void;
@@ -510,33 +511,22 @@ const ScholarshipForm: React.FC<ScholarshipFormProps> = ({ onBack }) => {
         </div>
       )}
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-start gap-4">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Scholarships</h1>
-            <p className="mt-1 max-w-2xl text-sm text-slate-500">
-              Manage scholarship page copy, categories, tags, and linked/uploaded scholarship documents.
-            </p>
-          </div>
-        </div>
-        <div className="text-right text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
-          <div>Slug: {section?.slug ?? 'scholarships'}</div>
-          <div className="mt-1">Records: {items.length}</div>
-        </div>
+      <PageEditorHeader
+        title="Scholarships"
+        description="Manage scholarship page copy, categories, tags, and linked/uploaded scholarship documents."
+        onSave={handleSubmit as unknown as () => void}
+        isSaving={saving}
+        showBackButton={!!onBack}
+        onBack={onBack}
+      />
+
+      <div className="rounded-2xl border border-slate-200/70 bg-white px-4 py-3 text-right text-xs font-bold uppercase tracking-[0.2em] text-slate-400 shadow-sm">
+        <div>Slug: {section?.slug ?? 'scholarships'}</div>
+        <div className="mt-1">Records: {items.length}</div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
+        <div className="overflow-hidden rounded-4xl border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
           <div className="border-b border-slate-100 px-8 py-5">
             <h2 className="text-sm font-extrabold uppercase tracking-[0.22em] text-slate-700">Section Settings</h2>
           </div>
@@ -598,7 +588,7 @@ const ScholarshipForm: React.FC<ScholarshipFormProps> = ({ onBack }) => {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
+        <div className="overflow-hidden rounded-4xl border border-slate-100 bg-white shadow-lg shadow-slate-200/40">
           <div className="flex items-center justify-between border-b border-slate-100 px-8 py-5">
             <h2 className="text-sm font-extrabold uppercase tracking-[0.22em] text-slate-700">Scholarship Items</h2>
             <button
@@ -726,18 +716,7 @@ const ScholarshipForm: React.FC<ScholarshipFormProps> = ({ onBack }) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 rounded-[2rem] border border-slate-100 bg-white px-8 py-6 shadow-lg shadow-slate-200/40 sm:flex-row">
-          <p className="text-sm text-slate-500">
-            Saving updates the scholarship section and syncs item rows with VCET admission routes so page order/content updates in DB and frontend.
-          </p>
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex min-w-[180px] items-center justify-center rounded-2xl bg-[#2563EB] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-white shadow-xl transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {saving ? 'Saving...' : 'Save Scholarships'}
-          </button>
-        </div>
+
       </form>
     </div>
   );

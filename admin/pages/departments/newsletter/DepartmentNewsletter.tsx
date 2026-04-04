@@ -8,6 +8,7 @@ import NewsletterForm from './NewsletterForm';
 import NewsletterPreview from './NewsletterPreview';
 import NewsletterCard from './NewsletterCard';
 import PdfViewer from './PdfViewer';
+import PageEditorHeader from '../../../../components/admin/PageEditorHeader';
 
 /* ── Toast Component ────────────────────────────────────────────────────────── */
 const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -172,18 +173,15 @@ const DepartmentNewsletter: React.FC = () => {
       `}</style>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-widest">
-            <Link to="/admin" className="hover:text-slate-600 transition-colors">Dashboard</Link>
-            <span className="text-slate-300 font-normal">/</span>
-            <Link to="/admin/pages/home" className="hover:text-slate-600 transition-colors">Pages</Link>
-            <span className="text-slate-300 font-normal">/</span>
-            <span className="text-slate-600">Newsletter</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-[#111827]">Department Newsletters</h1>
-        </div>
-      </div>
+      <PageEditorHeader
+        title={editingItem ? 'Edit Newsletter' : 'Department Newsletters'}
+        description="Publish and manage departmental newsletters, magazines, and monthly archives."
+        onSave={() => (document.querySelector('form button[type="submit"]') as HTMLButtonElement)?.click()}
+        isSaving={isSubmitting}
+        saveLabel={editingItem ? 'Save Changes' : 'Publish Newsletter'}
+        showBackButton
+        onBack={() => window.history.back()}
+      />
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
