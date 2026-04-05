@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/PageLayout';
 import DepartmentFacultySection from '../../components/DepartmentFacultySection';
@@ -53,7 +53,7 @@ const DeptENTC: React.FC = () => {
   return (
     <PageLayout>
 
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* â”€â”€ Hero Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white opacity-5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-brand-gold opacity-10 blur-2xl pointer-events-none" />
@@ -72,7 +72,7 @@ const DeptENTC: React.FC = () => {
         </div>
       </header>
 
-      {/* ── Page Body ───────────────────────────────────────────── */}
+      {/* â”€â”€ Page Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="container mx-auto px-4 sm:px-6 py-10 md:py-12 max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
 
         {/* Sticky Sidebar */}
@@ -100,7 +100,7 @@ const DeptENTC: React.FC = () => {
         {/* Main Content */}
         <main className="w-full flex-1 space-y-14 md:space-y-16 min-w-0">
 
-          {/* ════ ABOUT ════════════════════════════════════════════ */}
+          {/* â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'about' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="mb-8 flex flex-col items-center text-center">
@@ -132,7 +132,7 @@ const DeptENTC: React.FC = () => {
             </section>
           )}
 
-          {/* ════ VISION & MISSION ═════════════════════════════════ */}
+          {/* â•â•â•â• VISION & MISSION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'vision' && (
             <div className="space-y-16">
               <div className="reveal flex items-center gap-4">
@@ -156,7 +156,7 @@ const DeptENTC: React.FC = () => {
                     </blockquote>
                     <div className="flex items-center gap-4">
                       <div className="h-px flex-1 bg-white/10" />
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET · Electronics &amp; Telecomm. Engg.</span>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET Â· Electronics &amp; Telecomm. Engg.</span>
                       <div className="h-px w-12 bg-brand-gold/40" />
                     </div>
                   </div>
@@ -190,7 +190,7 @@ const DeptENTC: React.FC = () => {
             </div>
           )}
 
-          {/* ════ DAB ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• DAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'dab' && (() => {
             const members = [
               { sr: 1, name: 'Dr. Rakesh Himte', designation: 'Principal', org: 'VCET, Vasai', role: 'Principal', tag: 'internal' },
@@ -199,7 +199,7 @@ const DeptENTC: React.FC = () => {
               { sr: 4, name: 'Mr. Suhas Kulkarni', designation: 'General Manager Operations', org: 'Remi Elecrotehnik Ltd, Vasai', role: 'Industry Representative', tag: 'industry' },
               { sr: 5, name: 'Mr. Ramesh Titre', designation: 'Asst. Vice President HR & Admin', org: 'Parle Global Technologies Pvt. Ltd., Vasai (E)', role: 'Industry Representative', tag: 'industry' },
               { sr: 6, name: 'Ms. Swarupa Patankar', designation: 'Senior Manager', org: 'L & T Infotech, Mumbai', role: 'Industry Representative', tag: 'industry' },
-              { sr: 7, name: 'Dr. Santoshi Pote', designation: 'Associate Professor', org: 'SNDT Women’s University, Mumbai', role: 'Academic Representative', tag: 'academic' },
+              { sr: 7, name: 'Dr. Santoshi Pote', designation: 'Associate Professor', org: 'SNDT Womenâ€™s University, Mumbai', role: 'Academic Representative', tag: 'academic' },
               { sr: 8, name: 'Mr. Suyog Patil', designation: 'Parent Representative', org: '-', role: 'Parent Representative', tag: 'parent' },
               { sr: 9, name: 'Mr. Rajas Patil', designation: 'Embedded Software Engineer', org: 'Faurecia Clarion Electronics, Pune', role: 'Alumni Representative', tag: 'academic' },
               { sr: 10, name: 'Dr. Sunayana Jadhav', designation: 'Secretary (DAB), Asst. Professor, VCET, Vasai', org: 'VCET, Vasai', role: 'Secretary', tag: 'internal' },
@@ -242,7 +242,7 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ POs, PEOs & PSOs ═════════════════════════════════ */}
+          {/* â•â•â•â• POs, PEOs & PSOs â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'peo' && (() => {
             const pos = [
               { n: '01', text: 'Engineering knowledge: Apply the knowledge of mathematics, science, engineering fundamentals, and an engineering specialization to the solution of complex engineering problems.' },
@@ -255,7 +255,7 @@ const DeptENTC: React.FC = () => {
               { n: '08', text: 'Ethics: Apply ethical principles and commit to professional ethics and responsibilities and norms of the engineering practice.' },
               { n: '09', text: 'Individual and team work: Function effectively as an individual, and as a member or leader in diverse teams, and in multidisciplinary settings.' },
               { n: '10', text: 'Communication: Communicate effectively on complex engineering activities with the engineering community and with society at large, such as, being able to comprehend and write effective reports and design documentation, make effective presentations, and give and receive clear instructions.' },
-              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to one’s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
+              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to oneâ€™s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
               { n: '12', text: 'Life-long learning: Recognize the need for, and have the preparation and ability to engage in independent and life-long learning in the broadest context of technological change.' },
             ];
             const peos = [
@@ -315,10 +315,10 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ FACULTY ══════════════════════════════════════════ */}
+          {/* â•â•â•â• FACULTY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty' && <DepartmentFacultySection departmentName="Electronics & Telecommunication" />}
 
-          {/* ════ PAQIC ═══════════════════════════════════════════ */}
+          {/* â•â•â•â• PAQIC â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'paqic' && (() => {
             const members = [
               'Dr. Amrita Ruperee, Professor, HOD EXTC (Chairman)',
@@ -368,12 +368,12 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ MoU ═════════════════════════════════════════════ */}
+          {/* â•â•â•â• MoU â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'mou' && (() => {
             const links = [
               { label: 'MoU with IIoTExpert', url: 'https://iiotexpert.com/' },
-              { label: 'MoUs Document', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Mou\MoU_Final_4_Dec2024_website-2.pdf' },
-              { label: 'Research Agreement with BITS Hyderabad', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Mou\ResearchagreementwithBITSHyderabad.pdf' },
+              { label: 'MoUs Document', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Mou/MoU_Final_4_Dec2024_website-2.pdf' },
+              { label: 'Research Agreement with BITS Hyderabad', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Mou/ResearchagreementwithBITSHyderabad.pdf' },
             ];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
@@ -394,12 +394,12 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ STUDENT ACHIEVEMENTS ═══════════════════════════ */}
+          {/* â•â•â•â• STUDENT ACHIEVEMENTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'student-achievements' && (() => {
             const links = [
-              { label: 'Student Achievements 2024-25', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\StudentAchievements\students-Achievement-24-25.pdf' },
-              { label: 'Outreach Activity', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\StudentAchievements\achievemnets-18_3_25-2.pdf' },
-              { label: 'Best Outgoing', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\StudentAchievements\best-outgoing.pdf' },
+              { label: 'Student Achievements 2024-25', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/StudentAchievements/students-Achievement-24-25.pdf' },
+              { label: 'Outreach Activity', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/StudentAchievements/achievemnets-18_3_25-2.pdf' },
+              { label: 'Best Outgoing', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/StudentAchievements/best-outgoing.pdf' },
             ];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
@@ -420,7 +420,7 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ INFRASTRUCTURE ═════════════════════════════════ */}
+          {/* â•â•â•â• INFRASTRUCTURE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'infrastructure' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -487,7 +487,7 @@ const DeptENTC: React.FC = () => {
             </section>
           )}
 
-          {/* ════ TOPPERS ════════════════════════════════════════ */}
+          {/* â•â•â•â• TOPPERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'toppers' && (() => {
             const toppersList1 = {
               SE: ['Taru Sonal Arun (SGPI-9.40)', 'Chavan Pranav S. (SGPI-9.09)', 'Pal Aditya H. (SGPI-8.82)'],
@@ -587,14 +587,14 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ SYLLABUS ═══════════════════════════════════════ */}
+          {/* â•â•â•â• SYLLABUS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'syllabus' && (() => {
             const links = [
-              { label: 'Syllabus R19 (SE)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Syllabus\SE_EXTC_2019-20.pdf' },
-              { label: 'Syllabus R19 (TE)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Syllabus\TE_EXTC-1.pdf' },
-              { label: 'Syllabus R19 (BE)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Syllabus\Corrected-Final-BE-EXTC-R2019-Syllabus.pdf' },
-              { label: 'PO PSO CO (R16)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Syllabus\R16-EXTC-PO_PSO_CO_R16.pdf' },
-              { label: 'PO PSO CO (R19)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\Syllabus\CO-PO-PSO_EXTC_REv-2019_final.pdf' },
+              { label: 'Syllabus R19 (SE)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Syllabus/SE_EXTC_2019-20.pdf' },
+              { label: 'Syllabus R19 (TE)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Syllabus/TE_EXTC-1.pdf' },
+              { label: 'Syllabus R19 (BE)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Syllabus/Corrected-Final-BE-EXTC-R2019-Syllabus.pdf' },
+              { label: 'PO PSO CO (R16)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Syllabus/R16-EXTC-PO_PSO_CO_R16.pdf' },
+              { label: 'PO PSO CO (R19)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/Syllabus/CO-PO-PSO_EXTC_REv-2019_final.pdf' },
             ];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
@@ -615,7 +615,7 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ TIME TABLE ═════════════════════════════════════ */}
+          {/* â•â•â•â• TIME TABLE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'time-table' && (() => {
             const links = [
               { label: 'Time Table 2024-25 Even Sem', url: 'https://vcet.edu.in/wp-content/uploads/2025/04/Master-timetable-Even-sem-24-25.jpg' },
@@ -640,13 +640,13 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ INNOVATIONS IN TEACHING LEARNING ══════════════ */}
+          {/* â•â•â•â• INNOVATIONS IN TEACHING LEARNING â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'teaching-learning' && (() => {
             const links = [
-              { label: 'Innovation in Teaching Learning (2020-21)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\InnovationsinTeachingLearning\Innovation-in-teaching-learning_20-21.pdf' },
-              { label: 'Innovation in Teaching Learning (2021-22)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\InnovationsinTeachingLearning\Innovation-in-teaching-learning_21-22.pdf' },
-              { label: 'Innovation in Teaching Learning (2022-23)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-learning_2024-25.pdf' },
-              { label: 'Innovation in Teaching Learning (2024-25)', url: 'pdfs\Department\ElectronicsandTelecommunicationEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-learning_2024-25.pdf' },
+              { label: 'Innovation in Teaching Learning (2020-21)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/InnovationsinTeachingLearning/Innovation-in-teaching-learning_20-21.pdf' },
+              { label: 'Innovation in Teaching Learning (2021-22)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/InnovationsinTeachingLearning/Innovation-in-teaching-learning_21-22.pdf' },
+              { label: 'Innovation in Teaching Learning (2022-23)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-learning_2024-25.pdf' },
+              { label: 'Innovation in Teaching Learning (2024-25)', url: 'pdfs/Department/ElectronicsandTelecommunicationEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-learning_2024-25.pdf' },
             ];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
@@ -667,12 +667,12 @@ const DeptENTC: React.FC = () => {
             );
           })()}
 
-          {/* ════ NEWSLETTER & MAGAZINE ══════════════════════════ */}
+          {/* â•â•â•â• NEWSLETTER & MAGAZINE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'newsletter' && (
             <NewsletterSection departmentName="Electronics and Telecommunication Engineering" departmentId="7" />
           )}
 
-          {/* ════ DISTINGUISHED ALUMNI ═══════════════════════════ */}
+          {/* â•â•â•â• DISTINGUISHED ALUMNI â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'distinguished-alumni' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -680,14 +680,14 @@ const DeptENTC: React.FC = () => {
                 <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-gold">Electronics &amp; Telecommunication Engineering</span>
               </div>
               <h3 className="text-2xl font-bold text-brand-navy mb-5 relative inline-block">Distinguished Alumni<span className="absolute -bottom-2 left-0 w-12 h-1 bg-brand-gold rounded-full" /></h3>
-              <a href="pdfs\Department\ElectronicsandTelecommunicationEngineering\DistinguishedAlumni\Distinguished-Alumni.pdf" target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-brand-navy hover:border-brand-gold hover:bg-brand-navylight transition-colors">
+              <a href="pdfs/Department/ElectronicsandTelecommunicationEngineering/DistinguishedAlumni/Distinguished-Alumni.pdf" target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-brand-navy hover:border-brand-gold hover:bg-brand-navylight transition-colors">
                 <span>Distinguished Alumni</span>
                 <i className="ph ph-arrow-up-right text-brand-gold" />
               </a>
             </section>
           )}
 
-          {/* ════ OTHER SECTIONS (placeholder) ════════════════════ */}
+          {/* â•â•â•â• OTHER SECTIONS (placeholder) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId !== 'about' && activeId !== 'vision' && activeId !== 'dab' && activeId !== 'peo' && activeId !== 'faculty' && activeId !== 'paqic' && activeId !== 'mou' && activeId !== 'student-achievements' && activeId !== 'infrastructure' && activeId !== 'toppers' && activeId !== 'syllabus' && activeId !== 'time-table' && activeId !== 'teaching-learning' && activeId !== 'newsletter' && activeId !== 'distinguished-alumni' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -705,3 +705,4 @@ const DeptENTC: React.FC = () => {
 };
 
 export default DeptENTC;
+
