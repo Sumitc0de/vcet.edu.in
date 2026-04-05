@@ -2,14 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { pagesApi } from '../../api/pagesApi';
 import { CommitteeData, CommitteePayload, CommitteeMember, CommitteeReport } from '../../types';
 import PageEditorHeader from '../../../components/admin/PageEditorHeader';
-<<<<<<< HEAD
 import AdminFormSection from '../../components/AdminFormSection';
 import { SortableListContext } from '../../components/SortableList';
-
-/* ── UI Components ─────────────────────────────────────────────────────────── */
-const inputBase = "w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all text-slate-700";
-const labelBase = "block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1";
-=======
 import { resolveUploadedAssetUrl } from '../../../utils/uploadedAssets';
 
 /* ── UI Components ────────────────────────────────────────────────────────── */
@@ -38,7 +32,6 @@ const SectionCard: React.FC<{ title: string; icon: React.ReactNode; children: Re
 
 const inputBase = "w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all";
 const labelBase = "block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5 ml-1";
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
 
 const filePreviewCache = new WeakMap<File, string>();
 const getFilePreviewUrl = (file: File): string => {
@@ -320,8 +313,6 @@ const ReportManager: React.FC<{
                   {years.map(y => <option key={y} value={y}>{y}</option>)}
                 </select>
               </div>
-
-<<<<<<< HEAD
               <div className="grow">
                 <label className={labelBase}>PDF Report Document</label>
                 <div className="relative h-[3.45rem] bg-white border border-slate-200 rounded-2xl px-5 flex items-center justify-between overflow-hidden ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
@@ -338,51 +329,30 @@ const ReportManager: React.FC<{
                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                    </div>
                 </div>
+                {((item as any).file || item.fileUrl || item.url) && (
+                  <div className="mt-3 flex gap-2">
+                    <a
+                      href={(item as any).file instanceof File ? getFilePreviewUrl((item as any).file) : (resolveUploadedAssetUrl(item.fileUrl || item.url || '') || item.fileUrl || item.url || '#')}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider hover:bg-blue-100"
+                    >
+                      Preview PDF
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => updateItem(idx, { file: null, fileName: null, fileUrl: '', url: '' })}
+                      className="px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-black uppercase tracking-wider hover:bg-red-100"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
       />
-=======
-          <div className="flex-grow">
-            <label className={labelBase}>PDF Report</label>
-            <div className="relative h-[2.85rem] bg-white border border-slate-200 rounded-xl px-4 flex items-center justify-between overflow-hidden">
-               <input id="committeesform-3" name="committeesform-3" aria-label="committeesform field" 
-                 type="file" 
-                 accept=".pdf" 
-                  onChange={e => updateItem(idx, { file: e.target.files?.[0] || null })}
-                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                />
-                <span className="text-sm font-medium text-slate-500 truncate">
-                  {(item as any).file?.name || item.fileName || 'Select PDF file...'}
-                </span>
-               <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-[#2563EB]">
-                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                </div>
-             </div>
-             {((item as any).file || item.fileUrl || item.url) && (
-               <div className="mt-3 flex gap-2">
-                 <a
-                   href={(item as any).file instanceof File ? getFilePreviewUrl((item as any).file) : (resolveUploadedAssetUrl(item.fileUrl || item.url || '') || item.fileUrl || item.url || '#')}
-                   target="_blank"
-                   rel="noreferrer"
-                   className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider hover:bg-blue-100"
-                 >
-                   Preview PDF
-                 </a>
-                 <button
-                   type="button"
-                   onClick={() => updateItem(idx, { file: null, fileName: null, fileUrl: '', url: '' })}
-                   className="px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-black uppercase tracking-wider hover:bg-red-100"
-                 >
-                   Remove
-                 </button>
-               </div>
-             )}
-           </div>
-         </div>
-      ))}
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
       {items.length < maxItems && (
         <button type="button" onClick={addItem} className="text-[#2563EB] text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-80 transition-opacity ml-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
@@ -422,8 +392,6 @@ const PDFDocumentManager: React.FC<{
             <div className="flex flex-col pt-12 justify-start items-center mr-2 cursor-grab active:cursor-grabbing text-slate-400 hover:text-[#2563EB] opacity-50 group-hover:opacity-100 transition-opacity" {...dragHandleProps.attributes} {...dragHandleProps.listeners}>
                <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 8h16M4 16h16"/></svg>
             </div>
-<<<<<<< HEAD
-
              <button type="button" onClick={() => removeItem(idx)} className="absolute -top-3 -right-3 w-8 h-8 bg-white border border-red-100 shadow-md text-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -455,47 +423,29 @@ const PDFDocumentManager: React.FC<{
                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                      </div>
                   </div>
+                  {(item.file || item.fileUrl || item.pdfUrl) && (
+                    <div className="mt-3 flex gap-2">
+                      <a
+                        href={item.file instanceof File ? getFilePreviewUrl(item.file) : (resolveUploadedAssetUrl(item.fileUrl || item.pdfUrl || '') || item.fileUrl || item.pdfUrl || '#')}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider hover:bg-blue-100"
+                      >
+                        Preview PDF
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => updateItem(idx, { file: null, fileName: null, fileUrl: '', pdfUrl: '' })}
+                        className="px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-black uppercase tracking-wider hover:bg-red-100"
+                      >
+                        Remove PDF
+                      </button>
+                    </div>
+                  )}
                 </div>
-=======
-            <div>
-              <label className={labelBase}>File Upload</label>
-              <div className="relative h-[2.85rem] bg-white border border-slate-200 rounded-xl px-4 flex items-center justify-between overflow-hidden">
-                 <input id="committeesform-5" name="committeesform-5" aria-label="committeesform field" 
-                   type="file" 
-                   accept=".pdf" 
-                   onChange={e => updateItem(idx, { file: e.target.files?.[0] || null })}
-                   className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                 />
-                 <span className="text-sm font-medium text-slate-500 truncate">
-                    {item.file?.name || item.fileName || 'Upload PDF...'}
-                  </span>
-                 <div className="w-6 h-6 rounded-lg bg-[#2563EB]/5 text-[#2563EB] flex items-center justify-center">
-                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                  </div>
-              </div>
-              {(item.file || item.fileUrl || item.pdfUrl) && (
-                <div className="mt-3 flex gap-2">
-                  <a
-                    href={item.file instanceof File ? getFilePreviewUrl(item.file) : (resolveUploadedAssetUrl(item.fileUrl || item.pdfUrl || '') || item.fileUrl || item.pdfUrl || '#')}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider hover:bg-blue-100"
-                  >
-                    Preview PDF
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => updateItem(idx, { file: null, fileName: null, fileUrl: '', pdfUrl: '' })}
-                    className="px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-black uppercase tracking-wider hover:bg-red-100"
-                  >
-                    Remove PDF
-                  </button>
-                </div>
-              )}
-            </div>
-            <div>
-              <label className={labelBase}>Image Upload (Optional)</label>
-              <div className="rounded-2xl border border-slate-200 bg-white p-3 space-y-3">
+                <div>
+                  <label className={labelBase}>Image Upload (Optional)</label>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-3 space-y-3">
                 <div className="relative aspect-[16/10] rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
                   <input id="committeesform-image-1" name="committeesform-image-1" aria-label="committeesform image field"
                     type="file"
@@ -530,7 +480,8 @@ const PDFDocumentManager: React.FC<{
                     Remove Image
                   </button>
                 )}
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
+                  </div>
+                </div>
               </div>
               {showUrlField && (
                 <div>
@@ -568,11 +519,8 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
   const [payload, setPayload] = useState<CommitteePayload>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-<<<<<<< HEAD
   const [activeAccordionSection, setActiveAccordionSection] = useState<string | null>(null);
-=======
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
 
   useEffect(() => {
     pagesApi.committees.get(slug)
@@ -625,28 +573,16 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
   );
 
   return (
-<<<<<<< HEAD
-    <form onSubmit={handleSave} className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
-      <PageEditorHeader
-        title={data?.name || 'Committee Editor'}
-        description="Manage professional committee protocols, members, and historical reports."
-        onSave={saveChanges}
-        isSaving={saving}
-        showBackButton
-        onBack={onBack}
-      />
-=======
     <>
-      <form onSubmit={handleSave} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <form onSubmit={handleSave} className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
         <PageEditorHeader
           title={data?.name || 'Committee Editor'}
-          description="Manage professional committee data and records."
+          description="Manage professional committee protocols, members, and historical reports."
           onSave={saveChanges}
           isSaving={saving}
           showBackButton
           onBack={onBack}
         />
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
 
       <div className="space-y-4">
         {/* CDC Responsibilities */}
@@ -656,12 +592,8 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
               title="Responsibility" 
               items={payload.responsibilities || []} 
               onChange={items => setPayload({...payload, responsibilities: items})} 
-<<<<<<< HEAD
-              charLimit={[80, 250]}
-=======
               maxItems={10}
               charLimit={[80, 120]}
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
             />
           </AdminFormSection>
         )}
@@ -673,12 +605,8 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
               title="Objective" 
               items={payload.objectives || []} 
               onChange={items => setPayload({...payload, objectives: items})} 
-<<<<<<< HEAD
-              charLimit={slug === 'sc-st' ? [50, 450] : [50, 600]}
-=======
               maxItems={10}
               charLimit={slug === 'sc-st' ? [80, 100] : [80, 120]}
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
             />
           </AdminFormSection>
         )}
@@ -755,11 +683,7 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
                 slug === 'icc' ? [{ key: 'post', label: 'Post', placeholder: 'e.g. Presiding Officer' }, { key: 'name', label: 'Official Name', placeholder: 'Full Name' }, { key: 'contact', label: 'Contact', placeholder: 'Phone Number', limit: 40 }] :
                 [{ key: 'name', label: 'Full Name', placeholder: 'Official Name' }, { key: 'post', label: 'Committee Role', placeholder: 'e.g. Member Secretary' }]
               }
-<<<<<<< HEAD
-              maxItems={slug === 'cdc' ? 12 : 10}
-=======
               maxItems={slug === 'cdc' ? 20 : 15}
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
             />
           </AdminFormSection>
         )}
@@ -772,11 +696,11 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
               onChange={reports => setPayload({...payload, reports})} 
               maxItems={12}
             />
-          </SectionCard>
+          </AdminFormSection>
         )}
 
         {slug === 'iqac' && (
-          <SectionCard title="IQAC Minutes of Meeting (MoM)" icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}>
+          <AdminFormSection title="IQAC Minutes of Meeting (MoM)" icon="🕒" isOpen={activeAccordionSection === 'mom-reports'} onToggle={() => setActiveAccordionSection(activeAccordionSection === 'mom-reports' ? null : 'mom-reports')}>
             <ReportManager
               items={(payload as any).momReports || []}
               onChange={momReports => setPayload({ ...payload, momReports } as CommitteePayload)}
@@ -791,13 +715,8 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
             <PDFDocumentManager 
               items={payload.documents || []} 
               onChange={docs => setPayload({...payload, documents: docs})} 
-<<<<<<< HEAD
-              maxItems={slug === 'sedg' ? 2 : 4}
-              showUrlField={slug === 'equal-opportunity'}
-=======
               maxItems={10}
-              showUrlField
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
+              showUrlField={slug === 'equal-opportunity'}
             />
           </AdminFormSection>
         )}

@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PageEditorHeader from '../../../components/admin/PageEditorHeader';
-<<<<<<< HEAD
 import { SortableListContext } from '../../components/SortableList';
 import AdminFormSection from '../../components/AdminFormSection';
-=======
 import { pagesApi } from '../../api/pagesApi';
 import { resolveApiUrl } from '../../api/client';
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
 
 /* ── Toast ─────────────────────────────────────────────────────────────────── */
 const Toast: React.FC<{ message: string; type: 'success' | 'error'; onClose: () => void }> = ({ message, type, onClose }) => {
@@ -269,10 +266,7 @@ const StudentCareerForm: React.FC<StudentCareerFormProps> = ({ slug, onBack }) =
     else if (slug === 'airnova') setActiveClub('airnova');
     else if (slug === 'emechto') setActiveClub('emechto');
     else if (slug === 'external-projects') setActiveClub('ethan');
-<<<<<<< HEAD
-    setActiveAccordionSection('1'); // Reset accordion on slug change
-    setTimeout(() => setLoading(false), 300);
-=======
+    setActiveAccordionSection('1');
     pagesApi.studentCareer.get(slug)
       .then((res) => {
         const data = (res?.data as Record<string, unknown>) ?? {};
@@ -282,7 +276,6 @@ const StudentCareerForm: React.FC<StudentCareerFormProps> = ({ slug, onBack }) =
         setPayload({});
       })
       .finally(() => setLoading(false));
->>>>>>> a10712dd9bfe52065269a0c041e8a0d058872467
   }, [slug]);
 
   const save = async () => {
