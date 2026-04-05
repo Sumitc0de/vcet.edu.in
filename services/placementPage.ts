@@ -3,6 +3,7 @@ import { get } from './api';
 export interface PlacementReport {
   label: string;
   href: string;
+  fileUrl?: string;
   year: string;
 }
 

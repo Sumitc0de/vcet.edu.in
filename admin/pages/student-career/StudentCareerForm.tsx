@@ -175,6 +175,180 @@ const TableManager: React.FC<{
   );
 };
 
+const NestedEventManager: React.FC<{ items: any[]; onChange: (val: any[]) => void }> = ({ items = [], onChange }) => {
+  const addYear = () => onChange([...(items || []), { year: '', events: [] }]);
+  const delYear = (yearIndex: number) => onChange((items || []).filter((_: any, idx: number) => idx !== yearIndex));
+  const updateYear = (yearIndex: number, patch: Record<string, unknown>) => {
+    const next = [...(items || [])];
+    next[yearIndex] = { ...(next[yearIndex] || {}), ...patch };
+    onChange(next);
+  };
+
+  const addEvent = (yearIndex: number) => {
+    const next = [...(items || [])];
+    const events = Array.isArray(next[yearIndex]?.events) ? next[yearIndex].events : [];
+    if (events.length >= 8) return;
+    next[yearIndex] = {
+      ...(next[yearIndex] || {}),
+      events: [...events, { title: '', desc: '', speakers: '', participants: '', companies: '' }],
+    };
+    onChange(next);
+  };
+
+  const delEvent = (yearIndex: number, eventIndex: number) => {
+    const next = [...(items || [])];
+    const events = Array.isArray(next[yearIndex]?.events) ? next[yearIndex].events : [];
+    next[yearIndex] = {
+      ...(next[yearIndex] || {}),
+      events: events.filter((_: any, idx: number) => idx !== eventIndex),
+    };
+    onChange(next);
+  };
+
+  const updateEvent = (yearIndex: number, eventIndex: number, patch: Record<string, unknown>) => {
+    const next = [...(items || [])];
+    const events = Array.isArray(next[yearIndex]?.events) ? [...next[yearIndex].events] : [];
+    events[eventIndex] = { ...(events[eventIndex] || {}), ...patch };
+    next[yearIndex] = { ...(next[yearIndex] || {}), events };
+    onChange(next);
+  };
+
+  return (
+    <div className="space-y-6">
+      {(items || []).map((yearGroup: any, yearIndex: number) => (
+        <div key={yearIndex} className="border border-slate-200 rounded-3xl overflow-hidden bg-slate-50">
+          <div className="flex items-center gap-3 p-5 bg-white border-b border-slate-100">
+            <div className="flex-grow">
+              <label className={labelBase}>Academic Year</label>
+              <input
+                id="studentcareerform-ecell-year"
+                name="studentcareerform-ecell-year"
+                aria-label="ecell academic year"
+                value={yearGroup?.year || ''}
+                onChange={(e) => updateYear(yearIndex, { year: e.target.value })}
+                className={inputBase}
+                placeholder="e.g. 2023-24"
+                maxLength={20}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => delYear(yearIndex)}
+              className="mt-6 p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-600 hover:text-white transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+
+          <div className="p-4 space-y-3">
+            {(yearGroup?.events || []).map((event: any, eventIndex: number) => (
+              <div key={eventIndex} className="flex gap-4 p-5 bg-white border border-slate-100 rounded-2xl group relative shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => delEvent(yearIndex, eventIndex)}
+                  className="absolute top-4 right-4 p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-600 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+
+                <div className="flex-grow space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelBase}>Event Title</label>
+                      <input
+                        id="studentcareerform-ecell-event-title"
+                        name="studentcareerform-ecell-event-title"
+                        aria-label="ecell event title"
+                        value={event?.title || ''}
+                        onChange={(e) => updateEvent(yearIndex, eventIndex, { title: e.target.value })}
+                        className={`${inputBase} !py-2.5 !px-4 !rounded-xl !text-xs`}
+                        maxLength={120}
+                        placeholder="Event title"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelBase}>Companies / Partners</label>
+                      <input
+                        id="studentcareerform-ecell-event-companies"
+                        name="studentcareerform-ecell-event-companies"
+                        aria-label="ecell event companies"
+                        value={event?.companies || ''}
+                        onChange={(e) => updateEvent(yearIndex, eventIndex, { companies: e.target.value })}
+                        className={`${inputBase} !py-2.5 !px-4 !rounded-xl !text-xs`}
+                        maxLength={180}
+                        placeholder="Companies or collaborators"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelBase}>Description</label>
+                    <textarea
+                      id="studentcareerform-ecell-event-description"
+                      name="studentcareerform-ecell-event-description"
+                      aria-label="ecell event description"
+                      value={event?.desc || ''}
+                      onChange={(e) => updateEvent(yearIndex, eventIndex, { desc: e.target.value })}
+                      className={`${inputBase} !py-2.5 !px-4 !rounded-xl !text-xs resize-none h-20`}
+                      maxLength={500}
+                      placeholder="Short description"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelBase}>Speakers / Guests</label>
+                      <input
+                        id="studentcareerform-ecell-event-speakers"
+                        name="studentcareerform-ecell-event-speakers"
+                        aria-label="ecell event speakers"
+                        value={event?.speakers || ''}
+                        onChange={(e) => updateEvent(yearIndex, eventIndex, { speakers: e.target.value })}
+                        className={`${inputBase} !py-2.5 !px-4 !rounded-xl !text-xs`}
+                        maxLength={250}
+                        placeholder="Speaker names"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelBase}>Participants Count</label>
+                      <input
+                        id="studentcareerform-ecell-event-participants"
+                        name="studentcareerform-ecell-event-participants"
+                        aria-label="ecell event participants"
+                        value={event?.participants || ''}
+                        onChange={(e) => updateEvent(yearIndex, eventIndex, { participants: e.target.value })}
+                        className={`${inputBase} !py-2.5 !px-4 !rounded-xl !text-xs`}
+                        maxLength={50}
+                        placeholder="e.g. 150+"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => addEvent(yearIndex)}
+              className="w-full py-3 border border-dashed border-blue-300 rounded-2xl text-xs font-bold text-blue-500 hover:border-blue-500 hover:text-blue-700 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
+              Add Event
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={addYear}
+        className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-sm font-bold text-slate-400 hover:border-blue-500 hover:text-blue-500 transition-all flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4" /></svg>
+        Add Academic Year
+      </button>
+    </div>
+  );
+};
+
 /* ── Main Form Component ─────────────────────────────────────────────────────── */
 interface StudentCareerFormProps { slug: string; onBack: () => void; }
 
@@ -199,6 +373,8 @@ const SLUG_NAMES: Record<string, string> = {
   'external-projects': 'Ethan / Solecthon',
   'training': 'Training',
   'placement': 'Placement',
+  'e-cell': 'E-Cell',
+  'iiic': 'IIIC',
   'career-at-vcet': 'Career @ VCET',
 };
 
@@ -247,6 +423,7 @@ const StudentCareerForm: React.FC<StudentCareerFormProps> = ({ slug, onBack }) =
       const input = value as Record<string, unknown>;
       const output: Record<string, unknown> = {};
       Object.entries(input).forEach(([key, child]) => {
+        if (key.startsWith('_')) return;
         if (key.endsWith('_preview')) return;
         if (
           (key === 'fileName' || key === 'updatedAt' || key === 'slug') &&
@@ -1223,6 +1400,546 @@ const StudentCareerForm: React.FC<StudentCareerFormProps> = ({ slug, onBack }) =
 
 
 
+
+      case 'training':
+        return (
+          <div className="space-y-8">
+            <SectionCard title="1. Training Introduction" icon="🎯">
+              <label className={labelBase}>Intro Points (one per line)</label>
+              <textarea
+                id="studentcareerform-training-main-content"
+                name="studentcareerform-training-main-content"
+                aria-label="training intro points"
+                value={(payload.mainContent || []).join('\n')}
+                onChange={e => setPayload({ ...payload, mainContent: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-56 resize-y`}
+                placeholder="Enter one bullet point per line"
+              />
+            </SectionCard>
+
+            <SectionCard title="2. Training Events" icon="📅">
+              <TableManager
+                items={payload.events || []}
+                maxItems={20}
+                addLabel="Add Event"
+                onChange={v => setPayload({ ...payload, events: v })}
+                textFields={[
+                  { key: 'name', label: 'Event Name', placeholder: 'Event name', maxLength: 120 },
+                  { key: 'company', label: 'Company / Resource Person', placeholder: 'Details', maxLength: 400, isTextarea: true },
+                  { key: 'date', label: 'Date', placeholder: 'Since 2019 / 2024-25', maxLength: 60 },
+                ]}
+                mediaField={{ key: 'image', label: 'Event Image', accept: 'image/*' }}
+              />
+            </SectionCard>
+
+            <SectionCard title="3. Career Guidance" icon="🧭">
+              <label className={labelBase}>Guidance Highlights (one per line)</label>
+              <textarea
+                id="studentcareerform-training-career-highlights"
+                name="studentcareerform-training-career-highlights"
+                aria-label="career guidance highlights"
+                value={(payload.careerHighlights || []).join('\n')}
+                onChange={e => setPayload({ ...payload, careerHighlights: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-44 resize-y`}
+                placeholder="Enter one point per line"
+              />
+
+              <div className="pt-6 border-t border-slate-100">
+                <TableManager
+                  items={payload.careerGuidance || []}
+                  maxItems={20}
+                  addLabel="Add Seminar"
+                  onChange={v => setPayload({ ...payload, careerGuidance: v })}
+                  textFields={[
+                    { key: 'event', label: 'Event', placeholder: 'Seminar title', maxLength: 160 },
+                    { key: 'resourcePerson', label: 'Resource Person', placeholder: 'Speaker details', maxLength: 500, isTextarea: true },
+                  ]}
+                  mediaField={{ key: 'image', label: 'Seminar Image', accept: 'image/*' }}
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard title="4. Internship" icon="🏭">
+              <div className="space-y-4">
+                <div>
+                  <label className={labelBase}>Internship Description</label>
+                  <textarea
+                    id="studentcareerform-training-internship-description"
+                    name="studentcareerform-training-internship-description"
+                    aria-label="internship description"
+                    value={payload.internshipDescription || ''}
+                    onChange={e => setPayload({ ...payload, internshipDescription: e.target.value })}
+                    className={`${inputBase} h-36 resize-none`}
+                    placeholder="Internship section description"
+                    maxLength={2000}
+                  />
+                </div>
+                <TableManager
+                  items={payload.internship || []}
+                  maxItems={10}
+                  addLabel="Add Internship Procedure Step"
+                  onChange={v => setPayload({ ...payload, internship: v })}
+                  textFields={[
+                    { key: 'step', label: 'Procedure Step', placeholder: 'Step text', maxLength: 500, isTextarea: true },
+                  ]}
+                />
+                <div>
+                  <label className={labelBase}>Internship Banner Image</label>
+                  <MediaUploadButton
+                    value={payload.internshipImage}
+                    previewUrl={payload.internshipImage_preview}
+                    onChange={(v, p) => setPayload({ ...payload, internshipImage: v, internshipImage_preview: p })}
+                    accept="image/*"
+                    label="Upload Internship Image"
+                  />
+                </div>
+              </div>
+            </SectionCard>
+
+            <SectionCard title="5. Training Gallery" icon="🖼️">
+              <TableManager
+                items={payload.gallery || []}
+                maxItems={20}
+                addLabel="Add Gallery Image"
+                onChange={v => setPayload({ ...payload, gallery: v })}
+                textFields={[
+                  { key: 'title', label: 'Title (optional)', placeholder: 'Gallery item title', maxLength: 120 },
+                ]}
+                mediaField={{ key: 'image', label: 'Gallery Image', accept: 'image/*' }}
+              />
+            </SectionCard>
+          </div>
+        );
+
+      case 'placement':
+        return (
+          <div className="space-y-8">
+            <SectionCard title="1. Objectives" icon="🎯">
+              <label className={labelBase}>Objectives (one per line)</label>
+              <textarea
+                id="studentcareerform-placement-objectives"
+                name="studentcareerform-placement-objectives"
+                aria-label="placement objectives"
+                value={(payload.objectives || []).join('\n')}
+                onChange={e => setPayload({ ...payload, objectives: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-56 resize-y`}
+                placeholder="Enter one objective per line"
+              />
+            </SectionCard>
+
+            <SectionCard title="2. Placement Cell" icon="👥">
+              <TableManager
+                items={payload.placementCell?.members || []}
+                maxItems={8}
+                addLabel="Add Placement Cell Member"
+                onChange={v => setPayload({ ...payload, placementCell: { ...(payload.placementCell || {}), members: v } })}
+                textFields={[
+                  { key: 'name', label: 'Name', placeholder: 'Full name', maxLength: 120 },
+                  { key: 'role', label: 'Role', placeholder: 'Designation', maxLength: 120 },
+                  { key: 'email', label: 'Email', placeholder: 'Email', maxLength: 120 },
+                  { key: 'mobile', label: 'Mobile', placeholder: 'Mobile number', maxLength: 60 },
+                  { key: 'phone', label: 'Phone', placeholder: 'Phone/extension', maxLength: 80 },
+                ]}
+                mediaField={{ key: 'image', label: 'Member Image', accept: 'image/*' }}
+              />
+
+              <div className="pt-6 border-t border-slate-100">
+                <label className={labelBase}>Training & Placement Committee PDF</label>
+                <MediaUploadButton
+                  value={payload.placementCell?.committeePdf}
+                  previewUrl={payload.placementCell?.committeePdf_preview}
+                  onChange={(v, p) => setPayload({ ...payload, placementCell: { ...(payload.placementCell || {}), committeePdf: v, committeePdf_preview: p } })}
+                  accept=".pdf,application/pdf"
+                  label="Upload Committee PDF"
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard title="3. Reports" icon="📄">
+              <TableManager
+                items={payload.reports || []}
+                maxItems={12}
+                addLabel="Add Placement Report"
+                onChange={v => setPayload({ ...payload, reports: v })}
+                textFields={[
+                  { key: 'label', label: 'Label', placeholder: 'Placement 2024-25', maxLength: 120 },
+                  { key: 'year', label: 'Year', placeholder: '2024-25', maxLength: 40 },
+                  { key: 'href', label: 'Report URL', placeholder: '/pdfs/Trainging & Placement/Placement/file.pdf', maxLength: 600 },
+                ]}
+                mediaField={{ key: 'fileUrl', label: 'Upload Report PDF', accept: '.pdf,application/pdf' }}
+              />
+            </SectionCard>
+
+            <SectionCard title="4. Statistics (JSON)" icon="📊">
+              <div className="space-y-10 mt-4">
+                <div className="bg-slate-50 rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm">
+                  <div className="flex items-center justify-between px-8 py-5 border-b border-slate-100">
+                    <div>
+                      <h3 className="text-sm font-extrabold text-[#111827] uppercase tracking-wider">Higher Studies — Chart Data</h3>
+                      <p className="text-xs text-slate-400 mt-0.5">Year-wise count of students admitted to higher studies.</p>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-white/50 border-b border-slate-100">
+                          <th className="text-left px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Academic Year</th>
+                          <th className="text-left px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">No. of Students</th>
+                          <th className="text-right px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {(payload.statistics?.find((s: any) => s?.title === 'Higher Studies')?.values || []).map((row: any, i: number) => (
+                          <tr key={i} className="group hover:bg-white transition-all">
+                            <td className="px-8 py-4 text-sm font-bold text-slate-900">{row?.year || ''}</td>
+                            <td className="px-8 py-4 text-sm font-black text-blue-700">{row?.value ?? ''}</td>
+                            <td className="px-8 py-4">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const stats = Array.isArray(payload.statistics) ? [...payload.statistics] : [];
+                                    const hsIndex = stats.findIndex((s: any) => s?.title === 'Higher Studies');
+                                    if (hsIndex === -1) return;
+                                    const hs = { ...stats[hsIndex] };
+                                    const values = Array.isArray(hs.values) ? hs.values.filter((_: any, idx: number) => idx !== i) : [];
+                                    hs.values = values;
+                                    stats[hsIndex] = hs;
+                                    setPayload({ ...payload, statistics: stats });
+                                  }}
+                                  className="w-8 h-8 rounded-xl bg-white text-red-500 border border-slate-100 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="px-8 py-5 bg-white border-t border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Add Year Entry</p>
+                    <div className="flex flex-wrap gap-3 items-end">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Academic Year</label>
+                        <input
+                          id="studentcareerform-hs-year"
+                          name="studentcareerform-hs-year"
+                          aria-label="higher studies year"
+                          type="text"
+                          value={payload._hsYear || ''}
+                          onChange={(e) => setPayload({ ...payload, _hsYear: e.target.value })}
+                          className="bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm outline-none w-36"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">No. of Students</label>
+                        <input
+                          id="studentcareerform-hs-count"
+                          name="studentcareerform-hs-count"
+                          aria-label="higher studies count"
+                          type="number"
+                          min="0"
+                          value={payload._hsCount || ''}
+                          onChange={(e) => setPayload({ ...payload, _hsCount: e.target.value })}
+                          className="bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm outline-none w-32"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const year = String(payload._hsYear || '').trim();
+                          const value = Number(payload._hsCount);
+                          if (!year || Number.isNaN(value)) return;
+
+                          const defaultStats = [
+                            { title: 'Higher Studies', yAxisLabel: 'No. of students admitted to higher studies', maxValue: 50, values: [] as any[] },
+                            { title: 'Highest Package', yAxisLabel: 'Package (LPA)', maxValue: 25, unit: 'LPA', values: [] as any[] },
+                          ];
+                          const stats = Array.isArray(payload.statistics) && payload.statistics.length > 0 ? [...payload.statistics] : defaultStats;
+                          const hsIndex = stats.findIndex((s: any) => s?.title === 'Higher Studies');
+                          const hs = hsIndex >= 0 ? { ...stats[hsIndex] } : { ...defaultStats[0] };
+                          const values = Array.isArray(hs.values) ? [...hs.values] : [];
+                          values.push({ year, value, color: 'bg-[#1a4b7c]' });
+                          hs.values = values;
+                          hs.maxValue = Math.max(5, ...values.map((v: any) => Number(v?.value) || 0));
+                          if (hsIndex >= 0) stats[hsIndex] = hs; else stats.unshift(hs);
+
+                          setPayload({ ...payload, statistics: stats, _hsYear: '', _hsCount: '' });
+                        }}
+                        className="flex items-center gap-2 bg-[#2563EB] hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl text-xs transition-all shadow-sm"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Year
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm">
+                  <div className="flex items-center justify-between px-8 py-5 border-b border-slate-100">
+                    <div>
+                      <h3 className="text-sm font-extrabold text-[#111827] uppercase tracking-wider">Highest Package — Chart Data</h3>
+                      <p className="text-xs text-slate-400 mt-0.5">Year-wise highest package offered (in LPA).</p>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-white/50 border-b border-slate-100">
+                          <th className="text-left px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Academic Year</th>
+                          <th className="text-left px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Package (LPA)</th>
+                          <th className="text-right px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {(payload.statistics?.find((s: any) => s?.title === 'Highest Package')?.values || []).map((row: any, i: number) => (
+                          <tr key={i} className="group hover:bg-white transition-all">
+                            <td className="px-8 py-4 text-sm font-bold text-slate-900">{row?.year || ''}</td>
+                            <td className="px-8 py-4 text-sm font-black text-amber-700">{row?.value ?? ''} LPA</td>
+                            <td className="px-8 py-4">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const stats = Array.isArray(payload.statistics) ? [...payload.statistics] : [];
+                                    const hpIndex = stats.findIndex((s: any) => s?.title === 'Highest Package');
+                                    if (hpIndex === -1) return;
+                                    const hp = { ...stats[hpIndex] };
+                                    const values = Array.isArray(hp.values) ? hp.values.filter((_: any, idx: number) => idx !== i) : [];
+                                    hp.values = values;
+                                    stats[hpIndex] = hp;
+                                    setPayload({ ...payload, statistics: stats });
+                                  }}
+                                  className="w-8 h-8 rounded-xl bg-white text-red-500 border border-slate-100 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="px-8 py-5 bg-white border-t border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Add Year Entry</p>
+                    <div className="flex flex-wrap gap-3 items-end">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Academic Year</label>
+                        <input
+                          id="studentcareerform-hp-year"
+                          name="studentcareerform-hp-year"
+                          aria-label="highest package year"
+                          type="text"
+                          value={payload._hpYear || ''}
+                          onChange={(e) => setPayload({ ...payload, _hpYear: e.target.value })}
+                          className="bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-amber-500 rounded-xl px-4 py-3 text-sm outline-none w-36"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Package (LPA)</label>
+                        <input
+                          id="studentcareerform-hp-lpa"
+                          name="studentcareerform-hp-lpa"
+                          aria-label="highest package lpa"
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={payload._hpLpa || ''}
+                          onChange={(e) => setPayload({ ...payload, _hpLpa: e.target.value })}
+                          className="bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-amber-500 rounded-xl px-4 py-3 text-sm outline-none w-32"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const year = String(payload._hpYear || '').trim();
+                          const value = Number(payload._hpLpa);
+                          if (!year || Number.isNaN(value)) return;
+
+                          const defaultStats = [
+                            { title: 'Higher Studies', yAxisLabel: 'No. of students admitted to higher studies', maxValue: 50, values: [] as any[] },
+                            { title: 'Highest Package', yAxisLabel: 'Package (LPA)', maxValue: 25, unit: 'LPA', values: [] as any[] },
+                          ];
+                          const stats = Array.isArray(payload.statistics) && payload.statistics.length > 0 ? [...payload.statistics] : defaultStats;
+                          const hpIndex = stats.findIndex((s: any) => s?.title === 'Highest Package');
+                          const hp = hpIndex >= 0 ? { ...stats[hpIndex] } : { ...defaultStats[1] };
+                          const values = Array.isArray(hp.values) ? [...hp.values] : [];
+                          values.push({ year, value, color: 'bg-[#1a4b7c]' });
+                          hp.values = values;
+                          hp.maxValue = Math.max(5, ...values.map((v: any) => Number(v?.value) || 0));
+                          hp.unit = 'LPA';
+                          if (hpIndex >= 0) stats[hpIndex] = hp; else stats.push(hp);
+
+                          setPayload({ ...payload, statistics: stats, _hpYear: '', _hpLpa: '' });
+                        }}
+                        className="flex items-center gap-2 bg-[#1e293b] hover:bg-[#334155] text-white font-bold px-5 py-3 rounded-xl text-xs transition-all shadow-sm"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Year
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SectionCard>
+
+            <SectionCard title="5. Gallery & Recruiters" icon="🏢">
+              <TableManager
+                items={payload.gallery || []}
+                maxItems={20}
+                addLabel="Add Gallery Image"
+                onChange={v => setPayload({ ...payload, gallery: v })}
+                textFields={[
+                  { key: 'title', label: 'Title (optional)', placeholder: 'Gallery title', maxLength: 120 },
+                ]}
+                mediaField={{ key: 'image', label: 'Gallery Image', accept: 'image/*' }}
+              />
+
+              <div className="pt-6 border-t border-slate-100">
+                <label className={labelBase}>Recruiters Banner</label>
+                <MediaUploadButton
+                  value={payload.recruiters?.bannerImage}
+                  previewUrl={payload.recruiters?.bannerImage_preview}
+                  onChange={(v, p) => setPayload({ ...payload, recruiters: { ...(payload.recruiters || {}), bannerImage: v, bannerImage_preview: p } })}
+                  accept="image/*"
+                  label="Upload Recruiters Banner"
+                />
+              </div>
+            </SectionCard>
+          </div>
+        );
+
+      case 'e-cell':
+        return (
+          <div className="space-y-8">
+            <SectionCard title="1. About E-Cell" icon="🚀">
+              <label className={labelBase}>Description (one paragraph per line)</label>
+              <textarea
+                id="studentcareerform-ecell-about"
+                name="studentcareerform-ecell-about"
+                aria-label="ecell about"
+                value={(payload.about || []).join('\n')}
+                onChange={(e) => setPayload({ ...payload, about: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-44 resize-y`}
+                placeholder="About E-Cell content..."
+              />
+
+              <div>
+                <label className={labelBase}>Objectives (one per line)</label>
+                <textarea
+                  id="studentcareerform-ecell-objectives"
+                  name="studentcareerform-ecell-objectives"
+                  aria-label="ecell objectives"
+                  value={(payload.objectives || []).join('\n')}
+                  onChange={(e) => setPayload({ ...payload, objectives: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                  className={`${inputBase} h-40 resize-y`}
+                  placeholder="Objectives..."
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard title="2. Year-wise Events" icon="📅">
+              <NestedEventManager
+                items={payload.ecellEvents || []}
+                onChange={(v) => setPayload({ ...payload, ecellEvents: v })}
+              />
+            </SectionCard>
+
+            <SectionCard title="3. Co-ordinator & Members" icon="👥">
+              <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-4">
+                <h4 className="text-sm font-bold text-slate-700">Faculty In-charge</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className={labelBase}>Name</label>
+                    <input id="studentcareerform-ecell-incharge-name" name="studentcareerform-ecell-incharge-name" aria-label="ecell incharge name" maxLength={120} value={payload.inchargeName || ''} onChange={e => setPayload({ ...payload, inchargeName: e.target.value })} className={inputBase} />
+                  </div>
+                  <div>
+                    <label className={labelBase}>Email</label>
+                    <input id="studentcareerform-ecell-incharge-email" name="studentcareerform-ecell-incharge-email" aria-label="ecell incharge email" maxLength={120} value={payload.inchargeEmail || ''} onChange={e => setPayload({ ...payload, inchargeEmail: e.target.value })} className={inputBase} />
+                  </div>
+                  <div>
+                    <label className={labelBase}>Phone</label>
+                    <input id="studentcareerform-ecell-incharge-phone" name="studentcareerform-ecell-incharge-phone" aria-label="ecell incharge phone" maxLength={80} value={payload.inchargePhone || ''} onChange={e => setPayload({ ...payload, inchargePhone: e.target.value })} className={inputBase} />
+                  </div>
+                </div>
+              </div>
+
+              <TableManager
+                items={payload.members || []}
+                maxItems={12}
+                addLabel="Add Member"
+                onChange={v => setPayload({ ...payload, members: v })}
+                textFields={[{ key: 'name', label: 'Member Name', placeholder: 'Name', maxLength: 120 }]}
+              />
+            </SectionCard>
+
+            <SectionCard title="4. Gallery" icon="📸">
+              <TableManager
+                items={payload.gallery || []}
+                maxItems={24}
+                addLabel="Add Gallery Image"
+                onChange={v => setPayload({ ...payload, gallery: v })}
+                textFields={[{ key: 'title', label: 'Title (optional)', placeholder: 'Title', maxLength: 120 }]}
+                mediaField={{ key: 'image', label: 'Image', accept: 'image/*' }}
+              />
+            </SectionCard>
+          </div>
+        );
+
+      case 'iiic':
+        return (
+          <div className="space-y-8">
+            <SectionCard title="1. About IIIC" icon="🏭">
+              <label className={labelBase}>About (one paragraph per line)</label>
+              <textarea
+                id="studentcareerform-iiic-about"
+                name="studentcareerform-iiic-about"
+                aria-label="iiic about"
+                value={(payload.about || []).join('\n')}
+                onChange={(e) => setPayload({ ...payload, about: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-44 resize-y`}
+              />
+              <label className={labelBase}>Objectives (one per line)</label>
+              <textarea
+                id="studentcareerform-iiic-objectives"
+                name="studentcareerform-iiic-objectives"
+                aria-label="iiic objectives"
+                value={(payload.objectives || []).join('\n')}
+                onChange={(e) => setPayload({ ...payload, objectives: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-40 resize-y`}
+              />
+            </SectionCard>
+
+            <SectionCard title="2. Roles" icon="🧩">
+              <label className={labelBase}>Roles (one per line)</label>
+              <textarea
+                id="studentcareerform-iiic-roles"
+                name="studentcareerform-iiic-roles"
+                aria-label="iiic roles"
+                value={(payload.roles || []).join('\n')}
+                onChange={(e) => setPayload({ ...payload, roles: e.target.value.split('\n').map((v: string) => v.trim()).filter(Boolean) })}
+                className={`${inputBase} h-52 resize-y`}
+              />
+            </SectionCard>
+
+            <SectionCard title="3. Events" icon="📅">
+              <TableManager
+                items={payload.events || []}
+                maxItems={20}
+                addLabel="Add Event"
+                onChange={v => setPayload({ ...payload, events: v })}
+                textFields={[
+                  { key: 'title', label: 'Event Title', placeholder: 'Title', maxLength: 120 },
+                  { key: 'description', label: 'Description', placeholder: 'Description', maxLength: 500, isTextarea: true },
+                ]}
+                mediaField={{ key: 'image', label: 'Event Image', accept: 'image/*' }}
+              />
+            </SectionCard>
+          </div>
+        );
 
       case 'career-at-vcet':
         return (

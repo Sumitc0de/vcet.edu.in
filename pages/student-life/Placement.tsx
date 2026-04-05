@@ -238,7 +238,7 @@ const Placement: React.FC = () => {
                   {placementReports.map((report) => (
                     <a
                       key={report.label}
-                      href={report.href}
+                      href={report.href || report.fileUrl || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-4 border border-[#E5E7EB] bg-white px-4 py-4 group hover:bg-[#F7F9FC] transition-colors duration-200"
