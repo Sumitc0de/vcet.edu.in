@@ -680,7 +680,7 @@ const CommitteesForm: React.FC<CommitteesFormProps> = ({ slug, onBack }) => {
                 slug === 'iqac' ? [{ key: 'name', label: 'Official Name', placeholder: 'Full Name' }, { key: 'designation', label: 'Academic Designation', placeholder: 'e.g. Professor & Head' }] :
                 slug === 'anti-ragging' ? [{ key: 'name', label: 'Official Name', placeholder: 'Full Name' }, { key: 'designation', label: 'Designation', placeholder: 'e.g. HOD IT' }, { key: 'contact', label: 'Emergency Contact', placeholder: 'Mobile / Extension', limit: 40 }] :
                 slug === 'grievance' ? [{ key: 'post', label: 'Post', placeholder: 'e.g. Member Secretary' }, { key: 'name', label: 'Full Name', placeholder: 'Official Name' }, { key: 'email', label: 'Institutional Email', placeholder: 'email@vcet.edu.in', limit: 40 }] :
-                slug === 'icc' ? [{ key: 'post', label: 'Post', placeholder: 'e.g. Presiding Officer' }, { key: 'name', label: 'Official Name', placeholder: 'Full Name' }, { key: 'contact', label: 'Contact', placeholder: 'Phone Number', limit: 40 }] :
+                slug === 'icc' ? [{ key: 'post', label: 'Post', placeholder: 'e.g. Presiding Officer' }, { key: 'name', label: 'Official Name', placeholder: 'Full Name' }, { key: 'email', label: 'Email Id', placeholder: 'email@vcet.edu.in', limit: 40 }, { key: 'contact', label: 'Contact', placeholder: 'Phone Number', limit: 40 }, { key: 'address', label: 'Address', placeholder: 'Office / Department / Campus Location', limit: 180 }] :
                 [{ key: 'name', label: 'Full Name', placeholder: 'Official Name' }, { key: 'post', label: 'Committee Role', placeholder: 'e.g. Member Secretary' }]
               }
               maxItems={slug === 'cdc' ? 20 : 15}
