@@ -1,19 +1,19 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 
 export const useListSync = (items: any[]) => {
   const idsRef = useRef<string[]>([]);
-  
-  useEffect(() => {
-    if (items.length !== idsRef.current.length) {
-      if (items.length > idsRef.current.length) {
-        const diff = items.length - idsRef.current.length;
-        const newIds = Array.from({ length: diff }, () => Math.random().toString(36).substring(2, 9));
-        idsRef.current = [...idsRef.current, ...newIds];
-      } else {
-        idsRef.current = idsRef.current.slice(0, items.length);
-      }
-    }
-  }, [items.length]);
+
+  const createId = () =>
+    `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
+  // Keep id list in sync during render so keys are available on the first paint.
+  if (items.length > idsRef.current.length) {
+    const diff = items.length - idsRef.current.length;
+    const newIds = Array.from({ length: diff }, createId);
+    idsRef.current = [...idsRef.current, ...newIds];
+  } else if (items.length < idsRef.current.length) {
+    idsRef.current = idsRef.current.slice(0, items.length);
+  }
 
   return {
     ids: idsRef.current,
