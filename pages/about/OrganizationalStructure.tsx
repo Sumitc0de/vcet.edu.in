@@ -169,10 +169,29 @@ const OrganizationalStructure: React.FC = () => {
             )}
 
             {isLoading ? (
-              <div className="flex flex-wrap justify-center gap-6 pb-8" aria-live="polite" aria-busy="true">
-                {Array.from({ length: 3 }).map((_, idx) => (
-                  <div key={idx} className="w-[240px] h-[150px] rounded-2xl border border-gray-100 bg-slate-100 animate-pulse" />
-                ))}
+              <div className="pb-10" aria-live="polite" aria-busy="true">
+                <div className="mx-auto max-w-2xl rounded-3xl border border-brand-blue/10 bg-gradient-to-br from-brand-blue/[0.04] via-white to-brand-gold/[0.06] px-6 py-8 md:px-8 md:py-10 text-center shadow-sm">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm">
+                    <div className="h-7 w-7 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin" />
+                  </div>
+
+                  <h3 className="text-lg md:text-xl font-display font-bold text-brand-navy">
+                    Building the hierarchy graph...
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Please wait while we prepare the latest organizational structure.
+                  </p>
+
+                  <div className="mt-6 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                    <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-brand-blue via-brand-gold to-brand-blue animate-pulse" />
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-brand-blue animate-bounce" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-brand-gold animate-bounce [animation-delay:120ms]" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-brand-blue animate-bounce [animation-delay:240ms]" />
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="flex flex-wrap justify-center gap-10 overflow-x-auto pb-8">
