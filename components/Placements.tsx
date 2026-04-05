@@ -186,7 +186,7 @@ const Placements: React.FC = () => {
       <div className="relative py-10 md:py-14 bg-gradient-to-b from-brand-dark to-brand-navy">
         <div className="absolute inset-0 z-0">
           <img
-            src="/Images/PLACEMENT/Placement_Background.jpg"
+            src="/images/Main Page/PLACEMENT/Placement_Background.jpg"
             alt="Placements Background"
             className="w-full h-full object-cover opacity-10"
           />

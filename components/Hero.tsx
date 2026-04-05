@@ -316,18 +316,18 @@ const AdmissionForm: React.FC = () => {
 
 const packageImages = [
   {
-    src: "/Images/Packages/HIGEST Package banner.jpg",
+    src: "/images/Main Page/Packages/HIGEST_Package_banner.jpg",
     label: "Highest Package",
   },
   {
-    src: "/Images/Packages/AICTE-Pamphlet_page-0001.jpg",
+    src: "/images/Main Page/Packages/AICTE-Pamphlet_page-0001.jpg",
     label: "AICTE Pamphlet",
   },
 ];
 
 const fallbackBannerSlides = [
-    { src: "/Images/Banner/Bruse Banner.png", alt: "Bruse Banner" },
-    { src: "/Images/Banner/Yearly banner.png", alt: "Yearly Banner" },
+    { src: "/images/Main Page/Banner/Bruse_Banner.png", alt: "Bruse Banner" },
+    { src: "/images/Main Page/Banner/Yearly_banner.png", alt: "Yearly Banner" },
   ];
 
 const Hero: React.FC = () => {
@@ -370,7 +370,7 @@ const Hero: React.FC = () => {
       {/* ── Mobile hero image + card — only shown on xs/very small screens ───── */}
       <div className="sm:hidden flex flex-col w-full bg-brand-dark">
         <img
-          src="/Images/Home background/VCET-Home-1-scaled.jpg"
+          src="/images/Main Page/Home background/VCET-Home-1-scaled.jpg"
           alt="VCET Campus"
           className="block w-full h-[260px] sm:h-[320px] object-cover object-top"
         />
@@ -420,7 +420,7 @@ const Hero: React.FC = () => {
       <div
         className="hero-bg-pan hidden sm:block absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/Images/Home background/VCET-Home-1-scaled.jpg')",
+          backgroundImage: "url('/images/Main Page/Home background/VCET-Home-1-scaled.jpg')",
           backgroundRepeat: "no-repeat",
         }}
         aria-hidden="true"

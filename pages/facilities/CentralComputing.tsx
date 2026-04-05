@@ -32,7 +32,7 @@ const labs = [
   {
     name: 'Lab 1',
     total: 30,
-    image: '/images\Faculities\Central Computing Faculity\Central Computing Facilities\c1-1024x766.png',
+    image: '/images/Facilities/Central Computing Facilities/Central Computing Facilities/Central_Computing_Facilities_Lab1.png',
     configs: [
       {
         heading: 'Configuration (30 PCs)',
@@ -50,7 +50,7 @@ const labs = [
   {
     name: 'Lab 2',
     total: 26,
-    image: '/images\Faculities\Central Computing Faculity\Central Computing Facilities\c2-1024x767.png',
+    image: '/images/Facilities/Central Computing Facilities/Central Computing Facilities/Central_Computing_Facilities_Lab2.png',
     configs: [
       {
         heading: '20 PCs — 1 Server + 19 Clients',
@@ -80,7 +80,7 @@ const labs = [
   {
     name: 'Lab 3',
     total: 63,
-    image: '/images\Faculities\Central Computing Faculity\Central Computing Facilities\c3-1024x758.png',
+    image: '/images/Facilities/Central Computing Facilities/Central Computing Facilities/Central_Computing_Facilities_Lab3.png',
     configs: [
       {
         heading: 'Configuration (63 PCs)',

@@ -13,47 +13,47 @@ const fallbackGalleryItems: FallbackGalleryItem[] = [
   {
     title: 'VCET Campus',
     subtitle: 'Our Sprawling Campus',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'AICTE IDEA Lab',
     subtitle: 'Innovation & Design',
-    src: '/Images/gallery/aicte_lab_new.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'Center of Excellence',
     subtitle: 'Advanced Research',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'Machinery Diagnostics',
     subtitle: 'Precision Engineering',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'Texas Instruments Lab',
     subtitle: 'Embedded Systems',
-    src: '/Images/gallery/texas_lab_new.jpg',
+    src: '/images/Main Page/gallery/texas_lab_new.jpg',
   },
   {
     title: 'Robotics Lab',
     subtitle: 'Automation & AI',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'Siemens Lab',
     subtitle: 'Industrial Automation',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'Oracle Academy',
     subtitle: 'Cloud & Databases',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
   {
     title: 'e-Yantra Lab',
     subtitle: 'Drones & Embedded',
-    src: '/Images/gallery/Gallary_1.jpg',
+    src: '/images/Main Page/gallery/Gallary_1.jpg',
   },
 ];
 
@@ -67,7 +67,7 @@ const Gallery: React.FC = () => {
     ? activeGalleries.map(g => ({
         title: g.title || '',
         subtitle: g.subtitle || '',
-        src: g.image_url || '/Images/gallery/Gallary_1.jpg',
+        src: g.image_url || '/images/Main Page/gallery/Gallary_1.jpg',
         id: String(g.id)
       }))
     : fallbackGalleryItems.map((fg, i) => ({ ...fg, id: `fallback-${i}` }));
