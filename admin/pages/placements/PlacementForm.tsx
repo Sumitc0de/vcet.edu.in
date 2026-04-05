@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { placementsApi } from '../../api/placements';
 import type { PlacementPayload } from '../../types';
 import PageEditorHeader from '../../../components/admin/PageEditorHeader';
@@ -88,7 +88,6 @@ const PlacementForm: React.FC = () => {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4">
       <div className="w-full max-w-2xl">
-        {/* Breadcrumbs */}
         <PageEditorHeader
           title={isEdit ? 'Edit Placement' : 'New Placement'}
           description="Update campus placement statistics and company info."

@@ -90,6 +90,22 @@ const Placement: React.FC = () => {
     return () => { clearTimeout(t); observer.disconnect(); };
   }, [activeId]);
 
+  if (loading) {
+    return (
+      <PageLayout>
+        <PageBanner
+          title="Placement"
+          breadcrumbs={[
+            { label: 'Placement' },
+          ]}
+        />
+        <section className="py-10 md:py-12 bg-[#F7F9FC]">
+          <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+        </section>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <PageBanner
@@ -138,11 +154,7 @@ const Placement: React.FC = () => {
             <section className="reveal bg-white p-8 lg:p-12 border border-[#E5E7EB] shadow-[4px_4px_0_#E5E7EB]">
               <div className="space-y-6 text-[#5b6574] leading-relaxed text-[15px]">
                 <h3 className="text-2xl font-bold text-[#1a4b7c] border-b border-slate-100 pb-3 mb-6">Objectives</h3>
-                {loading ? (
-                  <div className="text-slate-500">Loading...</div>
-                ) : (
-                  <StyledPointList items={objectives} />
-                )}
+                <StyledPointList items={objectives} />
               </div>
             </section>
           )}
@@ -238,7 +250,7 @@ const Placement: React.FC = () => {
                   {placementReports.map((report) => (
                     <a
                       key={report.label}
-                      href={report.href}
+                      href={report.href || report.fileUrl || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-4 border border-[#E5E7EB] bg-white px-4 py-4 group hover:bg-[#F7F9FC] transition-colors duration-200"

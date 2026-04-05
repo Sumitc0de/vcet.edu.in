@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/PageLayout';
 import DepartmentFacultySection from '../../components/DepartmentFacultySection';
@@ -61,10 +61,28 @@ const DeptAIDS: React.FC = () => {
     return () => { clearTimeout(t); observer.disconnect(); };
   }, [activeId]);
 
+  if (loading) {
+    return (
+      <PageLayout>
+        <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
+          <div className="container mx-auto px-6 max-w-7xl relative z-10">
+            <h1 className="font-display font-bold text-white leading-tight tracking-tight text-center">
+              <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Artificial Intelligence</span>
+              <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-3 text-brand-gold font-semibold italic">&amp; Data Science</span>
+            </h1>
+          </div>
+        </header>
+        <section className="py-10 md:py-12 bg-[#F7F9FC]">
+          <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+        </section>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
 
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* â”€â”€ Hero Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white opacity-5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-brand-gold opacity-10 blur-2xl pointer-events-none" />
@@ -82,7 +100,7 @@ const DeptAIDS: React.FC = () => {
         </div>
       </header>
 
-      {/* ── Page Body ───────────────────────────────────────────── */}
+      {/* â”€â”€ Page Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="container mx-auto px-4 sm:px-6 py-10 md:py-12 max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
 
         {/* Sticky Sidebar */}
@@ -116,7 +134,7 @@ const DeptAIDS: React.FC = () => {
         {/* Main Content */}
         <main className="w-full flex-1 space-y-14 md:space-y-16 min-w-0">
 
-          {/* ════ ABOUT ════════════════════════════════════════════ */}
+          {/* â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'about' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="space-y-6 text-slate-600 leading-8 text-left">
@@ -149,7 +167,7 @@ const DeptAIDS: React.FC = () => {
             </section>
           )}
 
-          {/* ════ VISION & MISSION ═════════════════════════════════ */}
+          {/* â•â•â•â• VISION & MISSION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'vision' && (
             <div className="space-y-16">
               <div className="reveal flex items-center gap-4">
@@ -173,7 +191,7 @@ const DeptAIDS: React.FC = () => {
                     </blockquote>
                     <div className="flex items-center gap-4">
                       <div className="h-px flex-1 bg-white/10" />
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET · AI &amp; Data Science</span>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET Â· AI &amp; Data Science</span>
                       <div className="h-px w-12 bg-brand-gold/40" />
                     </div>
                   </div>
@@ -205,7 +223,7 @@ const DeptAIDS: React.FC = () => {
             </div>
           )}
 
-          {/* ════ DAB ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• DAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'dab' && (() => {
             const staticMembers = [
               { sr: 1, name: 'Dr. Rakesh Himte', designation: 'Principal', org: 'VCET, Vasai', role: 'Chairman', tag: 'internal' },
@@ -253,7 +271,7 @@ const DeptAIDS: React.FC = () => {
             );
           })()}
 
-          {/* ════ POs, PEOs & PSOs ═════════════════════════════════ */}
+          {/* â•â•â•â• POs, PEOs & PSOs â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'peo' && (() => {
             const pos = [
               { n: '01', text: 'Engineering knowledge: Apply the knowledge of mathematics, science, engineering fundamentals, and an engineering specialization to the solution of complex engineering problems.' },
@@ -319,10 +337,10 @@ const DeptAIDS: React.FC = () => {
             );
           })()}
 
-          {/* ════ FACULTY ══════════════════════════════════════════ */}
+          {/* â•â•â•â• FACULTY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty' && <DepartmentFacultySection departmentName="Artificial Intelligence & Data Science" />}
 
-          {/* ════ STUDENT ACHIEVEMENTS ════════════════════════════ */}
+          {/* â•â•â•â• STUDENT ACHIEVEMENTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'student-achievements' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -346,7 +364,7 @@ const DeptAIDS: React.FC = () => {
             </section>
           )}
 
-          {/* ════ TOPPERS ══════════════════════════════════════════ */}
+          {/* â•â•â•â• TOPPERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'toppers' && (() => {
             const topperYears = [
               {
@@ -409,7 +427,7 @@ const DeptAIDS: React.FC = () => {
             );
           })()}
 
-          {/* ════ SYLLABUS ═════════════════════════════════════════ */}
+          {/* â•â•â•â• SYLLABUS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'syllabus' && (() => {
             const staticLinks = [
               { label: 'SYLLABUS Revised 2019-20 (SE)', url: 'https://vcet.edu.in/wp-content/uploads/2021/11/Computer_SE_New_8_Branch_R2019_1.7.2021-1.pdf' },
@@ -438,7 +456,7 @@ const DeptAIDS: React.FC = () => {
             );
           })()}
 
-          {/* ════ PATENT / COPYRIGHTS ═════════════════════════════ */}
+          {/* â•â•â•â• PATENT / COPYRIGHTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'patent' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -462,7 +480,7 @@ const DeptAIDS: React.FC = () => {
             </section>
           )}
 
-          {/* ════ INNOVATIONS IN TEACHING LEARNING ═══════════════ */}
+          {/* â•â•â•â• INNOVATIONS IN TEACHING LEARNING â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'teaching-learning' && (() => {
             const links = [
               { label: 'Innovation in Teaching Learning 2024-25 (Even)', url: 'pdfs/Department/ArtificialIntelligenceandDataScience/InnovationinTeachingLearning/EVEN-SEM-Innovation-in-Teaching-learning-2024-25-.pdf' },
@@ -490,7 +508,7 @@ const DeptAIDS: React.FC = () => {
             );
           })()}
 
-          {/* ════ MoU ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• MoU â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'mou' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -514,12 +532,12 @@ const DeptAIDS: React.FC = () => {
             </section>
           )}
 
-          {/* ════ MAGAZINE / NEWSLETTER ═══════════════════════════ */}
+          {/* â•â•â•â• MAGAZINE / NEWSLETTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'newsletter' && (
             <NewsletterSection departmentName="Artificial Intelligence and Data Science" departmentId="4" />
           )}
 
-          {/* ════ FALLBACK ════════════════════════════════════════ */}
+          {/* â•â•â•â• FALLBACK â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId !== 'about' && activeId !== 'vision' && activeId !== 'dab' && activeId !== 'peo' && activeId !== 'faculty' && activeId !== 'student-achievements' && activeId !== 'toppers' && activeId !== 'syllabus' && activeId !== 'patent' && activeId !== 'teaching-learning' && activeId !== 'mou' && activeId !== 'newsletter' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -537,3 +555,4 @@ const DeptAIDS: React.FC = () => {
 };
 
 export default DeptAIDS;
+

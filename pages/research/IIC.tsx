@@ -155,18 +155,22 @@ const TeamTable: React.FC<TeamTableProps> = ({ title, leftHeader, rightHeader, r
 const ResearchIIC: React.FC = () => {
   const [apiData, setApiData] = useState<any>(null);
   const [activeSection, setActiveSection] = useState('about');
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     getResearchSection<any>('iic')
       .then((res) => mounted && setApiData(res))
-      .catch(() => mounted && setApiData(null));
+      .catch(() => mounted && setApiData(null))
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
+      });
     return () => {
       mounted = false;
     };
   }, []);
 
-  useEffect(() => {
+    useEffect(() => {
     const sectionIds = sectionTabs.map((tab) => tab.id);
 
     const updateActiveSection = () => {
@@ -253,6 +257,23 @@ const ResearchIIC: React.FC = () => {
   const expertRows = (Array.isArray(committeeGroups?.expert) && committeeGroups.expert.length > 0) ? committeeGroups.expert : defaultExpertRows;
   const supportStaffRows = (Array.isArray(committeeGroups?.support) && committeeGroups.support.length > 0) ? committeeGroups.support : defaultSupportStaffRows;
   const studentRepresentationRows = (Array.isArray(committeeGroups?.student) && committeeGroups.student.length > 0) ? committeeGroups.student : defaultStudentRepresentationRows;
+
+  if (!apiLoaded) {
+    return (
+      <PageLayout>
+        <PageBanner
+          title="Institution's Innovation Council (IIC)"
+          breadcrumbs={[
+            { label: 'Research', href: '/research' },
+            { label: 'IIC' },
+          ]}
+        />
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+        </section>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>

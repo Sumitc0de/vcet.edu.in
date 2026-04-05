@@ -104,6 +104,7 @@ const teamRows = [
 
 const CulturalCommittee: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -113,6 +114,9 @@ const CulturalCommittee: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
 
     return () => {
@@ -120,7 +124,7 @@ const CulturalCommittee: React.FC = () => {
     };
   }, []);
 
-  const apiEvents = Array.isArray(apiData?.events)
+    const apiEvents = Array.isArray(apiData?.events)
     ? apiData.events
       .map((event: Record<string, unknown>) => ({
         title: String(event.title ?? ''),
@@ -167,7 +171,18 @@ const CulturalCommittee: React.FC = () => {
   const instagramUrl = String(apiData?.hInsta || 'https://www.instagram.com/vcetstudentscouncil?igsh=MTVjamlqaWNrbnIzbg==');
   const videoUrl = String(resolveApiUrl(apiData?.hVid) || apiData?.hVid || 'https://youtu.be/-O0TexTnwJ8?si=3oPGI5pT0jiduJ6P');
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner title="Cultural Committee" breadcrumbs={[{ label: 'Cultural Committee' }]} />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner title="Cultural Committee" breadcrumbs={[{ label: 'Cultural Committee' }]} />
 

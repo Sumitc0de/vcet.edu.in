@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/PageLayout';
 import DepartmentFacultySection from '../../components/DepartmentFacultySection';
 import NewsletterSection from '../../components/NewsletterSection';
 
-/* ── Sidebar navigation links ─────────────────────────────── */
+/* â”€â”€ Sidebar navigation links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const sidebarLinks = [
   { id: 'about',        label: 'About',                        icon: 'ph-info' },
   { id: 'vision',       label: 'Vision and Mission',           icon: 'ph-target' },
@@ -28,7 +28,7 @@ const delayClass = (idx: number) => {
   return 'delay-300';
 };
 
-/* ── Component ─────────────────────────────────────────────── */
+/* â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const DeptComputerEngg: React.FC = () => {
   const [activeId, setActiveId] = useState('about');
   const activeLink = sidebarLinks.find(l => l.id === activeId);
@@ -54,7 +54,7 @@ const DeptComputerEngg: React.FC = () => {
   return (
     <PageLayout>
 
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* â”€â”€ Hero Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white opacity-5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-brand-gold opacity-10 blur-2xl pointer-events-none" />
@@ -71,10 +71,10 @@ const DeptComputerEngg: React.FC = () => {
         </div>
       </header>
 
-      {/* ── Page Body ────────────────────────────────────────────── */}
+      {/* â”€â”€ Page Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="container mx-auto px-4 sm:px-6 py-10 md:py-12 max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
 
-        {/* ── Sticky Sidebar ───────────────────────────────────── */}
+        {/* â”€â”€ Sticky Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
           <div className="lg:sticky lg:top-24 bg-white rounded-xl shadow-md overflow-hidden border border-slate-200 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             <nav className="flex flex-col py-2">
@@ -104,10 +104,10 @@ const DeptComputerEngg: React.FC = () => {
           </div>
         </aside>
 
-        {/* ── Main Content ─────────────────────────────────────── */}
+        {/* â”€â”€ Main Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <main className="w-full flex-1 space-y-14 md:space-y-16 min-w-0">
 
-          {/* ════ ABOUT ═════════════════════════════════════════ */}
+          {/* â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'about' && (
             <>
               {/* dept info */}
@@ -130,7 +130,7 @@ const DeptComputerEngg: React.FC = () => {
                     The Department of Computer Engineering was established in the year 1999 to impart knowledge and develop practical
                     skills in various areas of computer engineering. The Department offers an undergraduate program in Computer Engineering
                     with a current intake of 180 seats. The Department was accredited by the National Board of Accreditation (NBA) from
-                    2012–2015, reaccredited from July 2022 to June 2025, and is permanently affiliated with the University of Mumbai.
+                    2012â€“2015, reaccredited from July 2022 to June 2025, and is permanently affiliated with the University of Mumbai.
                   </p>
                   <p>
                     The Department has expert and well-trained human resources and state-of-the-art laboratories to impart domain-specific
@@ -165,7 +165,7 @@ const DeptComputerEngg: React.FC = () => {
             </>
           )}
 
-          {/* ════ VISION & MISSION ══════════════════════════════ */}
+          {/* â•â•â•â• VISION & MISSION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'vision' && (
             <div className="space-y-16">
               <div className="reveal flex items-center gap-4">
@@ -190,7 +190,7 @@ const DeptComputerEngg: React.FC = () => {
                     </blockquote>
                     <div className="flex items-center gap-4">
                       <div className="h-px flex-1 bg-white/10" />
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET · Computer Engineering</span>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET Â· Computer Engineering</span>
                       <div className="h-px w-12 bg-brand-gold/40" />
                     </div>
                   </div>
@@ -230,7 +230,7 @@ const DeptComputerEngg: React.FC = () => {
             </div>
           )}
 
-          {/* ════ DAB ════════════════════════════════════════════ */}
+          {/* â•â•â•â• DAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'dab' && (() => {
             const members = [
               { sr: 1, name: 'Dr. Rakesh Himte', designation: 'Principal', org: 'VCET, Vasai', role: 'Chairman', tag: 'internal' },
@@ -309,7 +309,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ POs, PEOs & PSOs ══════════════════════════════ */}
+          {/* â•â•â•â• POs, PEOs & PSOs â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'peo' && (() => {
             const pos = [
               { n: '01', text: 'Engineering knowledge: Apply the knowledge of mathematics, science, engineering fundamentals, and an engineering specialization to the solution of complex engineering problems.' },
@@ -322,7 +322,7 @@ const DeptComputerEngg: React.FC = () => {
               { n: '08', text: 'Ethics: Apply ethical principles and commit to professional ethics and responsibilities and norms of the engineering practice.' },
               { n: '09', text: 'Individual and team work: Function effectively as an individual, and as a member or leader in diverse teams, and in multidisciplinary settings.' },
               { n: '10', text: 'Communication: Communicate effectively on complex engineering activities with the engineering community and with society at large, such as, being able to comprehend and write effective reports and design documentation, make effective presentations, and give and receive clear instructions.' },
-              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to one’s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
+              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to oneâ€™s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
               { n: '12', text: 'Life-long learning: Recognize the need for, and have the preparation and ability to engage in independent and life-long learning in the broadest context of technological change.' },
             ];
             const psos = [
@@ -399,10 +399,10 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ FACULTY ════════════════════════════════════════ */}
+          {/* â•â•â•â• FACULTY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty' && <DepartmentFacultySection departmentName="Computer Engineering" />}
 
-          {/* ════ PAQIC ════════════════════════════════════════ */}
+          {/* â•â•â•â• PAQIC â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'paqic' && (() => {
             const members = [
               'Dr. Megha Trivedi, Head, Department of Computer Engineering (Chairperson)',
@@ -447,7 +447,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ INFRASTRUCTURE ═══════════════════════════════ */}
+          {/* â•â•â•â• INFRASTRUCTURE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'infrastructure' && (() => {
             const labs = [
               {
@@ -551,7 +551,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ TOPPERS ══════════════════════════════════════ */}
+          {/* â•â•â•â• TOPPERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'toppers' && (() => {
             const toppers = {
               SE: ['Yadav Rishiraj - 9.51', 'Barve Smit - 9.49', 'Yadav Visha - 9.48'],
@@ -589,21 +589,21 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ SYLLABUS ═════════════════════════════════════ */}
+          {/* â•â•â•â• SYLLABUS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'syllabus' && (() => {
             const links = [
-              { label: 'SE - R16 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//SE-Comps_CBCGS_Syllabus.pdf' },
-              { label: 'TE / BE - R16 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//TE_BE-Comp_Engg_CBCGS_Syllabus.pdf' },
-              { label: 'BE - R12 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//BE-Comps_VII_VIII_Syllabus-1.pdf' },
-              { label: 'First Year - R19 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//FE-Final-Syllabus-R19.pdf' },
-              { label: 'SE - R19 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//SE-C-scheme-syllabus-Computer-Engg.pdf' },
-              { label: 'TE - R19 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//T.E.-C-scheme-syllabus-Computer-Engg.pdf' },
-              { label: 'BE - R19 Syllabus', url: 'pdfs//Department//ComputerEngineering//Syllabus//B.E.-C-scheme-syllabus-Computer-Engg.pdf' },
-              { label: 'First Year (NEP) 2024-25', url: 'pdfs//Department//ComputerEngineering//Syllabus//First-Year-Engineering-All-Branches-Scheme-Syllabus-Sem-I-and-Sem-II-Final-1-July-2024-25-1.pdf' },
-              { label: 'Honours & Minor Degree Program (Data Science)', url: 'pdfs//Department//ComputerEngineering//Syllabus//Honours-Minor-Degree-Program-Data-Science.pdf' },
-              { label: 'PO PSO CO - R12', url: 'pdfs//Department//ComputerEngineering//Syllabus//NAAC-Comp_PO_PSO_CO_R-12.pdf' },
-              { label: 'PO PSO CO - R16', url: 'pdfs//Department//ComputerEngineering//Syllabus//NAAC-Comp_PO_PSO_CO_R-16.pdf' },
-              { label: 'PO PSO CO - R19', url: 'pdfs//Department//ComputerEngineering//Syllabus//NACC-COMP_PO_PSO_CO_R-19-updated.pdf' },
+              { label: 'SE - R16 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//SE-Comps_CBCGS_Syllabus.pdf' },
+              { label: 'TE / BE - R16 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//TE_BE-Comp_Engg_CBCGS_Syllabus.pdf' },
+              { label: 'BE - R12 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//BE-Comps_VII_VIII_Syllabus-1.pdf' },
+              { label: 'First Year - R19 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//FE-Final-Syllabus-R19.pdf' },
+              { label: 'SE - R19 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//SE-C-scheme-syllabus-Computer-Engg.pdf' },
+              { label: 'TE - R19 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//T.E.-C-scheme-syllabus-Computer-Engg.pdf' },
+              { label: 'BE - R19 Syllabus', url: 'pdfs/Department//ComputerEngineering//Syllabus//B.E.-C-scheme-syllabus-Computer-Engg.pdf' },
+              { label: 'First Year (NEP) 2024-25', url: 'pdfs/Department//ComputerEngineering//Syllabus//First-Year-Engineering-All-Branches-Scheme-Syllabus-Sem-I-and-Sem-II-Final-1-July-2024-25-1.pdf' },
+              { label: 'Honours & Minor Degree Program (Data Science)', url: 'pdfs/Department//ComputerEngineering//Syllabus//Honours-Minor-Degree-Program-Data-Science.pdf' },
+              { label: 'PO PSO CO - R12', url: 'pdfs/Department//ComputerEngineering//Syllabus//NAAC-Comp_PO_PSO_CO_R-12.pdf' },
+              { label: 'PO PSO CO - R16', url: 'pdfs/Department//ComputerEngineering//Syllabus//NAAC-Comp_PO_PSO_CO_R-16.pdf' },
+              { label: 'PO PSO CO - R19', url: 'pdfs/Department//ComputerEngineering//Syllabus//NACC-COMP_PO_PSO_CO_R-19-updated.pdf' },
             ];
             const syllabusLinks: { label: string, url: string }[] = [];
             return (
@@ -626,7 +626,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ PUBLICATIONS & IPR ═══════════════════════════ */}
+          {/* â•â•â•â• PUBLICATIONS & IPR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'patent' && (() => {
             const links = [
               { label: 'Patents Published', url: 'pdfs/Department/ComputerEngineering/Publications&IPR/patent.pdf' },
@@ -656,7 +656,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ INNOVATION & TECHNIQUE ═══════════════════════ */}
+          {/* â•â•â•â• INNOVATION & TECHNIQUE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'teaching-learning' && (() => {
             const links = [
               { label: 'Innovation in Teaching Learning 2025-26', url: 'pdfs/Department/ComputerEngineering/InnovationinTeachingLearning/Innovative-activities-in-Teaching-Learning_2025-26_Odd_Sem.pdf' },
@@ -685,7 +685,7 @@ const DeptComputerEngg: React.FC = () => {
             );
           })()}
 
-          {/* ════ MoU ══════════════════════════════════════════ */}
+          {/* â•â•â•â• MoU â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'mou' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -700,7 +700,7 @@ const DeptComputerEngg: React.FC = () => {
             </section>
           )}
 
-          {/* ════ TIME TABLE ═══════════════════════════════════ */}
+          {/* â•â•â•â• TIME TABLE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'time-table' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -715,12 +715,12 @@ const DeptComputerEngg: React.FC = () => {
             </section>
           )}
 
-          {/* ════ NEWSLETTER & MAGAZINE ═══════════════════════ */}
+          {/* â•â•â•â• NEWSLETTER & MAGAZINE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'newsletter' && (
             <NewsletterSection departmentName="Computer Engineering" departmentId="2" />
           )}
 
-          {/* ════ FALLBACK ═════════════════════════════════════ */}
+          {/* â•â•â•â• FALLBACK â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId !== 'about' && activeId !== 'vision' && activeId !== 'dab' && activeId !== 'peo' && activeId !== 'faculty' && activeId !== 'paqic' && activeId !== 'infrastructure' && activeId !== 'toppers' && activeId !== 'syllabus' && activeId !== 'patent' && activeId !== 'teaching-learning' && activeId !== 'mou' && activeId !== 'time-table' && activeId !== 'newsletter' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -738,3 +738,4 @@ const DeptComputerEngg: React.FC = () => {
 };
 
 export default DeptComputerEngg;
+

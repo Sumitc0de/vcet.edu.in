@@ -47,18 +47,24 @@ const recreationPanels = [
 
 const LadiesCommonRoom: React.FC = () => {
   const [apiData, setApiData] = useState<any>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     getFacilitiesSection<any>('ladies-common-room')
       .then((res) => mounted && setApiData(res))
-      .catch(() => mounted && setApiData(null));
-    return () => {
+      .catch(() => mounted && setApiData(null))
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
+      });
+    
+
+return () => {
       mounted = false;
     };
   }, []);
 
-  const general = useMemo(() => {
+    const general = useMemo(() => {
     const source = apiData?.general ?? {};
     return {
       title: String(source?.title ?? '').trim() || 'Overview',
@@ -95,7 +101,23 @@ const LadiesCommonRoom: React.FC = () => {
     return rows.length > 0 ? rows.slice(0, 4) : amenities;
   }, [apiData]);
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner
+  title="Ladies Common Room"
+  breadcrumbs={[
+  { label: 'Ladies Common Room' },
+  ]}
+  />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <style>
         {`

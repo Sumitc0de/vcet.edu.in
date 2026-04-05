@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/PageLayout';
 import DepartmentFacultySection from '../../components/DepartmentFacultySection';
@@ -47,7 +47,7 @@ const DeptFE: React.FC = () => {
   return (
     <PageLayout>
 
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* â”€â”€ Hero Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white opacity-5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-brand-gold opacity-10 blur-2xl pointer-events-none" />
@@ -64,12 +64,12 @@ const DeptFE: React.FC = () => {
           </div>
           <h1 className="font-display font-bold text-white leading-tight tracking-tight text-center">
             <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl">First Year Engineering</span>
-            <span className="block text-xl md:text-2xl mt-4 text-brand-gold/80 font-normal italic">Gateway to all Engineering Branches · 720 Students</span>
+            <span className="block text-xl md:text-2xl mt-4 text-brand-gold/80 font-normal italic">Gateway to all Engineering Branches Â· 720 Students</span>
           </h1>
         </div>
       </header>
 
-      {/* ── Page Body ───────────────────────────────────────────── */}
+      {/* â”€â”€ Page Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="container mx-auto px-4 sm:px-6 py-10 md:py-12 max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
 
         {/* Sticky Sidebar */}
@@ -97,7 +97,7 @@ const DeptFE: React.FC = () => {
         {/* Main Content */}
         <main className="w-full flex-1 space-y-14 md:space-y-16 min-w-0">
 
-          {/* ════ ABOUT ════════════════════════════════════════════ */}
+          {/* â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'about' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="mb-8 flex flex-col items-center text-center">
@@ -139,7 +139,7 @@ const DeptFE: React.FC = () => {
             </section>
           )}
 
-          {/* ════ VISION & MISSION ═════════════════════════════════ */}
+          {/* â•â•â•â• VISION & MISSION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'vision' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -150,7 +150,7 @@ const DeptFE: React.FC = () => {
             </section>
           )}
 
-          {/* ════ DAB ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• DAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'dab' && (() => {
             return (
               <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
@@ -163,7 +163,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ POs, PEOs & PSOs ═════════════════════════════════ */}
+          {/* â•â•â•â• POs, PEOs & PSOs â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'peo' && (() => {
             return (
               <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
@@ -176,7 +176,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ MoU ═════════════════════════════════════════════ */}
+          {/* â•â•â•â• MoU â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'mou' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -187,7 +187,7 @@ const DeptFE: React.FC = () => {
             </section>
           )}
 
-          {/* ════ PATENT ══════════════════════════════════════════ */}
+          {/* â•â•â•â• PATENT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'patent' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -198,16 +198,16 @@ const DeptFE: React.FC = () => {
             </section>
           )}
 
-          {/* ════ FACULTY ══════════════════════════════════════════ */}
+          {/* â•â•â•â• FACULTY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty' && <DepartmentFacultySection departmentName="First Year Engineering" />}
 
-          {/* ════ INFRASTRUCTURE ═════════════════════════════════ */}
+          {/* â•â•â•â• INFRASTRUCTURE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'infrastructure' && (() => {
             const labs = [
               {
                 title: 'Chemistry Lab',
                 inCharge: 'Ms. c.v.Sonarkar',
-                majorEquipments: 'Contech Electronic Balance, Portable DM Plant, Hot Air Oven, Redwood Viscometer, Pensky Martin’s Apparatus, Vicat’s Apparatus.',
+                majorEquipments: 'Contech Electronic Balance, Portable DM Plant, Hot Air Oven, Redwood Viscometer, Pensky Martinâ€™s Apparatus, Vicatâ€™s Apparatus.',
               },
               {
                 title: 'Physics Lab',
@@ -231,14 +231,14 @@ const DeptFE: React.FC = () => {
               {
                 title: 'Computer Lab',
                 inCharge: 'Ms. Shraddha Gosavi',
-                software: 'OS – Windows 11. SW – TC, JAVA, MS Office. Browser – IE 8, Google Chrome, Mozilla.',
-                hardware: 'PC – HP Corei3 – No.25. Printer – HP laser Jet.',
+                software: 'OS â€“ Windows 11. SW â€“ TC, JAVA, MS Office. Browser â€“ IE 8, Google Chrome, Mozilla.',
+                hardware: 'PC â€“ HP Corei3 â€“ No.25. Printer â€“ HP laser Jet.',
               },
               {
                 title: 'Language Lab',
                 inCharge: 'Dr. Pradip Gulbhile',
-                software: 'Orell Talk Smart Version , 1 Teacher,50 student Consoles ,OS – Windows 10. SW – TC, JAVA, MS Office. Browser – IE 8, Google Chrome, Mozilla.',
-                hardware: 'PC – HP Core i3 – No.25. Printer – HP Laser Jet.',
+                software: 'Orell Talk Smart Version , 1 Teacher,50 student Consoles ,OS â€“ Windows 10. SW â€“ TC, JAVA, MS Office. Browser â€“ IE 8, Google Chrome, Mozilla.',
+                hardware: 'PC â€“ HP Core i3 â€“ No.25. Printer â€“ HP Laser Jet.',
               },
               {
                 title: 'Engineering Mechanics',
@@ -294,7 +294,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ SYLLABUS ═══════════════════════════════════════ */}
+          {/* â•â•â•â• SYLLABUS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'syllabus' && (() => {
             const links = [
               { label: 'All Branches Scheme Syllabus (Sem I & Sem II)', url: 'pdfs/Department/FirstYearEngineering/Syllabus/First-Year-Engineering-All-Branches-Scheme-Syllabus-Sem-I-and-Sem-II-Final-1-July-2024-25.pdf' },
@@ -318,7 +318,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ TIME TABLE ═════════════════════════════════════ */}
+          {/* â•â•â•â• TIME TABLE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'time-table' && (() => {
             const sem2Links = [
               { label: 'Sem II - FE A (Comp 1)', url: 'pdfs/Department/FirstYearEngineering/TimeTable/SEM2/DivAComps1_Sem2_TT.pdf' },
@@ -376,14 +376,14 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ INNOVATIONS IN TEACHING LEARNING ══════════════ */}
+          {/* â•â•â•â• INNOVATIONS IN TEACHING LEARNING â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'teaching-learning' && (() => {
             const links = [
-              { label: 'Innovation in Teaching Report 2024-25', url: 'public\pdfs\Department\FirstYearEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-report-2024-25.pdf' },
-              { label: 'Innovation in Teaching Report 2023-24', url: 'public\pdfs\Department\FirstYearEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-report-2023-24.pdf' },
-              { label: 'Innovation in Teaching Report 2022-23', url: 'public\pdfs\Department\FirstYearEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-report-2022-23-Copy.pdf' },
-              { label: 'Innovation in Teaching Report 2021-22', url: 'public\pdfs\Department\FirstYearEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-report-2021-22-1.pdf' },
-              { label: 'Innovation in Teaching Report 2020-21', url: 'public\pdfs\Department\FirstYearEngineering\InnovationsinTeachingLearning\Innovation-in-Teaching-report-2020-21-2.pdf' },
+              { label: 'Innovation in Teaching Report 2024-25', url: 'public/pdfs/Department/FirstYearEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-report-2024-25.pdf' },
+              { label: 'Innovation in Teaching Report 2023-24', url: 'public/pdfs/Department/FirstYearEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-report-2023-24.pdf' },
+              { label: 'Innovation in Teaching Report 2022-23', url: 'public/pdfs/Department/FirstYearEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-report-2022-23-Copy.pdf' },
+              { label: 'Innovation in Teaching Report 2021-22', url: 'public/pdfs/Department/FirstYearEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-report-2021-22-1.pdf' },
+              { label: 'Innovation in Teaching Report 2020-21', url: 'public/pdfs/Department/FirstYearEngineering/InnovationsinTeachingLearning/Innovation-in-Teaching-report-2020-21-2.pdf' },
             ];
             return (
               <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
@@ -400,7 +400,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ INDUCTION PROGRAM ═════════════════════════════ */}
+          {/* â•â•â•â• INDUCTION PROGRAM â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'induction' && (() => {
             const links = [
               { label: 'SIP Report 2024-25', url: 'https://vcet.edu.in/wp-content/uploads/2025/05/SIP-Report_24-25.pdf' },
@@ -428,7 +428,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ TOPPERS ════════════════════════════════════════ */}
+          {/* â•â•â•â• TOPPERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'toppers' && (() => {
             const toppers = [
               { term: '2020-21 SEM-I', topper: 'Thakur Mihir Ashish', score: '9.26 SGPI' },
@@ -470,7 +470,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ ANNUAL REPORTS ═════════════════════════════════ */}
+          {/* â•â•â•â• ANNUAL REPORTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'annual-reports' && (() => {
             const links = [
               { label: 'Annual Report 2023-24', url: 'https://vcet.edu.in/wp-content/uploads/2025/05/First_Year_Engg._Annual_Report_23-24.pdf' },
@@ -492,7 +492,7 @@ const DeptFE: React.FC = () => {
             );
           })()}
 
-          {/* ════ OTHER SECTIONS (placeholder) ════════════════════ */}
+          {/* â•â•â•â• OTHER SECTIONS (placeholder) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'newsletter' && (
             <NewsletterSection departmentName="First Year Engineering" departmentId="6" />
           )}
@@ -514,4 +514,5 @@ const DeptFE: React.FC = () => {
 };
 
 export default DeptFE;
+
 

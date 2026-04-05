@@ -35,6 +35,35 @@ interface OrgCardProps {
   node: HierarchyNode;
 }
 
+const ORG_STRUCTURE_CACHE_KEY = 'vcet:org-structure:v1';
+const ORG_STRUCTURE_CACHE_TTL_MS = 1000 * 60 * 15;
+
+function readOrgStructureCache(): OrgData | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(ORG_STRUCTURE_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { data?: OrgData; ts?: number };
+    if (!parsed?.data || !parsed?.ts) return null;
+    if (Date.now() - parsed.ts > ORG_STRUCTURE_CACHE_TTL_MS) return null;
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function writeOrgStructureCache(data: OrgData): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(
+      ORG_STRUCTURE_CACHE_KEY,
+      JSON.stringify({ data, ts: Date.now() })
+    );
+  } catch {
+    // Ignore storage write failures.
+  }
+}
+
 const OrgCard: React.FC<OrgCardProps> = memo(({ node }) => {
   const shouldRenderChildren = !!node.children?.length;
 
@@ -113,13 +142,23 @@ const OrganizationalStructure: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    setIsLoading(true);
+    const cached = readOrgStructureCache();
+    if (cached) {
+      setData(cached);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+
     getAboutSection<OrgData>('org-structure')
       .then((res) => {
-        if (mounted) setData(res);
+        if (!mounted) return;
+        setData(res);
+        writeOrgStructureCache(res);
       })
       .catch(() => {
-        if (mounted) setData(null);
+        if (!mounted || cached) return;
+        setData(null);
       })
       .finally(() => {
         if (mounted) setIsLoading(false);
@@ -161,18 +200,19 @@ const OrganizationalStructure: React.FC = () => {
                   src={orgChartImage}
                   alt="Organizational Chart"
                   className="w-full h-auto object-contain"
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
-                  fetchPriority="high"
+                  fetchPriority="auto"
                 />
               </div>
             )}
 
             {isLoading ? (
-              <div className="flex flex-wrap justify-center gap-6 pb-8" aria-live="polite" aria-busy="true">
-                {Array.from({ length: 3 }).map((_, idx) => (
-                  <div key={idx} className="w-[240px] h-[150px] rounded-2xl border border-gray-100 bg-slate-100 animate-pulse" />
-                ))}
+              <div className="pb-10" aria-live="polite" aria-busy="true">
+                <div className="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
+                  <div className="mx-auto h-10 w-10 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin" />
+                  <p className="mt-4 text-sm font-semibold text-brand-navy">Loading organizational structure...</p>
+                </div>
               </div>
             ) : (
               <div className="flex flex-wrap justify-center gap-10 overflow-x-auto pb-8">

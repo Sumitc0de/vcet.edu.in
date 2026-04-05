@@ -80,6 +80,7 @@ const getAboutTitle = (text: string, index: number): string => {
 
 const SEDGCell: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -89,13 +90,16 @@ const SEDGCell: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
     return () => {
       mounted = false;
     };
   }, []);
 
-  const documents = useMemo<DocumentItem[]>(() => {
+    const documents = useMemo<DocumentItem[]>(() => {
     const source = Array.isArray(apiData?.documents) ? apiData.documents : [];
     const mapped = source
       .map((row: Record<string, unknown>) => ({
@@ -123,7 +127,23 @@ const SEDGCell: React.FC = () => {
     return mapped.length > 0 ? mapped : fallbackInitiatives;
   }, [apiData]);
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner
+  title="Socio-Economically Disadvantaged Groups Cell"
+  breadcrumbs={[
+  { label: 'SEDG Cell' },
+  ]}
+  />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner
         title="Socio-Economically Disadvantaged Groups Cell"

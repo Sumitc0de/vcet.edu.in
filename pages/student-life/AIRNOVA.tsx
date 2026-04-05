@@ -285,6 +285,7 @@ const ContactPanel: React.FC<{ contacts: ContactItem[]; email: string; insta: st
 const AirnovaPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('about');
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -294,11 +295,14 @@ const AirnovaPage: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
     return () => { mounted = false; };
   }, []);
 
-  const competitionItems: CompetitionItem[] = Array.isArray(apiData?.results)
+    const competitionItems: CompetitionItem[] = Array.isArray(apiData?.results)
     ? apiData.results
       .map((item: Record<string, unknown>) => ({
         event: String(item.event ?? ''),
@@ -352,7 +356,25 @@ const AirnovaPage: React.FC = () => {
     }
   };
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner
+  title="AIRNOVA"
+  subtitle="Vidyavardhini's College of Engineering and Technology's official Aeronautics & Aerospace team."
+  breadcrumbs={[
+  { label: 'Students Club', href: '/students-club' },
+  { label: 'AIRNOVA' },
+  ]}
+  />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner
         title="AIRNOVA"

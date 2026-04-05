@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/PageLayout';
 import DepartmentFacultySection from '../../components/DepartmentFacultySection';
@@ -54,7 +54,7 @@ const DeptIT: React.FC = () => {
   return (
     <PageLayout>
 
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* â”€â”€ Hero Banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="relative bg-gradient-to-r from-brand-navy to-slate-800 pt-24 md:pt-28 pb-12 md:pb-16 overflow-hidden shadow-lg border-b-4 border-brand-gold">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white opacity-5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-64 h-64 rounded-full bg-brand-gold opacity-10 blur-2xl pointer-events-none" />
@@ -71,7 +71,7 @@ const DeptIT: React.FC = () => {
         </div>
       </header>
 
-      {/* ── Page Body ───────────────────────────────────────────── */}
+      {/* â”€â”€ Page Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="container mx-auto px-4 sm:px-6 py-10 md:py-12 max-w-7xl flex flex-col lg:flex-row gap-8 lg:gap-10">
 
         {/* Sticky Sidebar */}
@@ -107,7 +107,7 @@ const DeptIT: React.FC = () => {
         {/* Main Content */}
         <main className="w-full flex-1 space-y-14 md:space-y-16 min-w-0">
 
-          {/* ════ ABOUT ════════════════════════════════════════════ */}
+          {/* â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'about' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="space-y-6 text-slate-600 leading-8 text-left">
@@ -140,7 +140,7 @@ const DeptIT: React.FC = () => {
             </section>
           )}
 
-          {/* ════ VISION & MISSION ═════════════════════════════════ */}
+          {/* â•â•â•â• VISION & MISSION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'vision' && (
             <div className="space-y-16">
               <div className="reveal flex items-center gap-4">
@@ -165,7 +165,7 @@ const DeptIT: React.FC = () => {
                     </blockquote>
                     <div className="flex items-center gap-4">
                       <div className="h-px flex-1 bg-white/10" />
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET · Information Technology</span>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30 font-semibold">VCET Â· Information Technology</span>
                       <div className="h-px w-12 bg-brand-gold/40" />
                     </div>
                   </div>
@@ -198,7 +198,7 @@ const DeptIT: React.FC = () => {
             </div>
           )}
 
-          {/* ════ DAB ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• DAB â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'dab' && (() => {
             const members = [
               { sr: 1, name: 'Dr. Rakesh Himte', designation: 'Principal', org: 'VCET, Vasai', role: 'Chairman', tag: 'internal' },
@@ -274,7 +274,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ POs, PEOs & PSOs ═════════════════════════════════ */}
+          {/* â•â•â•â• POs, PEOs & PSOs â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'peo' && (() => {
             const pos = [
               { n: '01', text: 'Engineering knowledge: Apply the knowledge of mathematics, science, engineering fundamentals, and an engineering specialization to the solution of complex engineering problems.' },
@@ -287,7 +287,7 @@ const DeptIT: React.FC = () => {
               { n: '08', text: 'Ethics: Apply ethical principles and commit to professional ethics and responsibilities and norms of the engineering practice.' },
               { n: '09', text: 'Individual and team work: Function effectively as an individual, and as a member or leader in diverse teams, and in multidisciplinary settings.' },
               { n: '10', text: 'Communication: Communicate effectively on complex engineering activities with the engineering community and with society at large, such as, being able to comprehend and write effective reports and design documentation, make effective presentations, and give and receive clear instructions.' },
-              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to one’s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
+              { n: '11', text: 'Project management and finance: Demonstrate knowledge and understanding of the engineering and management principles and apply these to oneâ€™s own work, as a member and leader in a team, to manage projects and in multidisciplinary environments.' },
               { n: '12', text: 'Life-long learning: Recognize the need for, and have the preparation and ability to engage in independent and life-long learning in the broadest context of technological change.' },
             ];
             const psos = [
@@ -367,10 +367,10 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ FACULTY ══════════════════════════════════════════ */}
+          {/* â•â•â•â• FACULTY â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty' && <DepartmentFacultySection departmentName="Information Technology" />}
 
-          {/* ════ MoU ══════════════════════════════════════════════ */}
+          {/* â•â•â•â• MoU â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'mou' && (() => {
             const links = [
               { label: 'MoU 2023-24', url: 'https://vcet.edu.in/wp-content/uploads/2024/07/List-of-ActiveMOUs.pdf' },
@@ -399,7 +399,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ PAQIC ════════════════════════════════════════════ */}
+          {/* â•â•â•â• PAQIC â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'paqic' && (() => {
             const roles = [
               'Devise Standard Operating Procedure for assessment and evaluation of Outcome Based Education (OBE) for the program.',
@@ -447,7 +447,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ FACULTY ACHIEVEMENTS ════════════════════════════ */}
+          {/* â•â•â•â• FACULTY ACHIEVEMENTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'faculty-achievements' && (() => {
             const links = [
               { label: 'Faculty Patents and Copyright (2024-25)', url: 'https://vcet.edu.in/wp-content/uploads/2025/03/2024-25-Patent-1.pdf' },
@@ -474,7 +474,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ STUDENT ACHIEVEMENTS ════════════════════════════ */}
+          {/* â•â•â•â• STUDENT ACHIEVEMENTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'student-achievements' && (() => {
             const links = [
               { label: 'Student Achievements (Hackathon Achievers)', url: 'pdfs/Department/InformationTechnology/StudentsAchievements/Hackathon-Achivers.pdf' },
@@ -499,7 +499,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ ACTIVITIES ═══════════════════════════════════════ */}
+          {/* â•â•â•â• ACTIVITIES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'activities' && (() => {
             const externalLinks = [
               { label: 'Code Craze', url: 'pdfs/Department/InformationTechnology/Activities/Code-Craze.pdf' },
@@ -529,7 +529,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ INFRASTRUCTURE ═══════════════════════════════════ */}
+          {/* â•â•â•â• INFRASTRUCTURE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'infrastructure' && (() => {
             const labs = [
               {
@@ -622,7 +622,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ TOPPERS ══════════════════════════════════════════ */}
+          {/* â•â•â•â• TOPPERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'toppers' && (() => {
             const topperYears = [
               {
@@ -681,7 +681,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ SYLLABUS ═════════════════════════════════════════ */}
+          {/* â•â•â•â• SYLLABUS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'syllabus' && (() => {
             const links = [
               { label: 'Syllabus R12', url: 'pdfs/Department/InformationTechnology/syllabus/SyllabusR1.pdf' },
@@ -710,7 +710,7 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ TIME TABLE ═══════════════════════════════════════ */}
+          {/* â•â•â•â• TIME TABLE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'time-table' && (() => {
             const links = [
               { label: '2025-26 Odd Sem Time Table', url: 'pdfs/Department/InformationTechnology/TimeTable/2025-26OddSem.pdf' },
@@ -739,12 +739,12 @@ const DeptIT: React.FC = () => {
             );
           })()}
 
-          {/* ════ NEWSLETTER & MAGAZINE ═══════════════════════════ */}
+          {/* â•â•â•â• NEWSLETTER & MAGAZINE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'newsletter' && (
             <NewsletterSection departmentName="Information Technology" departmentId="1" />
           )}
 
-          {/* ════ YOUTUBE ══════════════════════════════════════════ */}
+          {/* â•â•â•â• YOUTUBE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId === 'youtube' && (
             <section className="reveal bg-white rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-4">
@@ -759,7 +759,7 @@ const DeptIT: React.FC = () => {
             </section>
           )}
 
-          {/* ════ FALLBACK ════════════════════════════════════════ */}
+          {/* â•â•â•â• FALLBACK â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
           {activeId !== 'about' && activeId !== 'vision' && activeId !== 'dab' && activeId !== 'peo' && activeId !== 'faculty' && activeId !== 'mou' && activeId !== 'paqic' && activeId !== 'faculty-achievements' && activeId !== 'student-achievements' && activeId !== 'activities' && activeId !== 'infrastructure' && activeId !== 'toppers' && activeId !== 'syllabus' && activeId !== 'time-table' && activeId !== 'newsletter' && activeId !== 'youtube' && (
             <section className="reveal bg-white rounded-3xl p-12 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center min-h-[300px]">
               <div className="w-16 h-16 rounded-2xl bg-brand-navylight flex items-center justify-center mb-4">
@@ -777,3 +777,4 @@ const DeptIT: React.FC = () => {
 };
 
 export default DeptIT;
+

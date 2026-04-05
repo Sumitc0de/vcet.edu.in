@@ -123,6 +123,7 @@ const magazineLinks = [
 
 const Literati: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -132,6 +133,9 @@ const Literati: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
 
     return () => {
@@ -139,7 +143,7 @@ const Literati: React.FC = () => {
     };
   }, []);
 
-  const apiEvents = Array.isArray(apiData?.events)
+    const apiEvents = Array.isArray(apiData?.events)
     ? apiData.events
       .map((event: Record<string, unknown>) => ({
         title: String(event.title ?? ''),
@@ -197,7 +201,21 @@ const Literati: React.FC = () => {
   const resolvedMagazines = apiMagazines.length > 0 ? apiMagazines : magazineLinks;
   const instagramUrl = String(apiData?.hInsta || 'https://www.instagram.com/literativcet?igsh=Ym9sZzU1NjI3eGZ4');
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner
+  title="Literati"
+  breadcrumbs={[{ label: 'Literati' }]}
+  />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner
         title="Literati"

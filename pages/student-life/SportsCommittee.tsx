@@ -58,6 +58,7 @@ const teamRows = [
 
 const SportsCommittee: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -67,6 +68,9 @@ const SportsCommittee: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
 
     return () => {
@@ -74,7 +78,7 @@ const SportsCommittee: React.FC = () => {
     };
   }, []);
 
-  const pageTitle = String(apiData?.slug ?? '').trim() === 'sports-committee' ? 'Sports Committee' : 'Sports Committee';
+    const pageTitle = String(apiData?.slug ?? '').trim() === 'sports-committee' ? 'Sports Committee' : 'Sports Committee';
   const links = [
     {
       label: 'Avahan Instagram',
@@ -115,7 +119,18 @@ const SportsCommittee: React.FC = () => {
     : [];
   const resolvedGallery = apiGallery.length > 0 ? apiGallery : gallery;
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner title="Sports Committee" breadcrumbs={[{ label: 'Sports Committee' }]} />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner title={pageTitle} breadcrumbs={[{ label: 'Sports Committee' }]} />
 

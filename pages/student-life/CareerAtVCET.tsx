@@ -63,6 +63,7 @@ const processSteps = [
 
 const CareerAtVCET: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -72,14 +73,19 @@ const CareerAtVCET: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
 
-    return () => {
+    
+
+return () => {
       mounted = false;
     };
   }, []);
 
-  const resolvedStats = useMemo(() => {
+    const resolvedStats = useMemo(() => {
     if (!Array.isArray(apiData?.stats)) return stats;
     const iconMap = [Briefcase, Users, Clock, MapPin];
     const mapped = apiData.stats.map((item: Record<string, unknown>, index: number) => ({
@@ -117,7 +123,23 @@ const CareerAtVCET: React.FC = () => {
     ? apiData.heroDescription
     : "Vidyavardhini's College of Engineering and Technology (VCET) is always looking for talented, passionate individuals to join our team. We offer a dynamic work environment, opportunities for professional growth, and a chance to shape the future of engineering education.";
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner
+  title="Career @ VCET"
+  breadcrumbs={[
+  { label: 'Career @ VCET' },
+  ]}
+  />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner
         title="Career @ VCET"

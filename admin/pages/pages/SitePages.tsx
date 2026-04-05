@@ -10,7 +10,6 @@ import ResearchForm from '../research/ResearchForm';
 import FacilitiesForm from '../facilities/FacilitiesForm';
 import AboutUsForm from '../about/AboutUsForm';
 import NaacForm from '../naac/NaacForm';
-import TrainingPlacementForm from '../training-placement/TrainingPlacementForm';
 import StudentCareerForm from '../student-career/StudentCareerForm';
 
 const homeEditables = [
@@ -226,8 +225,8 @@ const studentCareerEditables = [
 const trainingPlacementEditables = [
   { slug: 'placement', title: 'Placement', description: 'Manage Placement Cell profiles, statistics, gallery, and recruiters.' },
   { slug: 'training', title: 'Training', description: 'Manage training events, career guidance seminars, and gallery.' },
-  { slug: 'e-cell', title: 'E-Cell', description: 'Manage Entrepreneurship Cell events, coordinators, and gallery.' },
-  { slug: 'iiic', title: 'IIIC', description: 'Manage Industry Institute Interaction Cell guidelines.' },
+  { slug: 'e-cell', title: 'E-Cell', description: 'Manage entrepreneurship cell content, yearly events, and team details.' },
+  { slug: 'iiic', title: 'IIIC', description: 'Manage Industry-Institute Interaction Cell sections, events, and resources.' },
 ];
 
 const mmsEditables = [
@@ -388,7 +387,7 @@ const SitePages: React.FC = () => {
   }
 
   if (activeTab.key === 'training-placement' && activeSection) {
-    return <TrainingPlacementForm slug={activeSection} onBack={() => setActiveSection(null)} />;
+    return <StudentCareerForm slug={activeSection} onBack={() => setActiveSection(null)} />;
   }
 
   if (activeTab.key === 'student-career' && activeSection) {

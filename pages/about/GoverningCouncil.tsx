@@ -19,18 +19,35 @@ interface CouncilData {
 
 export default function GoverningCouncil() {
   const [data, setData] = useState<CouncilData | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     getAboutSection<CouncilData>('governing-council')
       .then((res) => mounted && setData(res))
-      .catch(() => mounted && setData(null));
-    return () => {
+      .catch(() => mounted && setData(null))
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
+      });
+    
+
+if (!apiLoaded) {
+    return (
+      <PageLayout>
+        <PageBanner title="The Governing Council" breadcrumbs={[{ label: 'Governing Council' }]} />
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+        </section>
+      </PageLayout>
+    );
+  }
+
+return () => {
       mounted = false;
     };
   }, []);
 
-  const chairman = data?.chairman ?? {
+    const chairman = data?.chairman ?? {
     role: 'Chairman',
     name: 'Sri. Vikas Vartak',
     description: 'Chairman Vidyavardhini',

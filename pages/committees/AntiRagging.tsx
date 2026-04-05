@@ -22,6 +22,7 @@ const fallbackMembers = [
 
 const AntiRagging: React.FC = () => {
   const [apiData, setApiData] = useState<Record<string, any> | null>(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -31,13 +32,18 @@ const AntiRagging: React.FC = () => {
       })
       .catch(() => {
         if (mounted) setApiData(null);
+      })
+      .finally(() => {
+        if (mounted) setApiLoaded(true);
       });
-    return () => {
+    
+
+return () => {
       mounted = false;
     };
   }, []);
 
-  const objectives = useMemo(() => {
+    const objectives = useMemo(() => {
     const source = Array.isArray(apiData?.objectives) ? apiData.objectives : [];
     const mapped = source.map((item: unknown) => String(item ?? '').trim()).filter(Boolean);
     return mapped.length > 0 ? mapped : fallbackObjectives;
@@ -55,7 +61,18 @@ const AntiRagging: React.FC = () => {
     return mapped.length > 0 ? mapped : fallbackMembers;
   }, [apiData]);
 
+        if (!apiLoaded) {
   return (
+  <PageLayout>
+  <PageBanner title="Anti Ragging Committee" breadcrumbs={[{ label: 'Anti Ragging Committee' }]} />
+  <section className="py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 text-center text-slate-500">Loading content...</div>
+  </section>
+  </PageLayout>
+  );
+  }
+
+return (
     <PageLayout>
       <PageBanner title="Anti Ragging Committee" breadcrumbs={[{ label: 'Anti Ragging Committee' }]} />
 

@@ -520,6 +520,7 @@ export interface CommitteeMember {
   designation?: string;
   contact?: string;
   email?: string;
+  address?: string;
 }
 // ── Admission Sections (new structured admission system) ────────────────────────
 
